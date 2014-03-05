@@ -1,39 +1,34 @@
 package data;
 
+import java.awt.BorderLayout;
 import java.awt.Desktop;
 import java.awt.EventQueue;
+import java.awt.Font;
+import java.awt.Toolkit;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.io.File;
+import java.io.IOException;
 
-import javax.swing.JFrame;
-import javax.swing.JTabbedPane;
-import java.awt.BorderLayout;
-import javax.swing.JPanel;
-import net.miginfocom.swing.MigLayout;
-
-import javax.swing.JFileChooser;
-import javax.swing.JLabel;
-import javax.swing.JOptionPane;
-import javax.swing.JTextField;
+import javax.swing.AbstractAction;
+import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
-import javax.swing.JSeparator;
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
-import javax.swing.DefaultComboBoxModel;
+import javax.swing.JFileChooser;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JSeparator;
+import javax.swing.JTabbedPane;
+import javax.swing.JTextField;
+import javax.swing.ScrollPaneConstants;
 import javax.swing.SwingConstants;
 import javax.swing.WindowConstants;
 
-import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
-
-import java.awt.Toolkit;
-import java.awt.event.ActionListener;
-import java.awt.event.ActionEvent;
-import java.io.File;
-import java.io.FileReader;
-import java.io.IOException;
-import javax.swing.JScrollPane;
-import javax.swing.ScrollPaneConstants;
-import java.awt.Font;
-import javax.swing.AbstractAction;
+import net.miginfocom.swing.MigLayout;
 
 /**
  * 
@@ -57,10 +52,6 @@ public class PreferencesUI
 	public JCheckBox chckbxForceMultisnippetCapture;
 	public JCheckBox chckbxAutosaveUploads;
 	public JComboBox toolBox;
-
-	private JSONObject pref; // outputs
-	private JSONObject prefIn; // inputs
-	private JSONParser prefParser;
 
 	private DataUtils dataUtils = new DataUtils();
 
@@ -92,51 +83,10 @@ public class PreferencesUI
 	public PreferencesUI()
 	{
 		initialize();
+		
+		Preferences.loadPreferences();
 
-		loadPreferences();
 		setPrefrences();
-	}
-
-	private void loadPreferences()
-	{
-		/*
-		 * Load the preferences from the json file and set the Preferences Class
-		 * constants
-		 * 
-		 * preferences are not saving and loading correctly NOTE: possibly fixed
-		 * now
-		 */
-		System.out.println("Loading preferences...");
-		prefParser = new JSONParser();
-		try
-		{
-			Object obj;
-			if (os.indexOf("Mac") >= 0) // added check for osx file system
-			{
-				obj = prefParser.parse(new FileReader(
-						Preferences.DATA_FOLDER_PATH_MAC + "/prefs.json"));
-			} else
-			{ // Windows
-				obj = prefParser.parse(new FileReader(
-						Preferences.DATA_FOLDER_PATH + "/prefs.json"));
-			}
-			prefIn = (JSONObject) obj;
-		} catch (Exception e)
-		{
-			e.printStackTrace();
-		}
-
-		Preferences.DEFAULT_CAPTURE_DIR = (String) prefIn
-				.get("user_capture_dir");
-		Preferences.DEFAULT_EDITING_TOOL = (Long) prefIn
-				.get("default.editing.tool");
-		Preferences.DEFAULT_UPLOAD_PROVIDER = (Long) prefIn
-				.get("default.upload.provider");
-		Preferences.EDITING_ENABLED = (Boolean) prefIn.get("editing.enabled");
-		Preferences.FORCE_MULTI_CAPTURE = (Boolean) prefIn
-				.get("force.multi.capture");
-		Preferences.AUTO_SAVE_UPLOADS = (Boolean) prefIn
-				.get("auto.save.uploads");
 	}
 
 	private void setPrefrences()
@@ -389,7 +339,7 @@ public class PreferencesUI
 			public void actionPerformed(ActionEvent arg0)
 			{
 				updatePreferences();
-				loadPreferences();
+				Preferences.loadPreferences();
 				frmPreferences.dispose();
 			}
 		});
