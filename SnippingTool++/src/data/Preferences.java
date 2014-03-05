@@ -67,8 +67,7 @@ public class Preferences
 	private File PICTURES_FOLDER;
 
 	private static JSONObject pref; // outputs
-	private JSONObject prefIn; // inputs
-	private JSONParser prefParser;
+	private static JSONObject prefIn;
 
 	public Preferences()
 	{
@@ -83,9 +82,51 @@ public class Preferences
 															// make no
 															// difference in
 															// windows
+															
 		pref = new JSONObject();
-		prefParser = new JSONParser();
 		checkDirectories();
+	}
+	
+	public static void loadPreferences()
+	{
+		/*
+		 * Load the preferences from the json file and set the Preferences Class
+		 * constants
+		 * 
+		 * preferences are not saving and loading correctly NOTE: possibly fixed
+		 * now
+		 */
+		System.out.println("Loading preferences...");
+		JSONParser prefParser = new JSONParser();
+		try
+		{
+			Object obj;
+			if (os.indexOf("Mac") >= 0) // added check for osx file system
+			{
+				obj = prefParser.parse(new FileReader(
+						DATA_FOLDER_PATH_MAC + "/prefs.json"));
+			} else
+			{ // Windows
+				obj = prefParser.parse(new FileReader(
+						DATA_FOLDER_PATH + "/prefs.json"));
+			}
+			prefIn = (JSONObject) obj;
+		} catch (Exception e)
+		{
+			e.printStackTrace();
+		}
+		
+		DEFAULT_CAPTURE_DIR = (String) prefIn
+				.get("user_capture_dir");
+		DEFAULT_EDITING_TOOL = (Long) prefIn
+				.get("default.editing.tool");
+		DEFAULT_UPLOAD_PROVIDER = (Long) prefIn
+				.get("default.upload.provider");
+		EDITING_ENABLED = (Boolean) prefIn.get("editing.enabled");
+		FORCE_MULTI_CAPTURE = (Boolean) prefIn
+				.get("force.multi.capture");
+		AUTO_SAVE_UPLOADS = (Boolean) prefIn
+				.get("auto.save.uploads");
 	}
 
 	private void checkDirectories()
@@ -93,21 +134,16 @@ public class Preferences
 		if (!DATA_FOLDER.exists()) // if the data folder does not exist, create
 									// it (first time setup)
 		{
-			System.out
-					.println("Version mismatch... \nPerforming first time setup...");
+			System.out.println("Version mismatch... \nPerforming first time setup...");
 			setupDirectories();
-			initParser();
 		} else
 		{
-			// check the version, if the version is different recreate the
-			// preferences file
-			initParser();
+			loadPreferences();
+			
 			if (!VERSION.equals(prefIn.get("version"))) // if different version
-			{
 				setupDirectories();
-				initParser();
-			}
 		}
+		
 		if (!PICTURES_FOLDER.exists() && (os.indexOf("Mac") >= 0)) // so it will
 																	// make sure
 																	// that the
@@ -121,27 +157,6 @@ public class Preferences
 			PICTURES_FOLDER.mkdirs();
 			new File(DEFAULT_CAPTURE_DIR + "/Captures/").mkdir();
 			new File(DEFAULT_CAPTURE_DIR + "/Uploads/").mkdir();
-		}
-	}
-
-	private void initParser()
-	{
-		try
-		{
-			if (os.indexOf("Mac") >= 0) // added check for osx file system
-			{
-				Object obj = prefParser.parse(new FileReader(
-						DATA_FOLDER_PATH_MAC + "/prefs.json"));
-				prefIn = (JSONObject) obj;
-			} else
-			{ // Windows
-				Object obj = prefParser.parse(new FileReader(DATA_FOLDER_PATH
-						+ "/prefs.json"));
-				prefIn = (JSONObject) obj;
-			}
-		} catch (Exception e)
-		{
-			e.printStackTrace();
 		}
 	}
 
