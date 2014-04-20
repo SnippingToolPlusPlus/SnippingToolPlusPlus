@@ -46,7 +46,7 @@ public class Main extends JFrame implements ActionListener
 
     private OverlayFrame overlay;
     private PreferencesUI preferencesUI;
-    private Preferences preferences; // data setup
+    private Preferences preferences;
     private Save save;
     private Upload upload;
 
@@ -61,13 +61,13 @@ public class Main extends JFrame implements ActionListener
 
     private UpdateChecker updater;
 
-    private static Editor pointerEditor; // because the overlay panel is
-                                         // destroyed and remade, it needs a
-                                         // way to point to the editor that
-                                         // it created, that way it can be
-                                         // closed. So
-    // we will have a pointer located in the main class that points to the last
-    // created editor. That way we can close it after its been created.
+    /* because the overlay panel is destroyed and remade,
+     * it needs a way to point to the editor that it created,
+     * that way it can be closed. So we will have a pointer 
+     * located in the main class that points to the last
+     * created editor. That way we can close it after its been created.
+     */
+    private static Editor pointerEditor;
     final String iconMac = "trayIconMac.png";
     final String iconPressedMac = "trayIconPressedMac.png";
 
@@ -85,7 +85,7 @@ public class Main extends JFrame implements ActionListener
 
         try
         {
-            if (os.indexOf("Win") >= 0) // added this too
+            if (os.indexOf("Win") >= 0)
             {
                 UIManager.setLookAndFeel("com.sun.java.swing.plaf.windows.WindowsLookAndFeel");
             } else
@@ -108,13 +108,11 @@ public class Main extends JFrame implements ActionListener
          * 
          * Hotkeys will not work on Mac
          */
-        if (os.indexOf("Win") >= 0) // If in windows, initialize hotkeys.
-                                    // Because the hotkey systems uses .dll
-                                    // files, it wont work with mac.
+        if (os.indexOf("Win") >= 0)
+        {
             initializeHotkeys();
+        }
 
-        // UpdateChecker.checkForUpdates(); //checks to make sure this is the
-        // latest version of Snipping Tool++
         updater = new UpdateChecker();
         updater.checkForUpdates();
     }
@@ -197,7 +195,9 @@ public class Main extends JFrame implements ActionListener
     private void displayOverlay()
     {
         if (overlay == null || OverlayFrame.ACTIVE == false)
+        {
             overlay = new OverlayFrame();
+        }
     }
 
     public static void displayInfoMessage(String title, String message)
@@ -215,18 +215,17 @@ public class Main extends JFrame implements ActionListener
         final String icon = "trayIcon.png";
 
         if (os.indexOf("Win") >= 0)
+        {
             System.out.println("Running Windows OS");
-
-        else if (os.indexOf("Mac") >= 0) // added saying that its on osx
+        } else if (os.indexOf("Mac") >= 0)
         {
             System.out.println("Running Mac OS X");
-        }
-        /*
-         * Because it can only run on windows (maybe osx) currently, we kill the
-         * program if it detects non-windows or non osx before going further.
-         */
-        else
+        } else
         {
+            /*
+             * Because it can only run on windows (maybe osx) currently, we kill the
+             * program if it detects non-windows or non osx before going further.
+             */
             System.out.println("Invalid Operating System: Exiting");
             System.exit(0);
         }
@@ -306,8 +305,6 @@ public class Main extends JFrame implements ActionListener
         uploadMenu.add(uSnippet);
         uploadMenu.add(uScreenshot);
         uploadMenu.add(uClipboardImg);
-        // uploadMenu.addSeparator();
-        // uploadMenu.add(multiUploadItem);
         saveMenu.add(sSnippet);
         saveMenu.addSeparator();
         saveMenu.add(sScreenshot);
@@ -316,7 +313,6 @@ public class Main extends JFrame implements ActionListener
         utilitiesMenu.add(imageViewer);
 
         popup.add(aboutItem);
-        // popup.addSeparator();
         popup.add(prefMenu);
         popup.addSeparator();
         popup.add(utilitiesMenu);
@@ -332,7 +328,7 @@ public class Main extends JFrame implements ActionListener
         final Frame frame = new Frame("");
         frame.setUndecorated(true);
 
-        if (os.indexOf("Win") >= 0) // Only do this if your in windows
+        if (os.indexOf("Win") >= 0)
         {
             try
             {
@@ -384,7 +380,6 @@ public class Main extends JFrame implements ActionListener
                 @Override
                 public void mouseClicked(MouseEvent e)
                 {
-                    // TODO Auto-generated method stub
                     trayIcon.setImage(new ImageIcon(this.getClass().getResource("/images/" + iconPressedMac))
                             .getImage());
                     if (e.getButton() == MouseEvent.BUTTON1)
@@ -399,13 +394,11 @@ public class Main extends JFrame implements ActionListener
                 @Override
                 public void mouseEntered(MouseEvent e)
                 {
-                    // TODO Auto-generated method stub
                 }
 
                 @Override
                 public void mouseExited(MouseEvent e)
                 {
-                    // TODO Auto-generated method stub
                 }
             });
             frame.setResizable(false);
@@ -416,7 +409,6 @@ public class Main extends JFrame implements ActionListener
     @Override
     public void actionPerformed(ActionEvent e)
     {
-        // TODO Auto-generated method stub
         Object command = e.getActionCommand();
         if (command.equals("uSnippet"))
         {
@@ -454,11 +446,10 @@ public class Main extends JFrame implements ActionListener
             new MultiUploader();
         } else if (command.equals("tray"))
         {
-            if (os.indexOf("Win") >= 0) // only perform in windows
+            if (os.indexOf("Win") >= 0)
             {
                 try
                 {
-
                     Desktop.getDesktop().open(new File(Preferences.DEFAULT_CAPTURE_DIR));
                 } catch (Exception e1)
                 {
@@ -492,7 +483,6 @@ public class Main extends JFrame implements ActionListener
             Desktop.getDesktop().open(new File(Preferences.DEFAULT_CAPTURE_DIR));
         } catch (IOException e)
         {
-            // TODO Auto-generated catch block
             e.printStackTrace();
         }
     }

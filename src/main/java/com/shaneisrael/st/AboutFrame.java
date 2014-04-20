@@ -116,8 +116,6 @@ public class AboutFrame
             @Override
             public void hyperlinkUpdate(HyperlinkEvent arg0)
             {
-                // TODO Auto-generated method stub
-
             }
         };
         dtrpnSnippingToolIs.addHyperlinkListener(hyperlinkListener);
