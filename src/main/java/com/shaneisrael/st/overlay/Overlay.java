@@ -119,11 +119,6 @@ public class Overlay extends JPanel implements MouseListener, MouseMotionListene
 
     public void setupOverlay()
     {
-        reset();
-    }
-
-    public void reset()
-    {
         startPoint = new Point(0, 0);
         endPoint = new Point(0, 0);
         startPointList.clear();
@@ -135,7 +130,7 @@ public class Overlay extends JPanel implements MouseListener, MouseMotionListene
         // setMouseCursor();
     }
 
-    public void setMouseCursor()
+    private void setMouseCursor()
     {
         ImageIcon ii = new ImageIcon(this.getClass().getResource("/images/cursor.png"));
         Image cursorImage = ii.getImage();
