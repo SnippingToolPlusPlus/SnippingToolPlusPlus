@@ -2,7 +2,6 @@ package com.shaneisrael.st.data;
 
 import java.awt.BorderLayout;
 import java.awt.Desktop;
-import java.awt.EventQueue;
 import java.awt.Font;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
@@ -10,7 +9,6 @@ import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.IOException;
 
-import javax.swing.AbstractAction;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
@@ -44,37 +42,14 @@ public class PreferencesUI
      * capture directory.
      */
 
-    private String os = System.getProperty("os.name");
     private JFrame frmPreferences;
     public JTextField directoryField;
     public JCheckBox chckbxEnableEditor;
     public JCheckBox chckbxForceMultisnippetCapture;
     public JCheckBox chckbxAutosaveUploads;
-    public JComboBox toolBox;
+    public JComboBox<?> toolBox;
 
     private DataUtils dataUtils = new DataUtils();
-
-    /**
-     * Launch the application.
-     */
-    public static void main(String[] args)
-    {
-        EventQueue.invokeLater(new Runnable()
-        {
-            @Override
-            public void run()
-            {
-                try
-                {
-                    PreferencesUI window = new PreferencesUI();
-                    window.frmPreferences.setVisible(true);
-                } catch (Exception e)
-                {
-                    e.printStackTrace();
-                }
-            }
-        });
-    }
 
     /**
      * Create the application.
@@ -336,19 +311,5 @@ public class PreferencesUI
     private void updatePreferences()
     {
         Preferences.updatePreferences(this);
-    }
-
-    private class SwingAction extends AbstractAction
-    {
-        public SwingAction()
-        {
-            putValue(NAME, "SwingAction");
-            putValue(SHORT_DESCRIPTION, "Some short description");
-        }
-
-        @Override
-        public void actionPerformed(ActionEvent e)
-        {
-        }
     }
 }

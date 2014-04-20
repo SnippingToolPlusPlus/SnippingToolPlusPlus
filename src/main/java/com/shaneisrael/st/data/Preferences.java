@@ -19,7 +19,7 @@ import org.json.simple.parser.JSONParser;
 public class Preferences
 {
     private static String os = System.getProperty("os.name");
-    public static final String VERSION = "5.3.1";
+    public static final String VERSION = "5.3.5";
     /*
      * 5.2.2
      *
@@ -37,22 +37,9 @@ public class Preferences
 
     public static final String DATA_FOLDER_PATH = System.getProperty("user.home") + "/.snippingtool++/data/version5/";
     public static final String DATA_FOLDER_PATH_MAC = System.getProperty("user.home")
-            + "/Library/Application Support/snippingtool++/data/version5/"; // added
-                                                                            // the
-                                                                            // correct
-                                                                            // directory
-                                                                            // for
-                                                                            // mac
-                                                                            // to
-                                                                            // store
-                                                                            // this
-                                                                            // kind
-                                                                            // of
-                                                                            // stuff
+            + "/Library/Application Support/snippingtool++/data/version5/";
     public static long TOTAL_SAVED_UPLOADS = 0;
     public static String DEFAULT_CAPTURE_DIR = System.getProperty("user.home") + "/pictures/SnippingTool++/";
-    // private final String user_capture_dir = System.getProperty("user.home") +
-    // "/pictures/SnippingTool++/";
 
     public static boolean EDITING_ENABLED = true;
     public static boolean AUTO_SAVE_UPLOADS = true;
@@ -68,17 +55,14 @@ public class Preferences
 
     public Preferences()
     {
-        if (os.indexOf("Mac") >= 0) // added check for osx file system
+        if (os.indexOf("Mac") >= 0)
         {
             DATA_FOLDER = new File(DATA_FOLDER_PATH_MAC);
         } else
         { // Windows
             DATA_FOLDER = new File(DATA_FOLDER_PATH);
         }
-        PICTURES_FOLDER = new File(DEFAULT_CAPTURE_DIR); // added for osx should
-                                                         // make no
-                                                         // difference in
-                                                         // windows
+        PICTURES_FOLDER = new File(DEFAULT_CAPTURE_DIR);
 
         pref = new JSONObject();
         checkDirectories();
@@ -98,11 +82,11 @@ public class Preferences
         try
         {
             Object obj;
-            if (os.indexOf("Mac") >= 0) // added check for osx file system
+            if (os.indexOf("Mac") >= 0)
             {
                 obj = prefParser.parse(new FileReader(DATA_FOLDER_PATH_MAC + "/prefs.json"));
             } else
-            { // Windows
+            {
                 obj = prefParser.parse(new FileReader(DATA_FOLDER_PATH + "/prefs.json"));
             }
             prefIn = (JSONObject) obj;
@@ -121,8 +105,9 @@ public class Preferences
 
     private void checkDirectories()
     {
-        if (!DATA_FOLDER.exists()) // if the data folder does not exist, create
-                                   // it (first time setup)
+        // if the data folder does not exist, create
+        // it (first time setup)
+        if (!DATA_FOLDER.exists())
         {
             System.out.println("Version mismatch... \nPerforming first time setup...");
             setupDirectories();
@@ -134,13 +119,8 @@ public class Preferences
                 setupDirectories();
         }
 
-        if (!PICTURES_FOLDER.exists() && (os.indexOf("Mac") >= 0)) // so it will
-                                                                   // make sure
-                                                                   // that the
-                                                                   // pictures
-                                                                   // folder is
-                                                                   // there in
-                                                                   // osx
+        // so it will make sure that the pictures folder is there in osx
+        if (!PICTURES_FOLDER.exists() && (os.indexOf("Mac") >= 0))
         {
             System.out.println("No pictures folder existes... \nCreating folder");
             PICTURES_FOLDER.mkdirs();
@@ -151,9 +131,7 @@ public class Preferences
 
     private void setupDirectories()
     {
-        /*
-         * create the data directory, default snipping tool capture directory
-         */
+        //create the data directory, default snipping tool capture directory
         DATA_FOLDER.mkdirs(); // changed to mkdirs
         createPreferencesFile();
     }
@@ -171,11 +149,11 @@ public class Preferences
         try
         {
             FileWriter file;
-            if (os.indexOf("Mac") >= 0) // added check for osx file system
+            if (os.indexOf("Mac") >= 0)
             {
                 file = new FileWriter(DATA_FOLDER_PATH_MAC + "/prefs.json");
             } else
-            { // Windows
+            {
                 file = new FileWriter(DATA_FOLDER_PATH + "/prefs.json");
             }
             file.write(pref.toJSONString());
@@ -202,11 +180,11 @@ public class Preferences
         try
         {
             FileWriter file;
-            if (os.indexOf("Mac") >= 0) // added check for osx file system
+            if (os.indexOf("Mac") >= 0)
             {
                 file = new FileWriter(DATA_FOLDER_PATH_MAC + "/prefs.json");
             } else
-            { // Windows
+            {
                 file = new FileWriter(DATA_FOLDER_PATH + "/prefs.json");
             }
             file.write(pref.toJSONString());

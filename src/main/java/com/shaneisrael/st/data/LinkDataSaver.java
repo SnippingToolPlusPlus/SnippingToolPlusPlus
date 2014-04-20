@@ -17,13 +17,11 @@ public class LinkDataSaver
     {
         if (imgurLinksFile.exists() == false)
         {
-
             try
             {
                 out = new PrintWriter(new FileOutputStream(imgurLinksFile));
             } catch (FileNotFoundException e)
             {
-                // TODO Auto-generated catch block
                 e.printStackTrace();
             }
             out.println("TITLE - UPLOAD LINK - DELETION LINK\n------------------------------------");
@@ -51,7 +49,6 @@ public class LinkDataSaver
             e.printStackTrace();
         } catch (IOException e)
         {
-            // TODO Auto-generated catch block
             e.printStackTrace();
         }
     }

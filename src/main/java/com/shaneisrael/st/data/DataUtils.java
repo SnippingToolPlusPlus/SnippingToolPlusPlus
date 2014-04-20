@@ -2,16 +2,13 @@ package com.shaneisrael.st.data;
 
 import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.MalformedURLException;
 import java.net.URL;
 
 public class DataUtils
 {
-    private String imgur_credit_url = "http://api.imgur.com/2/credits.xml";
-    private int uploads_remaining;
-    private int uploads_limit;
+    private String imgurCreditUrl = "http://api.imgur.com/2/credits.xml";
     String response = "";
 
     public DataUtils()
@@ -23,7 +20,7 @@ public class DataUtils
     {
         try
         {
-            URL url = new URL(imgur_credit_url);
+            URL url = new URL(imgurCreditUrl);
             BufferedReader in = new BufferedReader(new InputStreamReader(url.openStream()));
 
             String line;
@@ -65,23 +62,5 @@ public class DataUtils
             e.printStackTrace();
             return 60;
         }
-    }
-
-    public String getFormat(String format)
-    {
-        InputStream is = this.getClass().getResourceAsStream("/data/formats.txt");
-        BufferedReader in = new BufferedReader(new InputStreamReader(is));
-        String line;
-        try
-        {
-            while ((line = in.readLine()) != null)
-            {
-
-            }
-        } catch (IOException e)
-        {
-            e.printStackTrace();
-        }
-        return "";
     }
 }
