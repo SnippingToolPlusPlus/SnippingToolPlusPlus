@@ -48,16 +48,10 @@ public class Overlay extends JPanel implements MouseListener, MouseMotionListene
     private Point startPoint = new Point();
     private Point endPoint = new Point();
 
-    private int mx, my; // mouse x, mouse y
-    private ArrayList<Point> startPointList = new ArrayList<Point>(); // used
-                                                                      // for
-                                                                      // multi
-                                                                      // snippet
-                                                                      // capture
-    private ArrayList<Point> endPointList = new ArrayList<Point>(); // used for
-                                                                    // multi
-                                                                    // snippet
-                                                                    // capture
+    private int mouseX, mouseY;
+    //used for multi snippet capture
+    private ArrayList<Point> startPointList = new ArrayList<Point>();
+    private ArrayList<Point> endPointList = new ArrayList<Point>();
 
     private Font font = new Font("sansserif", Font.BOLD, 12);
     private BufferedImage selectionImage;
@@ -87,16 +81,15 @@ public class Overlay extends JPanel implements MouseListener, MouseMotionListene
                 if (Preferences.EDITING_ENABLED)
                 {
                     Main.closeCurrentEditor();
-                    editor = new Editor(selectionImage, mode); // send the
-                                                               // snippet to
-                                                               // the editor
+                    editor = new Editor(selectionImage, mode); // send the snippet to the editor
                     Main.pointToEditor(editor);
                 } else
-                // send the snippet directly to the upload/save queue
                 {
+                    // send the snippet directly to the upload/save queue
                     if (mode == Overlay.UPLOAD)
+                    {
                         new Upload(selectionImage, false);
-                    else if (mode == Overlay.SAVE)
+                    } else if (mode == Overlay.SAVE)
                     {
                         save = new Save();
                         save.save(selectionImage);
@@ -180,14 +173,20 @@ public class Overlay extends JPanel implements MouseListener, MouseMotionListene
         int startX = 0;
         int startY = 0;
         if (endPoint.x > startPoint.x)
+        {
             startX = (endPoint.x - 90);
-        else if (endPoint.x < startPoint.x)
+        } else if (endPoint.x < startPoint.x)
+        {
             startX = endPoint.x;
+        }
 
         if (endPoint.y > startPoint.y)
+        {
             startY = endPoint.y;
-        else if (endPoint.y < startPoint.y)
+        } else if (endPoint.y < startPoint.y)
+        {
             startY = endPoint.y - 30;
+        }
 
         g2d.setFont(font);
         g2d.setColor(new Color(0, 0, 0, 100));
@@ -250,39 +249,33 @@ public class Overlay extends JPanel implements MouseListener, MouseMotionListene
     @Override
     public void mouseDragged(MouseEvent me)
     {
-        mx = me.getX();
-        my = me.getY();
-        endPoint = new Point(mx, my);
+        mouseX = me.getX();
+        mouseY = me.getY();
+        endPoint = new Point(mouseX, mouseY);
         repaint();
     }
 
     @Override
     public void mouseMoved(MouseEvent me)
     {
-        mx = me.getX();
-        my = me.getY();
+        mouseX = me.getX();
+        mouseY = me.getY();
         repaint();
     }
 
     @Override
     public void mouseClicked(MouseEvent arg0)
     {
-        // TODO Auto-generated method stub
-
     }
 
     @Override
     public void mouseEntered(MouseEvent arg0)
     {
-        // TODO Auto-generated method stub
-
     }
 
     @Override
     public void mouseExited(MouseEvent arg0)
     {
-        // TODO Auto-generated method stub
-
     }
 
     @Override
@@ -290,8 +283,8 @@ public class Overlay extends JPanel implements MouseListener, MouseMotionListene
     {
         if (e.getButton() == MouseEvent.BUTTON1)
         {
-            startPoint = new Point(mx, my);
-            endPoint = new Point(mx, my);
+            startPoint = new Point(mouseX, mouseY);
+            endPoint = new Point(mouseX, mouseY);
             startPointList.add(startPoint);
         }
     }
@@ -301,9 +294,9 @@ public class Overlay extends JPanel implements MouseListener, MouseMotionListene
     {
         if (e.getButton() == MouseEvent.BUTTON1)
         {
-            mx = e.getX();
-            my = e.getY();
-            endPoint = new Point(mx, my);
+            mouseX = e.getX();
+            mouseY = e.getY();
+            endPoint = new Point(mouseX, mouseY);
             endPointList.add(endPoint);
         }
 

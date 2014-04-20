@@ -7,7 +7,6 @@ import java.awt.Rectangle;
 
 public class ScreenBounds
 {
-
     public Rectangle getBounds()
     {
         GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();

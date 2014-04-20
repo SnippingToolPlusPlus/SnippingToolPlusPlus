@@ -194,7 +194,7 @@ public class Main extends JFrame implements ActionListener
 
     private void displayOverlay()
     {
-        if (overlay == null || OverlayFrame.ACTIVE == false)
+        if (overlay == null || OverlayFrame.IsActive == false)
         {
             overlay = new OverlayFrame();
         }
