@@ -32,24 +32,26 @@ package com.melloware.jintellitype;
 public class JIntellitypeException extends RuntimeException
 {
 
-	public JIntellitypeException()
-	{
-		super();
-	}
+    private static final long serialVersionUID = 1L;
 
-	public JIntellitypeException(String aMessage, Throwable aCause)
-	{
-		super(aMessage, aCause);
-	}
+    public JIntellitypeException()
+    {
+        super();
+    }
 
-	public JIntellitypeException(String aMessage)
-	{
-		super(aMessage);
-	}
+    public JIntellitypeException(String aMessage, Throwable aCause)
+    {
+        super(aMessage, aCause);
+    }
 
-	public JIntellitypeException(Throwable aCause)
-	{
-		super(aCause);
-	}
+    public JIntellitypeException(String aMessage)
+    {
+        super(aMessage);
+    }
+
+    public JIntellitypeException(Throwable aCause)
+    {
+        super(aCause);
+    }
 
 }

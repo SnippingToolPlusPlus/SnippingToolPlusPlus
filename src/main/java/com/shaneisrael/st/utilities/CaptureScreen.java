@@ -8,25 +8,25 @@ import com.shaneisrael.st.overlay.ScreenBounds;
 
 public class CaptureScreen
 {
-	private Rectangle screenRectangle;
-	private BufferedImage image = null;
-	private ScreenBounds bounds = new ScreenBounds();
+    private Rectangle screenRectangle;
+    private BufferedImage image = null;
+    private ScreenBounds bounds = new ScreenBounds();
 
-	public BufferedImage getScreenCapture()
-	{
-		screenRectangle = bounds.getBounds();
+    public BufferedImage getScreenCapture()
+    {
+        screenRectangle = bounds.getBounds();
 
-		try
-		{
-			// Dimension screenSize = new Dimension(screenRectangle.width,
-			// screenRectangle.height);
+        try
+        {
+            // Dimension screenSize = new Dimension(screenRectangle.width,
+            // screenRectangle.height);
 
-			Robot robot = new Robot();
-			image = robot.createScreenCapture(screenRectangle);
-		} catch (Exception e)
-		{
-			e.printStackTrace();
-		}
-		return image;
-	}
+            Robot robot = new Robot();
+            image = robot.createScreenCapture(screenRectangle);
+        } catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+        return image;
+    }
 }

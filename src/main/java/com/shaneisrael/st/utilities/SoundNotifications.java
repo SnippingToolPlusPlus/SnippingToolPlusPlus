@@ -8,22 +8,25 @@ import javax.sound.sampled.Clip;
 
 public class SoundNotifications
 {
-	public static void playDing() 
-	{
-		new Thread(new Runnable()
-		{
-		  @Override
-		public void run() {
-		    try {
-		      Clip clip = AudioSystem.getClip();
-		      URL url = SoundNotifications.class.getResource("/sounds/ding.wav");
-		      AudioInputStream inputStream = AudioSystem.getAudioInputStream(url);
-		      clip.open(inputStream);
-		      clip.start(); 
-		    } catch (Exception e) {
-		      System.err.println(e.getMessage());
-		    }
-		  }
-		}).start();
-	}
+    public static void playDing()
+    {
+        new Thread(new Runnable()
+        {
+            @Override
+            public void run()
+            {
+                try
+                {
+                    Clip clip = AudioSystem.getClip();
+                    URL url = SoundNotifications.class.getResource("/sounds/ding.wav");
+                    AudioInputStream inputStream = AudioSystem.getAudioInputStream(url);
+                    clip.open(inputStream);
+                    clip.start();
+                } catch (Exception e)
+                {
+                    System.err.println(e.getMessage());
+                }
+            }
+        }).start();
+    }
 }
