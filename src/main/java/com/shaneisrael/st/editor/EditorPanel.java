@@ -26,14 +26,13 @@ import com.shaneisrael.st.utilities.ImageManipulator;
 
 public class EditorPanel extends JPanel implements MouseMotionListener, MouseListener
 {
+    private static final long serialVersionUID = -8925388346037613270L;
     private Image image;
     private BufferedImage editingLayer;
-    private Graphics2D editG2D, layerG2D, textLayerG2D; // layerG2D is the
-                                                        // transparent layer for
-                                                        // rectangles and other
-                                                        // shapes not lines
-    private Graphics2D addG2D; // This is for adding the final edits to the main
-                               // image before upload
+    //laygerG2D is the transparent layer for rectangles and other shapes not lines
+    private Graphics2D editG2D, layerG2D, textLayerG2D;
+    //this is for adding the final edits to the main image before upload
+    private Graphics2D addG2D;
     private Color fillColor = Color.red;
     private Color borderColor = Color.black;
     private String tool = "pencil";
@@ -65,7 +64,7 @@ public class EditorPanel extends JPanel implements MouseMotionListener, MouseLis
 
     /*
      * 
-     * /* TODO: Update how drawing text works. First, draw out a box, this box
+     * TODO: Update how drawing text works. First, draw out a box, this box
      * will be the bounds of where you can draw text. use this code int chars =
      * g.getFontMetrics().stringWidth(text); to get the string length in pixels
      * so that you know when your at the edge of the box and have to create a
@@ -95,8 +94,7 @@ public class EditorPanel extends JPanel implements MouseMotionListener, MouseLis
         layerG2D.setColor(fillColor);
 
         textLayerG2D = editingLayer.createGraphics();
-        textLayerG2D.setBackground(new Color(0, 0, 0, 0)); // set layer
-                                                           // transparent
+        textLayerG2D.setBackground(new Color(0, 0, 0, 0)); // set layer transparent
         textLayerG2D.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_IN, 0.0f));
         textLayerG2D = editingLayer.createGraphics();
         textLayerG2D.setColor(fillColor);
@@ -174,10 +172,11 @@ public class EditorPanel extends JPanel implements MouseMotionListener, MouseLis
 
     public void setTool(String tool)
     {
-        if (!drawText.equals("")) // If there is text on the screen, and the
-                                  // tool is changed. We want that text added
-                                  // to the final image.
+        // If there is text on the screen, and the tool is changed. We want that text added to the final image.
+        if (!drawText.equals(""))
+        {
             forceDrawText();
+        }
         this.tool = tool;
     }
 
@@ -190,14 +189,6 @@ public class EditorPanel extends JPanel implements MouseMotionListener, MouseLis
         my = me.getY();
 
         draw(); // get selected tool and draw
-        //
-        //		try
-        //		{
-        //			Thread.sleep(1);
-        //		} catch (InterruptedException e)
-        //		{
-        //			e.printStackTrace();
-        //		}
 
         this.repaint();
     }
@@ -205,8 +196,9 @@ public class EditorPanel extends JPanel implements MouseMotionListener, MouseLis
     private void draw()
     {
         if (tool.equals("pencil"))
+        {
             drawPenLine(mx, my, lastX, lastY);
-        else if (tool.equals("line"))
+        } else if (tool.equals("line"))
         {
             layerG2D.clearRect(0, 0, editSize.width, editSize.height);
             layerG2D.setBackground(new Color(0, 0, 0, 0));
@@ -244,13 +236,18 @@ public class EditorPanel extends JPanel implements MouseMotionListener, MouseLis
     public Rectangle draggedRect()
     {
         if (mx < 0)
+        {
             selection.setFrameFromDiagonal(clickPoint, new Point(0, my));
-        else if (my < 0)
+        } else if (my < 0)
+        {
             selection.setFrameFromDiagonal(clickPoint, new Point(mx, 0));
-        else if (my < 0 && mx < 0)
+        } else if (my < 0 && mx < 0)
+        {
             selection.setFrameFromDiagonal(clickPoint, new Point(0, 0));
-        else
+        } else
+        {
             selection.setFrameFromDiagonal(clickPoint, new Point(mx, my));
+        }
         return selection.getBounds();
     }
 
@@ -271,7 +268,9 @@ public class EditorPanel extends JPanel implements MouseMotionListener, MouseLis
     private void drawString(Graphics g, String text, int x, int y)
     {
         for (String line : text.split("\n"))
+        {
             g.drawString(line, x, y += 8);
+        }
     }
 
     private void drawPenLine(int mx2, int my2, int lastX2, int lastY2)
@@ -304,11 +303,8 @@ public class EditorPanel extends JPanel implements MouseMotionListener, MouseLis
 
     private void createBlurSelection(Graphics2D g)
     {
-        blurredSelection = draggedRect(); // this variable is set so that later
-                                          // in the addEditToImage method, it
-                                          // can retrieve the subimage at that
-                                          // location and blur it then add it.
-
+        // this variable is set so that later in the addEditToImage method, it can retrieve the subimage at that location and blur it then add it.
+        blurredSelection = draggedRect();
         g.setStroke(dashed_stroke);
         g.setColor(new Color(0, 0, 0, 200));
         g.draw(blurredSelection);
@@ -398,14 +394,18 @@ public class EditorPanel extends JPanel implements MouseMotionListener, MouseLis
         // Skips pencil tool because the pencil is added directly
 
         if (tool.equals("rectangle"))
+        {
             drawRectangle(addG2D);
-        else if (tool.equals("line"))
+        } else if (tool.equals("line"))
+        {
             drawLine(addG2D);
-        else if (tool.equals("filled rectangle"))
+        } else if (tool.equals("filled rectangle"))
+        {
             drawFilledRectangle(addG2D);
-        else if (tool.equals("bordered rectangle"))
+        } else if (tool.equals("bordered rectangle"))
+        {
             drawBorderedRectangle(addG2D);
-        else if (tool.equals("blur"))
+        } else if (tool.equals("blur"))
         {
             createBlur(addG2D); // create the blur from the selection
         } else if (tool.equals("text"))
@@ -429,7 +429,6 @@ public class EditorPanel extends JPanel implements MouseMotionListener, MouseLis
     @Override
     public void mouseClicked(MouseEvent e)
     {
-        // TODO Auto-generated method stub
         if (e.getButton() == MouseEvent.BUTTON1)
         {
             textPoint = new Point(e.getPoint().x, e.getPoint().y);
@@ -441,15 +440,11 @@ public class EditorPanel extends JPanel implements MouseMotionListener, MouseLis
     @Override
     public void mouseEntered(MouseEvent arg0)
     {
-        // TODO Auto-generated method stub
-
     }
 
     @Override
     public void mouseExited(MouseEvent arg0)
     {
-        // TODO Auto-generated method stub
-
     }
 
     @Override
@@ -462,7 +457,9 @@ public class EditorPanel extends JPanel implements MouseMotionListener, MouseLis
     public void mouseReleased(MouseEvent arg0)
     {
         if (!tool.equals("pencil") && !tool.equals("text"))
+        {
             layerG2D.clearRect(0, 0, editSize.width, editSize.height);
+        }
         addEditToImage();
     }
 
@@ -499,14 +496,8 @@ public class EditorPanel extends JPanel implements MouseMotionListener, MouseLis
         }
     }
 
-    private void displayMessage(String title, String subtext)
-    {
-        Main.displayInfoMessage(title, subtext);
-    }
-
     public String getTool()
     {
-        // TODO Auto-generated method stub
         return tool;
     }
 

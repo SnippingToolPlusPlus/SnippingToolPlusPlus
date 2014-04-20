@@ -7,6 +7,7 @@ import javax.swing.JPanel;
 
 public class ColorSelectionPanel extends JPanel
 {
+    private static final long serialVersionUID = 3147366598069033090L;
     private Color color = Color.red;
 
     @Override
@@ -31,7 +32,6 @@ public class ColorSelectionPanel extends JPanel
 
     public Color getColor()
     {
-        // TODO Auto-generated method stub
         return color;
     }
 

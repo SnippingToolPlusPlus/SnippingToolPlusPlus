@@ -63,6 +63,7 @@ import com.shaneisrael.st.utilities.Upload;
 public class Editor extends JFrame implements MouseMotionListener
 {
 
+    private static final long serialVersionUID = -3724445600454013870L;
     private Color fillColor;
     private Color borderColor;
     private JColorChooser colorChooser;
@@ -72,7 +73,6 @@ public class Editor extends JFrame implements MouseMotionListener
     private JRadioButton rdbtnSave;
     private JSlider opacitySlider;
     private JSlider strokeSlider;
-    private ColorSelectionPanel colorSelection;
 
     private Upload upload;
     private JButton btnSubmit;
@@ -84,24 +84,6 @@ public class Editor extends JFrame implements MouseMotionListener
     private KeyboardFocusManager manager;
     private KeyEventDispatcher keyDispatcher;
 
-    /*
-     * KNOWN BUGS
-     */
-
-    /**
-     * Launch the application.
-     */
-    public static void main(String[] args)
-    {
-        try
-        {
-            UIManager.setLookAndFeel("com.sun.java.swing.plaf.windows.WindowsLookAndFeel");
-        } catch (Exception e)
-        {
-        }
-
-    }
-
     /**
      * Create the application.
      * 
@@ -109,62 +91,46 @@ public class Editor extends JFrame implements MouseMotionListener
      */
     public Editor(BufferedImage img, int mode)
     {
-
         this.addWindowListener(new WindowListener()
         {
-
             @Override
             public void windowOpened(WindowEvent arg0)
             {
-                // TODO Auto-generated method stub
-
             }
 
             @Override
             public void windowIconified(WindowEvent arg0)
             {
-                // TODO Auto-generated method stub
-
             }
 
             @Override
             public void windowDeiconified(WindowEvent arg0)
             {
-                // TODO Auto-generated method stub
-
             }
 
             @Override
             public void windowDeactivated(WindowEvent arg0)
             {
-                // TODO Auto-generated method stub
-
             }
 
             @Override
             public void windowClosing(WindowEvent arg0)
             {
-                // garbage collect
-
             }
 
             @Override
             public void windowClosed(WindowEvent arg0)
             {
-                // TODO Auto-generated method stub
                 System.gc();
             }
 
             @Override
             public void windowActivated(WindowEvent arg0)
             {
-                // TODO Auto-generated method stub
-
             }
         });
 
         setIconImage(Toolkit.getDefaultToolkit().getImage(Editor.class.getResource("/images/icons/utilities.png")));
-        // setType(this.Type.POPUP);
 
         this.mode = mode;
 
@@ -233,23 +199,18 @@ public class Editor extends JFrame implements MouseMotionListener
         colorChooser = new JColorChooser();
         editingPanel = new EditorPanel(img, this);
         editingPanel.setBackground(new Color(0, 0, 0, 0));
-        imageDimension = new Dimension(img.getWidth(), img.getHeight()); // get
-                                                                         // the
-                                                                         // height
-                                                                         // of
-                                                                         // the
-                                                                         // screen
-                                                                         // capture
-                                                                         // for
-                                                                         // the
-                                                                         // scrollpane
+        //get the height of the screen capture for the scrollpane
+        imageDimension = new Dimension(img.getWidth(), img.getHeight());
         this.addMouseMotionListener(this);
         initialize();
 
         if (this.mode == Overlay.SAVE)
+        {
             rdbtnSave.setSelected(true);
-        else if (this.mode == Overlay.UPLOAD)
+        } else if (this.mode == Overlay.UPLOAD)
+        {
             rdbtnUpload.setSelected(true);
+        }
     }
 
     /**
@@ -299,7 +260,7 @@ public class Editor extends JFrame implements MouseMotionListener
 
                 try
                 {
-                    Color c = colorChooser.showDialog(null, "Fill Color", new Color(255, 0, 0));
+                    Color c = JColorChooser.showDialog(null, "Fill Color", new Color(255, 0, 0));
                     fillColor = new Color(c.getRed(), c.getGreen(), c.getBlue(), c.getAlpha());
                     if (c.getTransparency() != 1.0)
                         opacitySlider.setValue((int) (c.getTransparency() * 10));
@@ -326,7 +287,7 @@ public class Editor extends JFrame implements MouseMotionListener
                 layeredPane.setLayer(fillColorPanel, 0);
                 try
                 {
-                    Color c = colorChooser.showDialog(null, "Border Color", new Color(255, 255, 255));
+                    Color c = JColorChooser.showDialog(null, "Border Color", new Color(255, 255, 255));
                     borderColor = new Color(c.getRed(), c.getGreen(), c.getBlue(), c.getAlpha());
                     if (c.getTransparency() != 1.0)
                         opacitySlider.setValue((int) (c.getTransparency() * 10));
@@ -608,7 +569,7 @@ public class Editor extends JFrame implements MouseMotionListener
         opacitySlider.setMajorTickSpacing(25);
         opacitySlider.setValue(255);
         // Create the label table
-        Hashtable labelTable = new Hashtable();
+        Hashtable<Integer, JLabel> labelTable = new Hashtable<>();
         labelTable.put(new Integer(0), new JLabel("0%"));
         labelTable.put(new Integer(25), new JLabel("25%"));
         labelTable.put(new Integer(50), new JLabel("50%"));
@@ -617,7 +578,7 @@ public class Editor extends JFrame implements MouseMotionListener
         opacitySlider.setLabelTable(labelTable);
 
         // Create the label table
-        Hashtable labelTable2 = new Hashtable();
+        Hashtable<Integer, JLabel> labelTable2 = new Hashtable<>();
         labelTable2.put(new Integer(0), new JLabel("0"));
         labelTable2.put(new Integer(10), new JLabel("1"));
         labelTable2.put(new Integer(20), new JLabel("2"));
@@ -759,8 +720,6 @@ public class Editor extends JFrame implements MouseMotionListener
     @Override
     public void mouseDragged(MouseEvent e)
     {
-        // TODO Auto-generated method stub
-
     }
 
     @Override
@@ -776,15 +735,17 @@ public class Editor extends JFrame implements MouseMotionListener
 
     public void submit()
     {
-        if (!editingPanel.getText().equals("")) // if there is text that has not
-                                                // been processed yet
+        // if there is text that has not been processed yet
+        if (!editingPanel.getText().equals(""))
+        {
             editingPanel.forceDrawText();
+        }
 
-        if (mode == 0) // save
+        if (mode == Overlay.SAVE)
         {
             save = new Save();
             save.save(getEditedImage());
-        } else if (mode == 1) // upload
+        } else if (mode == Overlay.UPLOAD)
         {
             upload = new Upload(getEditedImage(), false);
         }
@@ -794,9 +755,11 @@ public class Editor extends JFrame implements MouseMotionListener
 
     public void submitToReddit()
     {
-        if (!editingPanel.getText().equals("")) // if there is text that has not
-                                                // been processed yet
+        // if there is text that has notbeen processed yet
+        if (!editingPanel.getText().equals(""))
+        {
             editingPanel.forceDrawText();
+        }
 
         upload = new Upload(getEditedImage(), true);
     }
