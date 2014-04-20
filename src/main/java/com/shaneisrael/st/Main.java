@@ -433,7 +433,6 @@ public class Main extends JFrame implements ActionListener
             ClipboardUtilities.uploadImage();
         } else if (command.equals("about"))
         {
-
             new AboutFrame();
         } else if (command.equals("viewer"))
         {
@@ -473,17 +472,6 @@ public class Main extends JFrame implements ActionListener
         if (pointerEditor != null)
         {
             pointerEditor.dispose();
-        }
-    }
-
-    public static void doNotificatoinAction()
-    {
-        try
-        {
-            Desktop.getDesktop().open(new File(Preferences.DEFAULT_CAPTURE_DIR));
-        } catch (IOException e)
-        {
-            e.printStackTrace();
         }
     }
 }
