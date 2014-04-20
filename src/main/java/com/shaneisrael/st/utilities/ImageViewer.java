@@ -50,7 +50,7 @@ import com.shaneisrael.st.overlay.Overlay;
 public class ImageViewer
 {
 
-    private JFrame Viewer;
+    private JFrame viewer;
     private JTextField linkField;
     private JTextField deleteField;
     private ViewerPanel imagePanel;
@@ -83,8 +83,8 @@ public class ImageViewer
 
     private void initialize()
     {
-        Viewer = new JFrame();
-        Viewer.addWindowListener(new WindowListener()
+        viewer = new JFrame();
+        viewer.addWindowListener(new WindowListener()
         {
 
             @Override
@@ -124,15 +124,15 @@ public class ImageViewer
             {
             }
         });
-        Viewer.setIconImage(Toolkit.getDefaultToolkit().getImage(
+        viewer.setIconImage(Toolkit.getDefaultToolkit().getImage(
                 ImageViewer.class.getResource("/images/icons/folder.png")));
-        Viewer.setTitle("Viewer");
-        Viewer.setBounds(100, 100, 612, 458);
-        Viewer.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
-        Viewer.getContentPane().setLayout(new BorderLayout(0, 0));
+        viewer.setTitle("Viewer");
+        viewer.setBounds(100, 100, 612, 458);
+        viewer.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+        viewer.getContentPane().setLayout(new BorderLayout(0, 0));
 
         final JPanel panel = new JPanel();
-        Viewer.getContentPane().add(panel, BorderLayout.CENTER);
+        viewer.getContentPane().add(panel, BorderLayout.CENTER);
         panel.setLayout(new MigLayout("", "[100.00][298.00,grow]", "[28.00][][337.00,grow][][][]"));
 
         JPanel panel_1 = new JPanel();
@@ -325,7 +325,7 @@ public class ImageViewer
         btnUploads.setSelected(true);
 
         setListModel();
-        Viewer.setVisible(true);
+        viewer.setVisible(true);
         btnCaptures.setFocusable(false);
         btnUploads.setFocusable(false);
     }

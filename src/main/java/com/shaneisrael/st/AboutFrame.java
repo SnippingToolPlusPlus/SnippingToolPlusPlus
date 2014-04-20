@@ -16,12 +16,8 @@ import javax.swing.WindowConstants;
 import javax.swing.event.HyperlinkEvent;
 import javax.swing.event.HyperlinkListener;
 import javax.swing.text.html.HTMLEditorKit;
-import javax.swing.text.html.StyleSheet;
 
 import net.miginfocom.swing.MigLayout;
-
-import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
 
 import com.shaneisrael.st.data.Preferences;
 
@@ -30,10 +26,6 @@ public class AboutFrame
 
     private JFrame frmAbout;
     private JEditorPane dtrpnSnippingToolIs;
-
-    private JSONObject pref; // outputs
-    private JSONObject prefIn; // inputs
-    private JSONParser prefParser;
 
     private String version = Preferences.VERSION;
 
@@ -84,8 +76,6 @@ public class AboutFrame
         frmAbout.setVisible(true);
 
         HTMLEditorKit kit = new HTMLEditorKit();
-        StyleSheet styleSheet = kit.getStyleSheet();
-        // styleSheet.addRule("A {color:red}"); //change links to red
 
         JPanel panel = new JPanel();
         frmAbout.getContentPane().add(panel, BorderLayout.CENTER);

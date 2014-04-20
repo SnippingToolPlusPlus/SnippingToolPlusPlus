@@ -29,7 +29,6 @@ public class MultiUploader extends JFrame
 
     private static final long serialVersionUID = 5181546503719168014L;
     private JPanel contentPane;
-    private Upload upload;
     private JTextArea linkBox;
     private JTextArea pathBox;
     private MultiUploaderThread mut;
@@ -39,9 +38,6 @@ public class MultiUploader extends JFrame
     private int current_upload = 0;
     private JTextArea deletionBox;
 
-    /**
-     * Create the frame.
-     */
     public MultiUploader()
     {
         setTitle("Multi Image Uploader");
@@ -158,7 +154,9 @@ public class MultiUploader extends JFrame
                 for (String link : linkBox.getText().split("\\n"))
                 {
                     if (link.contains("imgur"))
+                    {
                         links += link + "\n";
+                    }
                 }
                 ClipboardUtilities.setClipboard(links);
             }

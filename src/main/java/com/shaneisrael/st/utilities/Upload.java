@@ -110,7 +110,7 @@ public class Upload extends Thread
         this.interrupt();
     }
 
-    private Boolean uploadToImgur(BufferedImage img)
+    private boolean uploadToImgur(BufferedImage img)
     {
         /**
          * Uploads any buffered image to imgur and retrieves the link
