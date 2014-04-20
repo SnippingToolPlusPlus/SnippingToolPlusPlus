@@ -22,6 +22,7 @@ import javax.swing.border.Border;
 
 public class SlidingNotification extends Notification
 {
+    private static final long serialVersionUID = 6993558070289918427L;
 
     public static void main(String[] args)
     {
@@ -51,7 +52,7 @@ public class SlidingNotification extends Notification
         String os = System.getProperty("os.name");
         if (os.contains("Windows"))
         {
-            this.setType(Type.UTILITY); //When testing on mac this line needs to be commented out
+            this.setType(Type.UTILITY);
         }
         panel = new JPanel();
         panel.setBorder(panelBorder);
@@ -102,9 +103,12 @@ public class SlidingNotification extends Notification
         JLabel imageLbl = new JLabel("");
         imageLbl.setIcon(icon);
         if (rounded_notification)
+        {
             imageLbl.setBounds(10, 5, 46, 14);
-        else
+        } else
+        {
             imageLbl.setBounds(5, 5, 46, 14);
+        }
 
         panel.add(imageLbl);
 
@@ -189,7 +193,7 @@ public class SlidingNotification extends Notification
             }
 
         });
-        this.pauseTimer = new Timer(notification_pause_time, new ActionListener()
+        this.pauseTimer = new Timer(notificationPauseTimeInMs, new ActionListener()
         {
             @Override
             public void actionPerformed(ActionEvent e)
@@ -278,7 +282,6 @@ public class SlidingNotification extends Notification
     @Override
     public JPanel getPanel()
     {
-        // TODO Auto-generated method stub
         return panel;
     }
 

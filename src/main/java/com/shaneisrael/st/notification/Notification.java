@@ -18,6 +18,7 @@ import javax.swing.border.Border;
 
 public abstract class Notification extends JFrame
 {
+    private static final long serialVersionUID = -489052526732366281L;
     protected Component comp = null;
     protected JPanel panel;
     protected JLabel lblTitle;
@@ -52,8 +53,7 @@ public abstract class Notification extends JFrame
     protected float slideOutTimerRate = 1f;
     protected float slideInTimerRate = 1f;
 
-    protected int notification_pause_time = 5000; // time in ms, 5000 = 5
-                                                  // seconds
+    protected int notificationPauseTimeInMs = 5000;
     protected int wait_time = 0;
 
     protected int offScreenPosition;
@@ -88,15 +88,13 @@ public abstract class Notification extends JFrame
         String os = System.getProperty("os.name");
         Insets screenMax = getToolkit().getScreenInsets(getGraphicsConfiguration());
 
-        if (comp == null) // if not tied to any component display at these
-                          // default locations
+        // if not tied to any component display at these default locations
+        if (comp == null)
         {
             offScreenPosition = (int) getToolkit().getScreenSize().getWidth();
             if (os.contains("Windows"))
             {
-                /*
-                 * Set it to the bottom right of the screen above the task tray;
-                 */
+                // Set it to the bottom right of the screen above the task tray;
                 int taskbarSize = screenMax.bottom;
                 int taskbarYlocation = getToolkit().getScreenSize().height - taskbarSize;
                 balloonPosition = new Point(getToolkit().getScreenSize().width - getWidth() - margin, taskbarYlocation
@@ -104,9 +102,7 @@ public abstract class Notification extends JFrame
                 setLocation(offScreenPosition, balloonPosition.y);
             } else if (os.contains("Mac"))
             {
-                /*
-                 * Set it to the top right of the screen below the task tray
-                 */
+                //Set it to the top right of the screen below the task tray
                 int taskbarSize = screenMax.top;
                 int taskbarYlocation = taskbarSize;
                 balloonPosition = new Point(getToolkit().getScreenSize().width - getWidth() - margin, taskbarYlocation
@@ -114,8 +110,8 @@ public abstract class Notification extends JFrame
                 setLocation(offScreenPosition, balloonPosition.y);
             }
         } else
-        // display at whereve the component is located on the screen
         {
+            // display at wherever the component is located on the screen
             offScreenPosition = (int) (comp.getLocation().getX() + getWidth());
             balloonPosition = new Point(comp.getX(), comp.getY() - getHeight() - margin);
             setLocation(offScreenPosition, balloonPosition.y);
@@ -123,9 +119,6 @@ public abstract class Notification extends JFrame
 
     }
 
-    /*
-     * SET METHODS
-     */
     public void setBackgroundColor(Color c)
     {
         backgroundColor = c;
@@ -201,7 +194,7 @@ public abstract class Notification extends JFrame
 
     public void setPauseTime(int ms)
     {
-        notification_pause_time = ms;
+        notificationPauseTimeInMs = ms;
     }
 
     public void setWaitTime(int ms)
@@ -224,9 +217,6 @@ public abstract class Notification extends JFrame
         rounded_notification = rounded;
     }
 
-    /*
-     * GET METHODS
-     */
     public Color getBackgroundColor()
     {
         return backgroundColor;
@@ -289,7 +279,7 @@ public abstract class Notification extends JFrame
 
     public int getPauseTime()
     {
-        return notification_pause_time;
+        return notificationPauseTimeInMs;
     }
 
     public int getWaitTime()
