@@ -10,7 +10,6 @@ import com.shaneisrael.st.data.Preferences;
 
 public class Save
 {
-    private int total_captures = 0;
     private String location;
     private File savLoc;
 
@@ -30,7 +29,6 @@ public class Save
             savLoc = new File(location + "/Captures/capture(" + index + ").png");
         } while (savLoc.exists());
 
-        total_captures = index;
         try
         {
             ImageIO.write(img, "png", savLoc);

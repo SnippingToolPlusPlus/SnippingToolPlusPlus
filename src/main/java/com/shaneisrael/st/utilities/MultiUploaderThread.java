@@ -33,6 +33,8 @@ public class MultiUploaderThread extends Thread
             mu.addLink(upLink[0]);
             mu.addDeletionLink(delLink[0]);
         } else
+        {
             mu.addLink("Unknown Error returning link");
+        }
     }
 }

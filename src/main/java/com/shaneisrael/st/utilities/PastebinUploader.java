@@ -16,10 +16,8 @@ import com.shaneisrael.st.Main;
 
 public class PastebinUploader extends Thread
 {
-    private String PASTEBIN_URI = "http://pastebin.com/api/api_post.php";
-    private String PASTEBIN_LOGIN_URI = "http://pastebin.com/api/api_login.php";
-    private String PASTEBIN_API_KEY = "4460c93cce03147d2142f26a02941642";
-    private String PASTEBIN_USER_KEY;
+    private final String PASTEBIN_URI = "http://pastebin.com/api/api_post.php";
+    private final String PASTEBIN_API_KEY = "4460c93cce03147d2142f26a02941642";
     private String pastebinError = "Unknown Error";
 
     private Thread uploadThread;
@@ -32,7 +30,6 @@ public class PastebinUploader extends Thread
         uploadText = text;
         uploadThread = new Thread(this);
         uploadThread.start();
-
     }
 
     @Override
@@ -49,11 +46,12 @@ public class PastebinUploader extends Thread
             Main.displayInfoMessage("Upload Successful!", "Link copied to clipboard.");
             SoundNotifications.playDing();
         } else
+        {
             Main.displayErrorMessage("Error Uploading!", "Error Code: " + pastebinError);
+        }
 
         // set back to the default image
         Main.trayIcon.setImage(new ImageIcon(this.getClass().getResource("/images/trayIcon.png")).getImage());
-
     }
 
     private boolean uploadToPastebin(String uploadText2)
@@ -86,8 +84,12 @@ public class PastebinUploader extends Thread
             String decodedString;
 
             while ((decodedString = in.readLine()) != null)
+            {
                 if (decodedString.contains("pastebin.com"))
+                {
                     ClipboardUtilities.setClipboard(decodedString);
+                }
+            }
             in.close();
 
             return true;
@@ -96,7 +98,6 @@ public class PastebinUploader extends Thread
         {
             e.printStackTrace();
         }
-
         return false;
     }
 }

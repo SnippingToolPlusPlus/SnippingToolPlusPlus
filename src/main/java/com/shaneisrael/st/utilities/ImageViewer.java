@@ -3,7 +3,6 @@ package com.shaneisrael.st.utilities;
 import java.awt.BorderLayout;
 import java.awt.Desktop;
 import java.awt.Dimension;
-import java.awt.EventQueue;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -37,7 +36,6 @@ import javax.swing.JTextField;
 import javax.swing.JToggleButton;
 import javax.swing.ListSelectionModel;
 import javax.swing.ScrollPaneConstants;
-import javax.swing.UIManager;
 import javax.swing.WindowConstants;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
@@ -61,10 +59,9 @@ public class ImageViewer
     private JToggleButton btnCaptures;
     private JToggleButton btnUploads;
     private JButton btnCopy;
-    private JList list;
+    private JList<?> list;
 
-    private String value = ""; // The selected item text used for grabbed an
-                               // image
+    private String value = ""; // The selected item text used for grabbed an image
 
     int correctedIndex = 0;
 
@@ -78,47 +75,12 @@ public class ImageViewer
 
     private String imageURL;
 
-    /**
-     * Launch the application.
-     */
-    public static void main(String[] args)
-    {
-        EventQueue.invokeLater(new Runnable()
-        {
-            @Override
-            public void run()
-            {
-                try
-                {
-                    ImageViewer window = new ImageViewer();
-                    window.Viewer.setVisible(true);
-                    try
-                    {
-                        UIManager.setLookAndFeel("com.sun.java.swing.plaf.windows.WindowsLookAndFeel");
-                    } catch (Exception e)
-                    {
-                    }
-                } catch (Exception e)
-                {
-                    e.printStackTrace();
-                }
-            }
-        });
-    }
-
-    /**
-     * Create the application.
-     */
     public ImageViewer()
     {
         addLinksToList();
         initialize();
-
     }
 
-    /**
-     * Initialize the contents of the frame.
-     */
     private void initialize()
     {
         Viewer = new JFrame();
@@ -128,29 +90,21 @@ public class ImageViewer
             @Override
             public void windowOpened(WindowEvent e)
             {
-                // TODO Auto-generated method stub
-
             }
 
             @Override
             public void windowIconified(WindowEvent e)
             {
-                // TODO Auto-generated method stub
-
             }
 
             @Override
             public void windowDeiconified(WindowEvent e)
             {
-                // TODO Auto-generated method stub
-
             }
 
             @Override
             public void windowDeactivated(WindowEvent e)
             {
-                // TODO Auto-generated method stub
-
             }
 
             @Override
@@ -162,15 +116,12 @@ public class ImageViewer
             @Override
             public void windowClosed(WindowEvent e)
             {
-                // TODO Auto-generated method stub
                 System.gc();
             }
 
             @Override
             public void windowActivated(WindowEvent e)
             {
-                // TODO Auto-generated method stub
-
             }
         });
         Viewer.setIconImage(Toolkit.getDefaultToolkit().getImage(
@@ -217,7 +168,7 @@ public class ImageViewer
         JScrollPane scrollPane = new JScrollPane();
         panel.add(scrollPane, "cell 0 2,grow");
 
-        list = new JList();
+        list = new JList<>();
         list.addListSelectionListener(new ListSelectionListener()
         {
             @Override
@@ -259,7 +210,6 @@ public class ImageViewer
                             }
                         } catch (IOException e1)
                         {
-                            // TODO Auto-generated catch block
                             e1.printStackTrace();
                         }
                         imagePanel.setImage(image);
@@ -268,7 +218,9 @@ public class ImageViewer
                         // Viewer.setSize(Viewer.getWidth()+1,
                         // Viewer.getHeight());
                         if (btnUploads.isSelected())
-                            setLinks(); // set the links
+                        {
+                            setLinks();
+                        }
                     }
                 }
             }
@@ -333,11 +285,9 @@ public class ImageViewer
 
                 } catch (URISyntaxException e1)
                 {
-                    // TODO Auto-generated catch block
                     e1.printStackTrace();
                 } catch (IOException e1)
                 {
-                    // TODO Auto-generated catch block
                     e1.printStackTrace();
                 }
             }
@@ -403,11 +353,9 @@ public class ImageViewer
 
         } catch (FileNotFoundException e)
         {
-            // TODO Auto-generated catch block
             e.printStackTrace();
         } catch (IOException e)
         {
-            // TODO Auto-generated catch block
             e.printStackTrace();
         }
 
@@ -439,7 +387,6 @@ public class ImageViewer
         } else
         {
             /*
-             * 
              * REDO THIS JUST LIKE DONE ABOVE
              */
             int index = 0;

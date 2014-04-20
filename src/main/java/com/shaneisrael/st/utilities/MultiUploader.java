@@ -27,6 +27,7 @@ import java.awt.GridLayout;
 public class MultiUploader extends JFrame
 {
 
+    private static final long serialVersionUID = 5181546503719168014L;
     private JPanel contentPane;
     private Upload upload;
     private JTextArea linkBox;
@@ -115,8 +116,7 @@ public class MultiUploader extends JFrame
             @Override
             public void actionPerformed(ActionEvent e)
             {
-                // upload each image and get the return link and add it to the
-                // link box.
+                // upload each image and get the return link and add it to the link box
                 if (!pathBox.getText().equals(""))
                 {
                     uploadFiles();

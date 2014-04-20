@@ -20,7 +20,6 @@ public class CaptureScreen
         {
             // Dimension screenSize = new Dimension(screenRectangle.width,
             // screenRectangle.height);
-
             Robot robot = new Robot();
             image = robot.createScreenCapture(screenRectangle);
         } catch (Exception e)

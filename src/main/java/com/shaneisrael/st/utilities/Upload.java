@@ -25,14 +25,8 @@ public class Upload extends Thread
 {
     private String IMGUR_POST_URI = "http://api.imgur.com/2/upload.xml";
     private String IMGUR_API_KEY = "e9095ffb6a818372fdf2fa927cb46f27";
-    private String CLIENT_ID = "492ba258a08820f"; // currently unused (for api
-                                                  // version 3)
-    private String CLIENT_SECRET = "8778dec43297a55f3e4768a5b8a5e6203ef12c4a"; // currently
-                                                                               // unused
-                                                                               // (for
-                                                                               // api
-                                                                               // version
-                                                                               // 3)
+    private String CLIENT_ID = "492ba258a08820f"; // currently unused (for api version 3)
+    private String CLIENT_SECRET = "8778dec43297a55f3e4768a5b8a5e6203ef12c4a"; // currently unused (for api version 3)
 
     private String os = System.getProperty("os.name");
 
@@ -50,7 +44,6 @@ public class Upload extends Thread
 
     public Upload()
     {
-
     }
 
     public Upload(BufferedImage img, boolean reddit)
@@ -76,8 +69,10 @@ public class Upload extends Thread
         Main.displayInfoMessage("Uploading...", "Link will be available shortly");
 
         boolean uploaded = false;
-        if (Preferences.DEFAULT_UPLOAD_PROVIDER == 0) // imgur
+        if (Preferences.DEFAULT_UPLOAD_PROVIDER == 0) //imgur
+        {
             uploaded = uploadToImgur(image);
+        }
 
         if (uploaded)
         {
@@ -200,10 +195,4 @@ public class Upload extends Thread
         }
         return "Error uploading file type: ." + type + " | Only image files allowed.";
     }
-
-    private Boolean uploadToMinus(BufferedImage img)
-    {
-        return false;
-    }
-
 }

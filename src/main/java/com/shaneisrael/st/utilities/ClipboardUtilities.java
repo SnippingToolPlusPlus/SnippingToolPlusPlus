@@ -13,8 +13,6 @@ import com.shaneisrael.st.Main;
 
 public abstract class ClipboardUtilities implements ClipboardOwner
 {
-    private static Upload upload;
-
     /**
      * Sets the system clipboard to a String input
      * 
@@ -90,16 +88,16 @@ public abstract class ClipboardUtilities implements ClipboardOwner
             img = getImageFromClipboard();
         } catch (Exception e1)
         {
-            // TODO Auto-generated catch block
             e1.printStackTrace();
         }
 
         if (img == null)
         {
-
             Main.displayErrorMessage("Upload Error", "An image could not be found in the clipboard.");
         } else
-            upload = new Upload(img, false);
+        {
+            new Upload(img, false);
+        }
     }
 
     /**
@@ -116,10 +114,8 @@ public abstract class ClipboardUtilities implements ClipboardOwner
             try
             {
                 return (BufferedImage) transferable.getTransferData(DataFlavor.imageFlavor);
-            } // catch (UnsupportedFlavorException | IOException e) //Java 1.7
-            catch (Exception e)
+            } catch (Exception e)
             {
-                // TODO Auto-generated catch block
                 e.printStackTrace();
             }
         }
@@ -131,51 +127,4 @@ public abstract class ClipboardUtilities implements ClipboardOwner
     {
         new PastebinUploader(getClipboardText());
     }
-
-    private class TransferableImage implements Transferable
-    {
-
-        BufferedImage i;
-
-        public TransferableImage(BufferedImage i)
-        {
-            this.i = i;
-        }
-
-        @Override
-        public Object getTransferData(DataFlavor flavor) throws UnsupportedFlavorException, IOException
-        {
-            if (flavor.equals(DataFlavor.imageFlavor) && i != null)
-            {
-                return i;
-            } else
-            {
-                throw new UnsupportedFlavorException(flavor);
-            }
-        }
-
-        @Override
-        public DataFlavor[] getTransferDataFlavors()
-        {
-            DataFlavor[] flavors = new DataFlavor[1];
-            flavors[0] = DataFlavor.imageFlavor;
-            return flavors;
-        }
-
-        @Override
-        public boolean isDataFlavorSupported(DataFlavor flavor)
-        {
-            DataFlavor[] flavors = getTransferDataFlavors();
-            for (int i = 0; i < flavors.length; i++)
-            {
-                if (flavor.equals(flavors[i]))
-                {
-                    return true;
-                }
-            }
-
-            return false;
-        }
-    }
-
 }

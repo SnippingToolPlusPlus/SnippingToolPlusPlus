@@ -9,6 +9,7 @@ import javax.swing.JPanel;
 
 public class ViewerPanel extends JPanel
 {
+    private static final long serialVersionUID = -12723826586678160L;
     private BufferedImage image;
 
     @Override
@@ -17,14 +18,15 @@ public class ViewerPanel extends JPanel
         super.paintComponent(g);
         Graphics2D g2d = (Graphics2D) g;
         if (image != null)
+        {
             g2d.drawImage(image, 0, 0, null);
+        }
 
         try
         {
             Thread.sleep(1);
         } catch (InterruptedException e)
         {
-            // TODO Auto-generated catch block
             e.printStackTrace();
         }
         repaint();

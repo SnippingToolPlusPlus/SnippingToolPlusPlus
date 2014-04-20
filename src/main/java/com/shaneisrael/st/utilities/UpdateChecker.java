@@ -23,10 +23,10 @@ import com.shaneisrael.st.notification.SlidingNotification;
  */
 public class UpdateChecker
 {
-    private static String html_content = "";
-    static String update_site = "http://www.snippingtoolplusplus.co.nf";
-    static int latest_version;
-    static int current_version = Integer.parseInt(Preferences.VERSION.replace(".", ""));
+    private static String htmlContent = "";
+    static String updateSite = "http://www.snippingtoolplusplus.co.nf";
+    static int latestVersion;
+    static int currentVersion = Integer.parseInt(Preferences.VERSION.replace(".", ""));
 
     private static Notification updateNotification = new SlidingNotification(null);
     private JButton updateButton;
@@ -53,7 +53,6 @@ public class UpdateChecker
                     OpenBrowser.open(new URI("http://www.snippingtoolplusplus.co.nf"));
                 } catch (URISyntaxException e1)
                 {
-                    // TODO Auto-generated catch block
                     e1.printStackTrace();
                 }
             }
@@ -72,7 +71,6 @@ public class UpdateChecker
         /*
          * Creates the notification box. Must always be called with each new Notification instance. 
          * This method must be called any time the default variables are changed or else changes will not be made.
-
          */
         updateNotification.initialize();
 
@@ -82,8 +80,8 @@ public class UpdateChecker
     {
         try
         {
-            html_content = Jsoup.connect(update_site).timeout(30000).get().html();
-            BufferedReader bufReader = new BufferedReader(new StringReader(html_content));
+            htmlContent = Jsoup.connect(updateSite).timeout(30000).get().html();
+            BufferedReader bufReader = new BufferedReader(new StringReader(htmlContent));
 
             String line = null;
 
@@ -93,21 +91,18 @@ public class UpdateChecker
                 {
                     if (line.contains("Download"))
                     {
-                        html_content = line;
+                        htmlContent = line;
                         break;
                     }
                 }
 
-                String[] split = html_content.split(">Download");
+                String[] split = htmlContent.split(">Download");
                 split = split[1].split("</a>");
                 System.out.println(split[0]);
-                latest_version = Integer.parseInt(split[0].replace(" ", "").replace(".", ""));
+                latestVersion = Integer.parseInt(split[0].replace(" ", "").replace(".", ""));
 
-                if (current_version < latest_version)
+                if (currentVersion < latestVersion)
                 {
-                    String temp = "" + latest_version;
-                    String version = temp.charAt(0) + "." + temp.charAt(1) + "." + temp.charAt(2);
-
                     updateNotification.showBalloon("Update Available!", "");
                 }
             } catch (IOException e)

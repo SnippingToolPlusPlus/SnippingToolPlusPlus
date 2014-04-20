@@ -6,7 +6,7 @@ import java.net.URISyntaxException;
 
 public class OpenBrowser
 {
-    private static String reddit_submit_link = "www.reddit.com/submit?url=";
+    private static final String REDDIT_SUBMIT_LINK = "www.reddit.com/submit?url=";
 
     public static void open(URI link)
     {
@@ -29,10 +29,9 @@ public class OpenBrowser
         URI url = null;
         try
         {
-            url = new URI(reddit_submit_link + link);
+            url = new URI(REDDIT_SUBMIT_LINK + link);
         } catch (URISyntaxException e1)
         {
-            // TODO Auto-generated catch block
             e1.printStackTrace();
         }
         Desktop desktop = Desktop.isDesktopSupported() ? Desktop.getDesktop() : null;
@@ -42,7 +41,9 @@ public class OpenBrowser
             try
             {
                 if (url != null)
+                {
                     desktop.browse(url);
+                }
             } catch (Exception e)
             {
                 e.printStackTrace();
