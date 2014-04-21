@@ -10,7 +10,6 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.io.File;
-import java.io.IOException;
 
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
@@ -80,6 +79,7 @@ public class Main extends JFrame implements ActionListener
     public Main()
     {
         preferences = new Preferences();
+        System.out.println("Version: " + Preferences.getVersion());
         setUndecorated(true);
         setAlwaysOnTop(true);
 

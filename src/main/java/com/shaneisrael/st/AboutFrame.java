@@ -27,7 +27,7 @@ public class AboutFrame
     private JFrame frmAbout;
     private JEditorPane dtrpnSnippingToolIs;
 
-    private String version = Preferences.VERSION;
+    private String version = Preferences.getVersion();
 
     /**
      * Launch the application.

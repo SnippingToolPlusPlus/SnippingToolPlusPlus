@@ -26,7 +26,7 @@ public class UpdateChecker
     private static String htmlContent = "";
     static String updateSite = "http://www.snippingtoolplusplus.co.nf";
     static int latestVersion;
-    static int currentVersion = Integer.parseInt(Preferences.VERSION.replace(".", ""));
+    static int currentVersion = Integer.parseInt(Preferences.getVersion().replace(".", ""));
 
     private static Notification updateNotification = new SlidingNotification(null);
     private JButton updateButton;

@@ -24,11 +24,6 @@ public class SlidingNotification extends Notification
 {
     private static final long serialVersionUID = 6993558070289918427L;
 
-    public static void main(String[] args)
-    {
-        new SlidingNotification(null);
-    }
-
     /**
      * Create a new SlidingNotification.
      */
@@ -174,7 +169,9 @@ public class SlidingNotification extends Notification
             {
                 setLocation(getX() + 1, getY());
                 if (getX() > getToolkit().getScreenSize().getWidth())
+                {
                     slideOutTimer.stop();
+                }
             }
 
         });
@@ -184,8 +181,9 @@ public class SlidingNotification extends Notification
             public void actionPerformed(ActionEvent e)
             {
                 if (getX() >= balloonPosition.x)
+                {
                     setLocation(offScreenPosition -= 1, getY());
-                else
+                } else
                 {
                     setLocation(balloonPosition);
                     slideInTimer.stop();
@@ -257,9 +255,12 @@ public class SlidingNotification extends Notification
     private void setFrameShape()
     {
         if (rounded_notification)
+        {
             this.setShape(new RoundRectangle2D.Double(0, 0, this.getWidth(), this.getHeight(), 20, 20));
-        else
+        } else
+        {
             this.setShape(null);
+        }
     }
 
     @Override

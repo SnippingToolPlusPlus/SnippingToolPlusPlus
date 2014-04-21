@@ -43,7 +43,6 @@ public class EditorPanel extends JPanel implements MouseMotionListener, MouseLis
     private Point textPoint = new Point(0, 0);
     private Dimension editSize;
     private float stroke = 3f;
-    private Editor editor;
     private Rectangle blurredSelection;
 
     private Font textFont = new Font("verdana", Font.BOLD, 14);
@@ -79,7 +78,6 @@ public class EditorPanel extends JPanel implements MouseMotionListener, MouseLis
     public EditorPanel(BufferedImage img, Editor e)
     {
         image = img;
-        editor = e;
 
         addG2D = ((BufferedImage) image).createGraphics();
         addG2D.setStroke(new BasicStroke(stroke));
@@ -362,10 +360,16 @@ public class EditorPanel extends JPanel implements MouseMotionListener, MouseLis
 
         int stroke_correction = Math.round(stroke);
         if (stroke_correction % 2 != 0)
+        {
             if (stroke_correction % 2 >= .5)
+            {
                 stroke_correction++;
+            }
             else
+            {
                 stroke_correction--;
+            }
+        }
 
         g.fillRect((int) (draggedRect().getX() + draggedRect().getWidth()) + (int) (stroke_correction / 2),
                 (int) draggedRect().getY() + stroke_correction, stroke_correction, (int) draggedRect().getHeight()
