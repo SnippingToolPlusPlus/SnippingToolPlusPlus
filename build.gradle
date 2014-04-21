@@ -1,5 +1,6 @@
 apply plugin: 'java'
 apply plugin: 'eclipse'
+apply plugin: 'jacoco'
 
 sourceCompatibility = 1.7
 version = '5.3.5'
@@ -32,7 +33,6 @@ dependencies {
     compile 'org.jsoup:jsoup:1.7.3'
     compile 'com.googlecode.json-simple:json-simple:1.1.1'
     compile 'com.google.code.gson:gson:2.2.4'
-    
 }
 
 eclipse {
@@ -43,6 +43,19 @@ eclipse {
 
 test {
     systemProperties 'property': 'value'
+}
+
+jacoco {
+    toolVersion = '0.7.0.201403182114'
+}
+
+jacocoTestReport {
+    additionalSourceDirs = files("src/main/java")
+    reports {
+        xml.enabled false
+        csv.enabled false
+        html.destination "${buildDir}/reports/coverage"
+    }
 }
 
 uploadArchives {

@@ -1,5 +1,8 @@
 package com.shaneisrael.st.utilities.version;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
+
 import com.google.gson.annotations.SerializedName;
 
 /**
@@ -193,22 +196,22 @@ public final class Version implements Comparable<Version>
 
         if (getVersionName() != null && !getVersionName().isEmpty())
         {
-            builder.append(" [" + getVersionName() + "]" + System.lineSeparator());
-        }
-
-        if (getNote() != null && !getNote().isEmpty())
-        {
-            builder.append("Note: " + getNote() + System.lineSeparator());
+            builder.append(" [" + getVersionName() + "]");
         }
 
         if (getChangeLog() != null)
         {
-            builder.append(getChangeLog().toString());
+            builder.append(System.lineSeparator() + System.lineSeparator() + getChangeLog().toString());
+        }
+
+        if (getNote() != null && !getNote().isEmpty())
+        {
+            builder.append(System.lineSeparator() + "Note: " + getNote());
         }
 
         if (getDownloadLocation() != null && !getDownloadLocation().isEmpty())
         {
-            builder.append("Download: " + getDownloadLocation() + System.lineSeparator());
+            builder.append(System.lineSeparator() + "Download: " + getDownloadLocation());
         }
 
         return builder.toString();

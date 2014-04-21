@@ -9,7 +9,7 @@ public class ChangeLog
     private static final String ADDED_PREFIX = "+ ";
     private static final String REMOVED_PREFIX = "- ";
     private static final String CHANGED_PREFIX = "* ";
-    private static final String FIXED_PREFIX = "* ";
+    private static final String FIXED_PREFIX = "# ";
 
     @SerializedName("added")
     private List<String> added;
@@ -85,7 +85,7 @@ public class ChangeLog
         StringBuilder builder = new StringBuilder();
         if (hasAdditions())
         {
-            builder.append("-Added-");
+            builder.append("Added:" + System.lineSeparator());
             for (String addition : getAdded())
             {
                 builder.append(ADDED_PREFIX + addition + System.lineSeparator());
@@ -95,7 +95,7 @@ public class ChangeLog
 
         if (hasRemovals())
         {
-            builder.append("-Removed-");
+            builder.append("Removed:" + System.lineSeparator());
             for (String removal : getRemoved())
             {
                 builder.append(REMOVED_PREFIX + removal + System.lineSeparator());
@@ -105,7 +105,7 @@ public class ChangeLog
 
         if (hasChanges())
         {
-            builder.append("-Changed-");
+            builder.append("Changed:" + System.lineSeparator());
             for (String change : getChanged())
             {
                 builder.append(CHANGED_PREFIX + change + System.lineSeparator());
@@ -115,7 +115,7 @@ public class ChangeLog
 
         if (hasFixes())
         {
-            builder.append("-Bug Fixes-");
+            builder.append("Bug Fixes:" + System.lineSeparator());
             for (String bugFix : getFixed())
             {
                 builder.append(FIXED_PREFIX + bugFix + System.lineSeparator());
@@ -123,6 +123,6 @@ public class ChangeLog
             builder.append(System.lineSeparator());
         }
 
-        return super.toString();
+        return builder.toString();
     }
 }
