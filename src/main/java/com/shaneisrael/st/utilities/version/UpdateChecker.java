@@ -1,4 +1,4 @@
-package com.shaneisrael.st.utilities;
+package com.shaneisrael.st.utilities.version;
 
 import java.awt.Color;
 import java.awt.event.ActionEvent;
@@ -17,12 +17,15 @@ import org.jsoup.Jsoup;
 import com.shaneisrael.st.data.Preferences;
 import com.shaneisrael.st.notification.Notification;
 import com.shaneisrael.st.notification.SlidingNotification;
+import com.shaneisrael.st.utilities.OpenBrowser;
 
 /*
  * This class just checks my tools webpage and notifies the user if there is a new update to the program.
  */
 public class UpdateChecker
 {
+    private static final String VERSION_URL = "http://snippingtoolpluspl.us/latest_version";
+
     private String htmlContent = "";
     private String updateSite = "http://www.snippingtoolplusplus.co.nf";
     private int latestVersion;

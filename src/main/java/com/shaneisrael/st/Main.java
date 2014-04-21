@@ -35,8 +35,8 @@ import com.shaneisrael.st.utilities.ClipboardUtilities;
 import com.shaneisrael.st.utilities.ImageViewer;
 import com.shaneisrael.st.utilities.MultiUploader;
 import com.shaneisrael.st.utilities.Save;
-import com.shaneisrael.st.utilities.UpdateChecker;
 import com.shaneisrael.st.utilities.Upload;
+import com.shaneisrael.st.utilities.version.UpdateChecker;
 
 public class Main extends JFrame implements ActionListener
 {
