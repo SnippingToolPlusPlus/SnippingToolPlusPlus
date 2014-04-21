@@ -23,12 +23,12 @@ import com.shaneisrael.st.notification.SlidingNotification;
  */
 public class UpdateChecker
 {
-    private static String htmlContent = "";
-    static String updateSite = "http://www.snippingtoolplusplus.co.nf";
-    static int latestVersion;
-    static int currentVersion = Integer.parseInt(Preferences.getVersion().replace(".", ""));
+    private String htmlContent = "";
+    private String updateSite = "http://www.snippingtoolplusplus.co.nf";
+    private int latestVersion;
+    private int currentVersion = Integer.parseInt(Preferences.getVersion().replace(".", ""));
 
-    private static Notification updateNotification = new SlidingNotification(null);
+    private Notification updateNotification = new SlidingNotification(null);
     private JButton updateButton;
 
     public UpdateChecker()
@@ -66,7 +66,7 @@ public class UpdateChecker
         updateNotification.setSeperatorWidth(140);
         updateNotification.getPanel().setToolTipText("Snipping Tool++ Notification");
         updateNotification.setBounds(updateNotification.getX(), updateNotification.getY(), 200,
-                updateNotification.getHeight());
+            updateNotification.getHeight());
 
         /*
          * Creates the notification box. Must always be called with each new Notification instance. 
