@@ -8,6 +8,12 @@ public class VersionComparisonTests
 {
 
     @Test
+    public void testRunningVersionIsDebugDuringTests()
+    {
+        assertEquals("0.0.0", Version.getCurrentRunningVersion().getVersionString());
+    }
+
+    @Test
     public void testVersionComparisonWithValidVersions()
     {
         new VersionCompareTest("1.0.0", "1.0.0", 0).test();

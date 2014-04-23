@@ -1,6 +1,11 @@
 package com.shaneisrael.st.utilities.version;
 
+import java.util.Properties;
+
+import com.google.gson.Gson;
+import com.google.gson.JsonSyntaxException;
 import com.google.gson.annotations.SerializedName;
+import com.shaneisrael.st.data.Preferences;
 
 /**
  * Represents the Version information.
@@ -50,6 +55,23 @@ public final class Version implements Comparable<Version>
     public String getVersionString()
     {
         return String.format("%d.%d.%d", getMajorVersion(), getMinorVersion(), getPatchVersion());
+    }
+
+    /**
+     * 
+     * @return The version string in major.mine.patch [version name] form
+     */
+    public String getVersionStringWithName()
+    {
+        StringBuilder builder = new StringBuilder();
+        builder.append(getVersionString());
+
+        if (getVersionName() != null && !getVersionName().isEmpty())
+        {
+            builder.append(" [" + getVersionName() + "]");
+        }
+
+        return builder.toString();
     }
 
     /**
@@ -184,17 +206,34 @@ public final class Version implements Comparable<Version>
         return version;
     }
 
+    /**
+     * Parses a json representation of a Version and returns it.
+     * 
+     * @param json
+     *            the json representation of the version
+     * @return the object representation of a json formatted version, null if there are any parsing errors.
+     */
+    public static Version fromJson(String json)
+    {
+        Gson gson = new Gson();
+        Version version = null;
+        try
+        {
+            version = gson.fromJson(json, Version.class);
+        } catch (JsonSyntaxException e)
+        {
+            e.printStackTrace();
+            version = null;
+        }
+        return version;
+    }
+
     @Override
     public String toString()
     {
         StringBuilder builder = new StringBuilder();
 
-        builder.append("Version " + getVersionString());
-
-        if (getVersionName() != null && !getVersionName().isEmpty())
-        {
-            builder.append(" [" + getVersionName() + "]");
-        }
+        builder.append(getVersionStringWithName());
 
         if (getChangeLog() != null)
         {
@@ -212,5 +251,36 @@ public final class Version implements Comparable<Version>
         }
 
         return builder.toString();
+    }
+
+    private static Version getDebugVersion()
+    {
+        Version debug = new Version();
+        debug.majorVersion = 0;
+        debug.minorVersion = 0;
+        debug.patchVersion = 0;
+        debug.versionName = "Debug";
+        return debug;
+    }
+    
+    /**
+     * Attempts to read the version number out of the MANIFEST.MF. If not found then Debug is returned as the version.
+     * <p>
+     * 
+     * @return the full version number of this application
+     */
+    public static Version getCurrentRunningVersion()
+    {
+        String versionString = null;
+        try
+        {
+            final Properties pomProperties = new Properties();
+            pomProperties.load(Preferences.class.getResourceAsStream("/META-INF/MANIFEST.MF"));
+            versionString = pomProperties.getProperty("Application-Version");
+        } catch (Exception e)
+        {
+        }
+
+        return versionString == null ? Version.getDebugVersion() : Version.fromString(versionString);
     }
 }

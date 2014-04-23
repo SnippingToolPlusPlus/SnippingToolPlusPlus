@@ -20,6 +20,7 @@ import javax.swing.text.html.HTMLEditorKit;
 import net.miginfocom.swing.MigLayout;
 
 import com.shaneisrael.st.data.Preferences;
+import com.shaneisrael.st.utilities.version.Version;
 
 public class AboutFrame
 {
@@ -27,7 +28,7 @@ public class AboutFrame
     private JFrame frmAbout;
     private JEditorPane dtrpnSnippingToolIs;
 
-    private String version = Preferences.getVersion();
+    private String version = Version.getCurrentRunningVersion().getVersionStringWithName();
 
     /**
      * Launch the application.

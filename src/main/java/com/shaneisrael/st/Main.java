@@ -36,7 +36,10 @@ import com.shaneisrael.st.utilities.ImageViewer;
 import com.shaneisrael.st.utilities.MultiUploader;
 import com.shaneisrael.st.utilities.Save;
 import com.shaneisrael.st.utilities.Upload;
+import com.shaneisrael.st.utilities.version.LatestVersionChecker;
 import com.shaneisrael.st.utilities.version.UpdateChecker;
+import com.shaneisrael.st.utilities.version.Version;
+import com.shaneisrael.st.utilities.version.VersionResponseListener;
 
 public class Main extends JFrame implements ActionListener
 {
@@ -79,7 +82,7 @@ public class Main extends JFrame implements ActionListener
     public Main()
     {
         preferences = new Preferences();
-        System.out.println("Version: " + Preferences.getVersion());
+        System.out.println("Version: " + Version.getCurrentRunningVersion());
         setUndecorated(true);
         setAlwaysOnTop(true);
 
@@ -113,8 +116,29 @@ public class Main extends JFrame implements ActionListener
             initializeHotkeys();
         }
 
-        updater = new UpdateChecker();
-        updater.checkForUpdates();
+        new LatestVersionChecker(new VersionResponseListener()
+        {
+            @Override
+            public void onSuccess(Version latestVersion)
+            {
+                System.out.println("Running Version " + Version.getCurrentRunningVersion().getVersionString());
+                System.out.println(" Latest Version " + latestVersion.getVersionStringWithName());
+                if (Version.getCurrentRunningVersion().compareTo(latestVersion) < 0)
+                {
+                    System.out.println("You should update, here are the patch notes: ");
+                    System.out.println(latestVersion);
+                }
+            }
+
+            @Override
+            public void onFailure(String reason)
+            {
+                System.out.println("Could not find latest version because " + reason);
+            }
+        });
+
+        //        updater = new UpdateChecker();
+        //        updater.checkForUpdates();
     }
 
     private void initializeNotifications()
@@ -357,7 +381,7 @@ public class Main extends JFrame implements ActionListener
                 public void mousePressed(MouseEvent e)
                 {
                     trayIcon.setImage(new ImageIcon(this.getClass().getResource("/images/" + iconPressedMac))
-                            .getImage());
+                        .getImage());
                     if (e.getButton() == MouseEvent.BUTTON1)
                     {
                         JOptionPane.showMessageDialog(null, "Pointer Location: OOOh a message");
@@ -381,7 +405,7 @@ public class Main extends JFrame implements ActionListener
                 public void mouseClicked(MouseEvent e)
                 {
                     trayIcon.setImage(new ImageIcon(this.getClass().getResource("/images/" + iconPressedMac))
-                            .getImage());
+                        .getImage());
                     if (e.getButton() == MouseEvent.BUTTON1)
                     {
                         frame.setVisible(true);

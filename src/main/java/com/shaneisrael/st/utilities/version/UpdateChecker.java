@@ -29,7 +29,7 @@ public class UpdateChecker
     private String htmlContent = "";
     private String updateSite = "http://www.snippingtoolplusplus.co.nf";
     private int latestVersion;
-    private int currentVersion = Integer.parseInt(Preferences.getVersion().replace(".", ""));
+    private int currentVersion = Version.getCurrentRunningVersion().getMajorVersion();
 
     private Notification updateNotification = new SlidingNotification(null);
     private JButton updateButton;

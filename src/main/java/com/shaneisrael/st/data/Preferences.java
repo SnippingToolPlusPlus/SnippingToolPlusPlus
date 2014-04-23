@@ -9,6 +9,8 @@ import java.util.Properties;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 
+import com.shaneisrael.st.utilities.version.Version;
+
 /**
  * 
  * @author Shane
@@ -130,7 +132,7 @@ public class Preferences
     @SuppressWarnings("unchecked")
     private void createPreferencesFile()
     {
-        pref.put("version", getVersion());
+        pref.put("version", Version.getCurrentRunningVersion().getVersionString());
         pref.put("user_capture_dir", DEFAULT_CAPTURE_DIR);
         pref.put("editing.enabled", EDITING_ENABLED);
         pref.put("default.upload.provider", DEFAULT_UPLOAD_PROVIDER);
@@ -172,25 +174,5 @@ public class Preferences
         }
 
         System.out.println("=====PREFERENCES======\n" + pref);
-    }
-
-    /**
-     * Attempts to read the version number out of the MANIFEST.MF. If not found then Debug is returned as the version.
-     * <p>
-     * 
-     * @return the full version number of this application
-     */
-    public static String getVersion()
-    {
-        String version = "Debug";
-        try
-        {
-            final Properties pomProperties = new Properties();
-            pomProperties.load(Preferences.class.getResourceAsStream("/META-INF/MANIFEST.MF"));
-            version = pomProperties.getProperty("Application-Version", "Debug");
-        } catch (Exception e)
-        {
-        }
-        return version;
     }
 }

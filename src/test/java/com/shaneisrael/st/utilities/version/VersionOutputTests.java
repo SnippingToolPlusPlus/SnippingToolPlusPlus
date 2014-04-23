@@ -13,7 +13,7 @@ public class VersionOutputTests
     public void testVersionJustString()
     {
         Version version = Version.fromString("1.2.3");
-        String expected = "Version 1.2.3";
+        String expected = "1.2.3";
 
         assertEquals(expected, version.toString());
     }
@@ -29,7 +29,7 @@ public class VersionOutputTests
             assertEquals(3, version.getMinorVersion());
             assertEquals(1, version.getPatchVersion());
             assertEquals("5.3.5 - Fuzzy Foo", version.getVersionName());
-            assertEquals("Version 5.3.1 [5.3.5 - Fuzzy Foo]", version.toString());
+            assertEquals("5.3.1 [5.3.5 - Fuzzy Foo]", version.toString());
         } catch (Exception e)
         {
             e.printStackTrace();
@@ -74,7 +74,7 @@ public class VersionOutputTests
         "    \"note\": \"Just some extra information from the developer\"\r\n" +
         "}";
 
-    private static final String versionWithEverythingOutput = "Version 5.3.5 [5.3.5 - Fuzzy Foo]\r\n" +
+    private static final String versionWithEverythingOutput = "5.3.5 [5.3.5 - Fuzzy Foo]\r\n" +
         "\r\n" +
         "Added:\r\n" +
         "+ this is a list\r\n" +
