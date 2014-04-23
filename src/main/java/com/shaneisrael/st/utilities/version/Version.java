@@ -1,8 +1,5 @@
 package com.shaneisrael.st.utilities.version;
 
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
-
 import com.google.gson.annotations.SerializedName;
 
 /**
