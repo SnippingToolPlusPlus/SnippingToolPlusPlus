@@ -116,29 +116,8 @@ public class Main extends JFrame implements ActionListener
             initializeHotkeys();
         }
 
-        new LatestVersionChecker(new VersionResponseListener()
-        {
-            @Override
-            public void onSuccess(Version latestVersion)
-            {
-                System.out.println("Running Version " + Version.getCurrentRunningVersion().getVersionString());
-                System.out.println(" Latest Version " + latestVersion.getVersionStringWithName());
-                if (Version.getCurrentRunningVersion().compareTo(latestVersion) < 0)
-                {
-                    System.out.println("You should update, here are the patch notes: ");
-                    System.out.println(latestVersion);
-                }
-            }
-
-            @Override
-            public void onFailure(String reason)
-            {
-                System.out.println("Could not find latest version because " + reason);
-            }
-        });
-
-        //        updater = new UpdateChecker();
-        //        updater.checkForUpdates();
+        updater = new UpdateChecker();
+        updater.checkForUpdates();
     }
 
     private void initializeNotifications()
@@ -358,7 +337,6 @@ public class Main extends JFrame implements ActionListener
             {
                 tray.add(trayIcon);
                 displayInfoMessage("Snipping Tool++", "Right click for more options!");
-                new UpdateChecker();
             } catch (AWTException e)
             {
                 System.out.println("TrayIcon could not be added.");

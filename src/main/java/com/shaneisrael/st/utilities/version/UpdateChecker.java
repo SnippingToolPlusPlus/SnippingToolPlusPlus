@@ -3,18 +3,12 @@ package com.shaneisrael.st.utilities.version;
 import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.StringReader;
 import java.net.URI;
 import java.net.URISyntaxException;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 
-import org.jsoup.Jsoup;
-
-import com.shaneisrael.st.data.Preferences;
 import com.shaneisrael.st.notification.Notification;
 import com.shaneisrael.st.notification.SlidingNotification;
 import com.shaneisrael.st.utilities.OpenBrowser;
@@ -22,21 +16,29 @@ import com.shaneisrael.st.utilities.OpenBrowser;
 /*
  * This class just checks my tools webpage and notifies the user if there is a new update to the program.
  */
-public class UpdateChecker
+public class UpdateChecker implements VersionResponseListener
 {
-    private static final String VERSION_URL = "http://snippingtoolpluspl.us/latest_version";
-
-    private String htmlContent = "";
-    private String updateSite = "http://www.snippingtoolplusplus.co.nf";
-    private int latestVersion;
-    private int currentVersion = Version.getCurrentRunningVersion().getMajorVersion();
-
-    private Notification updateNotification = new SlidingNotification(null);
+    private final Version currentVersion;
+    private final Notification updateNotification;
+    private final LatestVersionChecker versionChecker;
     private JButton updateButton;
 
     public UpdateChecker()
     {
+        currentVersion = Version.getCurrentRunningVersion();
+        updateNotification = new SlidingNotification(null);
         initilizeNotification();
+
+        versionChecker = new LatestVersionChecker();
+    }
+
+    /**
+     * Asynchronously checks for updates and alerts the user via the Notification system if an update is available.
+     * 
+     */
+    public void checkForUpdates()
+    {
+        versionChecker.fetchLatestVersion(this);
     }
 
     private void initilizeNotification()
@@ -51,13 +53,7 @@ public class UpdateChecker
             public void actionPerformed(ActionEvent e)
             {
                 updateNotification.hideBalloon();
-                try
-                {
-                    OpenBrowser.open(new URI("http://www.snippingtoolplusplus.co.nf"));
-                } catch (URISyntaxException e1)
-                {
-                    e1.printStackTrace();
-                }
+
             }
         });
         updateNotification.add(updateButton);
@@ -79,43 +75,40 @@ public class UpdateChecker
 
     }
 
-    public void checkForUpdates()
+    @Override
+    public void onSuccess(final Version latestVersion)
     {
-        try
+        System.out.println("Latest version is " + latestVersion.getVersionStringWithName());
+        if (currentVersion.compareTo(latestVersion) < 0)
         {
-            htmlContent = Jsoup.connect(updateSite).timeout(30000).get().html();
-            BufferedReader bufReader = new BufferedReader(new StringReader(htmlContent));
-
-            String line = null;
-
-            try
+            updateButton.addActionListener(new ActionListener()
             {
-                while ((line = bufReader.readLine()) != null)
+                @Override
+                public void actionPerformed(ActionEvent e)
                 {
-                    if (line.contains("Download"))
+                    try
                     {
-                        htmlContent = line;
-                        break;
+                        OpenBrowser.open(new URI(latestVersion.getDownloadLocation()));
+                    } catch (URISyntaxException e1)
+                    {
+                        try
+                        {
+                            OpenBrowser.open(new URI("http://snippingtoolpluspl.us/"));
+                        } catch (URISyntaxException e2)
+                        {
+                            e2.printStackTrace();
+                        }
                     }
                 }
-
-                String[] split = htmlContent.split(">Download");
-                split = split[1].split("</a>");
-                System.out.println(split[0]);
-                latestVersion = Integer.parseInt(split[0].replace(" ", "").replace(".", ""));
-
-                if (currentVersion < latestVersion)
-                {
-                    updateNotification.showBalloon("Update Available!", "");
-                }
-            } catch (IOException e)
-            {
-                e.printStackTrace();
-            }
-        } catch (Exception e)
-        {
-            e.printStackTrace();
+            });
+            updateNotification.getPanel().setToolTipText(latestVersion.getVersionStringWithName());
+            updateNotification.showBalloon("Update Available!", "");
         }
+    }
 
+    @Override
+    public void onFailure(String reason)
+    {
+        System.out.println("Could not find latest version information because: " + reason);
     }
 }
