@@ -19,6 +19,7 @@ import org.apache.commons.codec.binary.Base64;
 
 import com.shaneisrael.st.Main;
 import com.shaneisrael.st.data.LinkDataSaver;
+import com.shaneisrael.st.data.OperatingSystem;
 import com.shaneisrael.st.data.Preferences;
 
 public class Upload extends Thread
@@ -27,8 +28,6 @@ public class Upload extends Thread
     private String IMGUR_API_KEY = "e9095ffb6a818372fdf2fa927cb46f27";
     private String CLIENT_ID = "492ba258a08820f"; // currently unused (for api version 3)
     private String CLIENT_SECRET = "8778dec43297a55f3e4768a5b8a5e6203ef12c4a"; // currently unused (for api version 3)
-
-    private String os = System.getProperty("os.name");
 
     private ByteArrayOutputStream baos;
 
@@ -59,12 +58,12 @@ public class Upload extends Thread
     public void run()
     {
         // set working image
-        if (os.indexOf("Mac") >= 0)
+        if (OperatingSystem.isWindows())
+        {
+            Main.trayIcon.setImage(new ImageIcon(this.getClass().getResource("/images/upload.gif")).getImage());
+        } else
         {
             Main.trayIcon.setImage(new ImageIcon(this.getClass().getResource("/images/uploadMac.png")).getImage());
-        } else
-        { // Windows
-            Main.trayIcon.setImage(new ImageIcon(this.getClass().getResource("/images/upload.gif")).getImage());
         }
         Main.displayInfoMessage("Uploading...", "Link will be available shortly");
 
@@ -97,13 +96,12 @@ public class Upload extends Thread
         } else
             Main.displayErrorMessage("Upload Failed!", "An unexpected error has occurred");
 
-        // set back to the default image
-        if (os.indexOf("Mac") >= 0)
+        if (OperatingSystem.isWindows())
+        {
+            Main.trayIcon.setImage(new ImageIcon(this.getClass().getResource("/images/trayIcon.png")).getImage());
+        } else
         {
             Main.trayIcon.setImage(new ImageIcon(this.getClass().getResource("/images/trayIconMac.png")).getImage());
-        } else
-        { // Windows
-            Main.trayIcon.setImage(new ImageIcon(this.getClass().getResource("/images/trayIcon.png")).getImage());
         }
 
         System.gc(); //garbage collect any unused memory by the upload thread and editor.
@@ -124,7 +122,7 @@ public class Upload extends Thread
 
             // encodes picture with Base64 and inserts api key
             String data = URLEncoder.encode("image", "UTF-8") + "="
-                    + URLEncoder.encode(Base64.encodeBase64String(baos.toByteArray()).toString(), "UTF-8");
+                + URLEncoder.encode(Base64.encodeBase64String(baos.toByteArray()).toString(), "UTF-8");
             data += "&" + URLEncoder.encode("key", "UTF-8") + "=" + URLEncoder.encode(IMGUR_API_KEY, "UTF-8");
 
             // opens connection and sends data
@@ -169,7 +167,7 @@ public class Upload extends Thread
 
             // encodes picture with Base64 and inserts api key
             String data = URLEncoder.encode("image", "UTF-8") + "="
-                    + URLEncoder.encode(Base64.encodeBase64String(baos.toByteArray()).toString(), "UTF-8");
+                + URLEncoder.encode(Base64.encodeBase64String(baos.toByteArray()).toString(), "UTF-8");
             data += "&" + URLEncoder.encode("key", "UTF-8") + "=" + URLEncoder.encode(IMGUR_API_KEY, "UTF-8");
 
             // opens connection and sends data

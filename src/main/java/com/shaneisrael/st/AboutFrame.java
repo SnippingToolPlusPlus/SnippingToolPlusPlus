@@ -19,7 +19,6 @@ import javax.swing.text.html.HTMLEditorKit;
 
 import net.miginfocom.swing.MigLayout;
 
-import com.shaneisrael.st.data.Preferences;
 import com.shaneisrael.st.utilities.version.Version;
 
 public class AboutFrame
@@ -57,7 +56,6 @@ public class AboutFrame
      */
     public AboutFrame()
     {
-
         initialize();
     }
 

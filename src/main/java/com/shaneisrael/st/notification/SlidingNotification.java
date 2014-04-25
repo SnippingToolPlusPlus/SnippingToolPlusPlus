@@ -20,6 +20,8 @@ import javax.swing.Timer;
 import javax.swing.WindowConstants;
 import javax.swing.border.Border;
 
+import com.shaneisrael.st.data.OperatingSystem;
+
 public class SlidingNotification extends Notification
 {
     private static final long serialVersionUID = 6993558070289918427L;
@@ -44,9 +46,7 @@ public class SlidingNotification extends Notification
      */
     public void initialize()
     {
-        String os = System.getProperty("os.name");
-        if (os.contains("Windows"))
-        {
+        if(OperatingSystem.isWindows()) {
             this.setType(Type.UTILITY);
         }
         panel = new JPanel();

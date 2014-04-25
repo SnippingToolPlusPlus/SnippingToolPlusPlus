@@ -21,6 +21,7 @@ import javax.swing.ImageIcon;
 import javax.swing.JPanel;
 
 import com.shaneisrael.st.Main;
+import com.shaneisrael.st.data.OperatingSystem;
 import com.shaneisrael.st.utilities.ClipboardUtilities;
 import com.shaneisrael.st.utilities.ImageManipulator;
 
@@ -47,8 +48,6 @@ public class EditorPanel extends JPanel implements MouseMotionListener, MouseLis
 
     private Font textFont = new Font("verdana", Font.BOLD, 14);
     private String drawText = "";
-
-    private String os = System.getProperty("os.name");
 
     /*
      * Dashed Stroke
@@ -104,8 +103,7 @@ public class EditorPanel extends JPanel implements MouseMotionListener, MouseLis
         this.setFocusable(true);
         this.setPreferredSize(new Dimension(img.getWidth(), img.getHeight()));
 
-        if (os.indexOf("Win") >= 0) // only use in windows for now
-        {
+        if(OperatingSystem.isWindows()) {
             setMouseCursor();
         }
     }

@@ -101,4 +101,20 @@ public enum OperatingSystem
         }
         return foundMatch;
     }
+
+    /**
+     * A convenience method for calling is(OperatingSystem.WINDOWS);
+     * 
+     * @return true if running OS is Windows, false otherwise
+     */
+    public static boolean isWindows()
+    {
+        return is(WINDOWS);
+    }
+
+    @Override
+    public String toString()
+    {
+        return System.getProperty("os.name");
+    }
 }

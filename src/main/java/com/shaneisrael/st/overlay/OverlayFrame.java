@@ -10,27 +10,28 @@ import java.awt.event.WindowListener;
 import javax.swing.JFrame;
 import javax.swing.JRootPane;
 
+import com.shaneisrael.st.data.OperatingSystem;
+
 public class OverlayFrame extends JFrame
 {
     private static final long serialVersionUID = 4640312842620083014L;
     public static boolean IsActive = false;
     private Overlay overlayPanel;
-    private String os = System.getProperty("os.name");
 
     public OverlayFrame()
     {
         IsActive = true; // the overlay is currently opened.
 
         setUndecorated(true);
-        if (os.indexOf("Mac") >= 0)
-        {
-            this.setBounds(getScreenSize());
-
-        } else
+        if (OperatingSystem.isWindows())
         {
             getRootPane().setWindowDecorationStyle(JRootPane.NONE);
             this.setBounds(getScreenSize());
+        } else
+        {
+            this.setBounds(getScreenSize());
         }
+
         overlayPanel = new Overlay(this);
         this.add(overlayPanel);
         this.setVisible(true);

@@ -10,6 +10,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.io.File;
+import java.io.IOException;
 
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
@@ -23,6 +24,7 @@ import javax.swing.UIManager;
 import com.melloware.jintellitype.HotkeyListener;
 import com.melloware.jintellitype.JIntellitype;
 import com.melloware.jintellitype.JIntellitypeConstants;
+import com.shaneisrael.st.data.OperatingSystem;
 import com.shaneisrael.st.data.Preferences;
 import com.shaneisrael.st.data.PreferencesUI;
 import com.shaneisrael.st.editor.Editor;
@@ -36,15 +38,12 @@ import com.shaneisrael.st.utilities.ImageViewer;
 import com.shaneisrael.st.utilities.MultiUploader;
 import com.shaneisrael.st.utilities.Save;
 import com.shaneisrael.st.utilities.Upload;
-import com.shaneisrael.st.utilities.version.LatestVersionChecker;
 import com.shaneisrael.st.utilities.version.UpdateChecker;
 import com.shaneisrael.st.utilities.version.Version;
-import com.shaneisrael.st.utilities.version.VersionResponseListener;
 
 public class Main extends JFrame implements ActionListener
 {
     public static JXTrayIcon trayIcon;
-    private String os = System.getProperty("os.name");
 
     private OverlayFrame overlay;
     private PreferencesUI preferencesUI;
@@ -88,7 +87,7 @@ public class Main extends JFrame implements ActionListener
 
         try
         {
-            if (os.indexOf("Win") >= 0)
+            if (OperatingSystem.isWindows())
             {
                 UIManager.setLookAndFeel("com.sun.java.swing.plaf.windows.WindowsLookAndFeel");
             } else
@@ -111,9 +110,12 @@ public class Main extends JFrame implements ActionListener
          * 
          * Hotkeys will not work on Mac
          */
-        if (os.indexOf("Win") >= 0)
+        if (OperatingSystem.isWindows())
         {
             initializeHotkeys();
+        } else
+        {
+            System.out.println(OperatingSystem.getCurrentOS() + " is not supported.");
         }
 
         updater = new UpdateChecker();
@@ -217,30 +219,20 @@ public class Main extends JFrame implements ActionListener
     {
         final String icon = "trayIcon.png";
 
-        if (os.indexOf("Win") >= 0)
-        {
-            System.out.println("Running Windows OS");
-        } else if (os.indexOf("Mac") >= 0)
-        {
-            System.out.println("Running Mac OS X");
-        } else
+        System.out.println("Running " + OperatingSystem.getCurrentOS());
+
+        if (OperatingSystem.isAny(OperatingSystem.WINDOWS, OperatingSystem.MAC))
         {
             /*
              * Because it can only run on windows (maybe osx) currently, we kill the
              * program if it detects non-windows or non osx before going further.
              */
-            System.out.println("Invalid Operating System: Exiting");
+            System.out.println("This OS is not yet supported. Exiting");
             System.exit(0);
         }
 
-        ImageIcon ii;
-        if (os.indexOf("Mac") >= 0)
-        {
-            ii = new ImageIcon(this.getClass().getResource("/images/" + iconMac));
-        } else
-        { // Windows
-            ii = new ImageIcon(this.getClass().getResource("/images/" + icon));
-        }
+        ImageIcon ii = new ImageIcon(this.getClass().getResource(
+            "/images/" + (OperatingSystem.isWindows() ? icon : iconMac)));
 
         final JPopupMenu popup = new JPopupMenu();
 
@@ -331,27 +323,17 @@ public class Main extends JFrame implements ActionListener
         final Frame frame = new Frame("");
         frame.setUndecorated(true);
 
-        if (os.indexOf("Win") >= 0)
+        try
         {
-            try
-            {
-                tray.add(trayIcon);
-                displayInfoMessage("Snipping Tool++", "Right click for more options!");
-            } catch (AWTException e)
-            {
-                System.out.println("TrayIcon could not be added.");
-            }
+            tray.add(trayIcon);
+            displayInfoMessage("Snipping Tool++", "Right click tray icon for more options!");
+        } catch (AWTException e)
+        {
+            System.out.println("TrayIcon could not be added.");
+        }
 
-        } else
+        if (!OperatingSystem.isWindows())
         {
-            try
-            {
-                tray.add(trayIcon);
-                displayInfoMessage("Snipping Tool++", "Right click for more options!");
-            } catch (AWTException e)
-            {
-                System.out.println("TrayIcon could not be added.");
-            }
             trayIcon.addMouseListener(new MouseListener()
             {
 
@@ -447,12 +429,12 @@ public class Main extends JFrame implements ActionListener
             new MultiUploader();
         } else if (command.equals("tray"))
         {
-            if (os.indexOf("Win") >= 0)
+            if (OperatingSystem.isWindows())
             {
                 try
                 {
                     Desktop.getDesktop().open(new File(Preferences.DEFAULT_CAPTURE_DIR));
-                } catch (Exception e1)
+                } catch (IOException e1)
                 {
                     e1.printStackTrace();
                 }
@@ -461,7 +443,6 @@ public class Main extends JFrame implements ActionListener
         {
             System.exit(0);
         }
-
     }
 
     public static void pointToEditor(Editor pointer)
