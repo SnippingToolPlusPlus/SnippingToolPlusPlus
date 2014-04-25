@@ -19,7 +19,7 @@ jar {
                     'Built-On': new Date().toString())
     }
     
-    archiveName = 'Snipping Tool++ (v' + version + ').jar'
+    archiveName = 'SnippingToolPlusPlus-' + version + '.jar'
 }
 
 repositories {
