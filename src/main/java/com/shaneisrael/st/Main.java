@@ -221,7 +221,7 @@ public class Main extends JFrame implements ActionListener
 
         System.out.println("Running " + OperatingSystem.getCurrentOS());
 
-        if (OperatingSystem.isAny(OperatingSystem.WINDOWS, OperatingSystem.MAC))
+        if (!OperatingSystem.isAny(OperatingSystem.WINDOWS, OperatingSystem.MAC))
         {
             /*
              * Because it can only run on windows (maybe osx) currently, we kill the
