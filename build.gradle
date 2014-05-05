@@ -1,0 +1,67 @@
+apply plugin: 'java'
+apply plugin: 'eclipse'
+apply plugin: 'jacoco'
+
+sourceCompatibility = 1.7
+version = '5.3.5'
+jar {
+
+	from {
+        configurations.compile.collect { it.isDirectory() ? it : zipTree(it) }
+    }
+    
+    
+    manifest {
+        attributes ('Main-Class': 'com.shaneisrael.st.Main',
+                    'Application-Version': version,
+                    'Author': 'Shane Israel',
+                    'Built-By': System.getProperty("user.name"),
+                    'Built-On': new Date().toString())
+    }
+    
+    archiveName = 'SnippingToolPlusPlus-' + version + '.jar'
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    testCompile group: 'junit', name: 'junit', version: '4.11'
+    compile 'commons-codec:commons-codec:1.8'
+    compile 'com.miglayout:miglayout:3.7.4'
+    compile 'org.jsoup:jsoup:1.7.3'
+    compile 'com.googlecode.json-simple:json-simple:1.1.1'
+    compile 'com.google.code.gson:gson:2.2.4'
+}
+
+eclipse {
+	project {
+		name = 'snippingtoolplusplus'
+	}
+}
+
+test {
+    systemProperties 'property': 'value'
+}
+
+jacoco {
+    toolVersion = '0.7.0.201403182114'
+}
+
+jacocoTestReport {
+    additionalSourceDirs = files("src/main/java")
+    reports {
+        xml.enabled false
+        csv.enabled false
+        html.destination "${buildDir}/reports/coverage"
+    }
+}
+
+uploadArchives {
+    repositories {
+       flatDir {
+           dirs 'repos'
+       }
+    }
+}
