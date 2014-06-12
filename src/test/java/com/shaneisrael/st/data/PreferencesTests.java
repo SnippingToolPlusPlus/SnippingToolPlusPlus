@@ -12,7 +12,7 @@ public class PreferencesTests
     {
         String fakeRoot = "C:";
         Locations locations = new Locations(fakeRoot, OperatingSystem.WINDOWS);
-        assertEquals("C:\\.snippingtool++\\data\\version5", locations.getDataDirectory().getAbsolutePath());
+        assertEquals("C:\\.snippingtool++\\data", locations.getDataDirectory().getAbsolutePath());
     }
 
     @Test
@@ -20,7 +20,7 @@ public class PreferencesTests
     {
         String fakeRoot = "C:";
         Locations locations = new Locations(fakeRoot, OperatingSystem.WINDOWS);
-        assertEquals("C:\\.snippingtool++\\data\\version5\\prefs.json", locations.getPreferencesFile()
+        assertEquals("C:\\.snippingtool++\\data\\prefs.json", locations.getPreferencesFile()
             .getAbsolutePath());
     }
 

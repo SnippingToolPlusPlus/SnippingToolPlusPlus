@@ -96,4 +96,13 @@ public class Locations
     {
         return new File(getDataDirectory(), PREFERENCES_FILE);
     }
+
+    @Override
+    public String toString()
+    {
+        return String.format("{\n\tdata_directory: %s,\n\tpicture_directory: %s,\n\tpreferences_file: %s\n}",
+            getDataDirectory().getAbsolutePath(),
+            getPictureDirectory().getAbsolutePath(),
+            getPreferencesFile().getAbsolutePath());
+    }
 }

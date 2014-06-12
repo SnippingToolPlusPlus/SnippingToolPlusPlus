@@ -24,14 +24,16 @@ import javax.swing.UIManager;
 import com.melloware.jintellitype.HotkeyListener;
 import com.melloware.jintellitype.JIntellitype;
 import com.melloware.jintellitype.JIntellitypeConstants;
+import com.shaneisrael.st.data.Locations;
 import com.shaneisrael.st.data.OperatingSystem;
-import com.shaneisrael.st.data.Preferences;
 import com.shaneisrael.st.data.PreferencesUI;
 import com.shaneisrael.st.editor.Editor;
 import com.shaneisrael.st.notification.Notification;
 import com.shaneisrael.st.notification.SlidingNotification;
 import com.shaneisrael.st.overlay.Overlay;
 import com.shaneisrael.st.overlay.OverlayFrame;
+import com.shaneisrael.st.prefs.Preferences;
+import com.shaneisrael.st.prefs.Preferences;
 import com.shaneisrael.st.utilities.CaptureScreen;
 import com.shaneisrael.st.utilities.ClipboardUtilities;
 import com.shaneisrael.st.utilities.ImageViewer;
@@ -80,8 +82,9 @@ public class Main extends JFrame implements ActionListener
 
     public Main()
     {
-        preferences = new Preferences();
+        Preferences.getInstance().refresh();
         System.out.println("Version: " + Version.getCurrentRunningVersion());
+        System.out.println("Locations: " + new Locations().toString());
         setUndecorated(true);
         setAlwaysOnTop(true);
 
@@ -433,7 +436,7 @@ public class Main extends JFrame implements ActionListener
             {
                 try
                 {
-                    Desktop.getDesktop().open(new File(Preferences.DEFAULT_CAPTURE_DIR));
+                    Desktop.getDesktop().open(new File(Preferences.getInstance().getCaptureDirectoryRoot()));
                 } catch (IOException e1)
                 {
                     e1.printStackTrace();

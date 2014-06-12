@@ -26,8 +26,9 @@ import javax.swing.JPanel;
 import javax.swing.KeyStroke;
 
 import com.shaneisrael.st.Main;
-import com.shaneisrael.st.data.Preferences;
 import com.shaneisrael.st.editor.Editor;
+import com.shaneisrael.st.prefs.Preferences;
+import com.shaneisrael.st.prefs.Preferences;
 import com.shaneisrael.st.utilities.CaptureScreen;
 import com.shaneisrael.st.utilities.Save;
 import com.shaneisrael.st.utilities.Upload;
@@ -78,7 +79,7 @@ public class Overlay extends JPanel implements MouseListener, MouseMotionListene
             public void actionPerformed(ActionEvent e)
             {
                 // setOverlayVisible(false); //remove the overlay
-                if (Preferences.EDITING_ENABLED)
+                if (Preferences.getInstance().isEditorEnabled())
                 {
                     Main.closeCurrentEditor();
                     editor = new Editor(selectionImage, mode); // send the snippet to the editor

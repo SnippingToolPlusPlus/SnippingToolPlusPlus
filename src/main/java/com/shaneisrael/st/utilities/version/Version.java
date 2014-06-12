@@ -5,7 +5,7 @@ import java.util.Properties;
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 import com.google.gson.annotations.SerializedName;
-import com.shaneisrael.st.data.Preferences;
+import com.shaneisrael.st.prefs.Preferences;
 
 /**
  * Represents the Version information.
@@ -75,7 +75,7 @@ public final class Version implements Comparable<Version>
     }
 
     /**
-     * Changed when the user will have to manually do something due to incompatibilites with previous versions.
+     * Changed when the user will have to manually do something due to incompatibilities with previous versions.
      * 
      * @return the major version
      */

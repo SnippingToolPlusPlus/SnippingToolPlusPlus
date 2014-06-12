@@ -20,7 +20,8 @@ import org.apache.commons.codec.binary.Base64;
 import com.shaneisrael.st.Main;
 import com.shaneisrael.st.data.LinkDataSaver;
 import com.shaneisrael.st.data.OperatingSystem;
-import com.shaneisrael.st.data.Preferences;
+import com.shaneisrael.st.prefs.Preferences;
+import com.shaneisrael.st.prefs.Preferences;
 
 public class Upload extends Thread
 {
@@ -67,15 +68,11 @@ public class Upload extends Thread
         }
         Main.displayInfoMessage("Uploading...", "Link will be available shortly");
 
-        boolean uploaded = false;
-        if (Preferences.DEFAULT_UPLOAD_PROVIDER == 0) //imgur
-        {
-            uploaded = uploadToImgur(image);
-        }
+        boolean uploaded = uploadToImgur(image);
 
         if (uploaded)
         {
-            if (Preferences.AUTO_SAVE_UPLOADS)
+            if (Preferences.getInstance().isAutoSaveEnabled())
             {
                 save.saveUpload(image);
                 new LinkDataSaver(imgUrl[0], delUrl[0], "upload(" + Preferences.TOTAL_SAVED_UPLOADS + ")");

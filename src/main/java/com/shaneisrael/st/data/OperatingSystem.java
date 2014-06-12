@@ -9,15 +9,15 @@ package com.shaneisrael.st.data;
 public enum OperatingSystem
 {
     WINDOWS(
-        "\\.snippingtool++\\data\\version5\\",
+        "\\.snippingtool++\\data\\",
         "\\Pictures\\SnippingTool++\\"
     ),
     MAC(
-        "/Library/Application Support/snippingtool++/data/version5/",
+        "/Library/Application Support/snippingtool++/data/",
         "/pictures/SnippingTool++/"
     ),
     OTHER(
-        "/.snippingtool++/data/version5/",
+        "/.snippingtool++/data/",
         "/pictures/SnippingTool++"
     );
 
