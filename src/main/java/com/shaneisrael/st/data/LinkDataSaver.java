@@ -8,10 +8,12 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.io.PrintWriter;
 
+import com.shaneisrael.st.prefs.Preferences;
+
 public class LinkDataSaver
 {
     PrintWriter out;
-    File imgurLinksFile = new File(Preferences.DEFAULT_CAPTURE_DIR + "/Uploads/imgur_links.txt");
+    File imgurLinksFile = new File(Preferences.getInstance().getCaptureDirectoryRoot() + "/Uploads/imgur_links.txt");
 
     public LinkDataSaver(String upLink, String delLink, String title)
     {

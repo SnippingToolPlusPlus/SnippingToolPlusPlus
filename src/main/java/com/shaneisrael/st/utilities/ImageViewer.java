@@ -43,9 +43,10 @@ import javax.swing.event.ListSelectionListener;
 import net.miginfocom.swing.MigLayout;
 
 import com.shaneisrael.st.Main;
-import com.shaneisrael.st.data.Preferences;
 import com.shaneisrael.st.editor.Editor;
 import com.shaneisrael.st.overlay.Overlay;
+import com.shaneisrael.st.prefs.Preferences;
+import com.shaneisrael.st.prefs.Preferences;
 
 public class ImageViewer
 {
@@ -185,9 +186,9 @@ public class ImageViewer
                         {
                             if (btnUploads.isSelected())
                             {
-                                if (new File(Preferences.DEFAULT_CAPTURE_DIR + "/Uploads/"
+                                if (new File(Preferences.getInstance().getCaptureDirectoryRoot() + "/Uploads/"
                                         + list.getSelectedValue().toString().replace(" ", "")) != null)
-                                    image = ImageIO.read(new File(Preferences.DEFAULT_CAPTURE_DIR + "/Uploads/"
+                                    image = ImageIO.read(new File(Preferences.getInstance().getCaptureDirectoryRoot() + "/Uploads/"
                                             + list.getSelectedValue().toString().replace(" ", "")));
                                 else
                                     image = new BufferedImage(250, 250, BufferedImage.TYPE_INT_ARGB); // set
@@ -203,9 +204,9 @@ public class ImageViewer
                             {
                                 linkField.setText("");
                                 deleteField.setText("");
-                                image = ImageIO.read(new File(Preferences.DEFAULT_CAPTURE_DIR + "/Captures/capture("
+                                image = ImageIO.read(new File(Preferences.getInstance().getCaptureDirectoryRoot() + "/Captures/capture("
                                         + (list.getSelectedIndex() + 1) + ").png"));
-                                imageURL = Preferences.DEFAULT_CAPTURE_DIR + "/Captures/capture("
+                                imageURL = Preferences.getInstance().getCaptureDirectoryRoot() + "/Captures/capture("
                                         + (list.getSelectedIndex() + 1) + ").png";
                             }
                         } catch (IOException e1)
@@ -334,7 +335,7 @@ public class ImageViewer
     {
         try
         {
-            BufferedReader reader = new BufferedReader(new FileReader(new File(Preferences.DEFAULT_CAPTURE_DIR
+            BufferedReader reader = new BufferedReader(new FileReader(new File(Preferences.getInstance().getCaptureDirectoryRoot()
                     + "/Uploads/imgur_links.txt")));
             String line;
             String parsedLine[];
@@ -366,7 +367,7 @@ public class ImageViewer
         final ArrayList<String> items = new ArrayList<String>();
         if (btnUploads.isSelected()) // get uploads
         {
-            File folder = new File(Preferences.DEFAULT_CAPTURE_DIR + "/Uploads/");
+            File folder = new File(Preferences.getInstance().getCaptureDirectoryRoot() + "/Uploads/");
             File[] listOfFiles = folder.listFiles();
             Arrays.sort(listOfFiles, new Comparator<File>()
             {
@@ -395,7 +396,7 @@ public class ImageViewer
             do
             {
                 index++;
-                file = new File(Preferences.DEFAULT_CAPTURE_DIR + "/Captures/capture(" + index + ").png");
+                file = new File(Preferences.getInstance().getCaptureDirectoryRoot() + "/Captures/capture(" + index + ").png");
                 items.add(file.getName());
             } while (file.exists());
 

@@ -6,7 +6,8 @@ import java.io.File;
 import javax.imageio.ImageIO;
 
 import com.shaneisrael.st.Main;
-import com.shaneisrael.st.data.Preferences;
+import com.shaneisrael.st.prefs.Preferences;
+import com.shaneisrael.st.prefs.Preferences;
 
 public class Save
 {
@@ -15,7 +16,7 @@ public class Save
 
     public Save()
     {
-        location = Preferences.DEFAULT_CAPTURE_DIR;
+        location = Preferences.getInstance().getCaptureDirectoryRoot();
     }
 
     public void save(BufferedImage img)

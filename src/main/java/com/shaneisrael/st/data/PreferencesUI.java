@@ -26,6 +26,9 @@ import javax.swing.ScrollPaneConstants;
 import javax.swing.SwingConstants;
 import javax.swing.WindowConstants;
 
+import com.shaneisrael.st.prefs.Preferences;
+import com.shaneisrael.st.prefs.Preferences;
+
 import net.miginfocom.swing.MigLayout;
 
 /**
@@ -58,19 +61,16 @@ public class PreferencesUI
     {
         initialize();
 
-        Preferences.loadPreferences();
-
         setPrefrences();
     }
 
     private void setPrefrences()
     {
-        System.out.println("Set the prefrences...");
-        directoryField.setText(Preferences.DEFAULT_CAPTURE_DIR);
-        chckbxEnableEditor.setSelected(Preferences.EDITING_ENABLED);
-        chckbxForceMultisnippetCapture.setSelected(Preferences.FORCE_MULTI_CAPTURE);
-        chckbxAutosaveUploads.setSelected(Preferences.AUTO_SAVE_UPLOADS);
-        toolBox.setSelectedIndex((int) Preferences.DEFAULT_EDITING_TOOL);
+        directoryField.setText(Preferences.getInstance().getCaptureDirectoryRoot());
+        chckbxEnableEditor.setSelected(Preferences.getInstance().isEditorEnabled());
+        chckbxForceMultisnippetCapture.setSelected(false);
+        chckbxAutosaveUploads.setSelected(Preferences.getInstance().isAutoSaveEnabled());
+        toolBox.setSelectedIndex((int) Preferences.getInstance().getDefaultTool());
     }
 
     /**
@@ -80,7 +80,7 @@ public class PreferencesUI
     {
         frmPreferences = new JFrame();
         frmPreferences.setIconImage(Toolkit.getDefaultToolkit().getImage(
-                PreferencesUI.class.getResource("/images/icons/pref.png")));
+            PreferencesUI.class.getResource("/images/icons/pref.png")));
         frmPreferences.setTitle("Preferences");
         frmPreferences.setBounds(100, 100, 299, 304);
         frmPreferences.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
@@ -109,15 +109,16 @@ public class PreferencesUI
             {
                 JFileChooser fc = new JFileChooser();
                 fc.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
-                fc.setSelectedFile(new File(Preferences.DEFAULT_CAPTURE_DIR));
+                fc.setSelectedFile(new File(Preferences.getInstance().getCaptureDirectoryRoot()));
                 int option = fc.showOpenDialog(null);
                 if (option == JFileChooser.APPROVE_OPTION)
                 {
                     directoryField.setText(fc.getSelectedFile().getPath() + "/");
-                    Preferences.DEFAULT_CAPTURE_DIR = fc.getSelectedFile().getPath() + "/SnippingTool++/";
+                    Preferences.getInstance().setCaptureDirectoryRoot(
+                        fc.getSelectedFile().getPath() + "/SnippingTool++/");
                     // setup the new directory
-                    new File(Preferences.DEFAULT_CAPTURE_DIR + "/Captures/").mkdir();
-                    new File(Preferences.DEFAULT_CAPTURE_DIR + "/Uploads/").mkdir();
+                    new File(Preferences.getInstance().getCaptureDirectoryRoot() + "/Captures/").mkdir();
+                    new File(Preferences.getInstance().getCaptureDirectoryRoot() + "/Uploads/").mkdir();
                 }
             }
         });
@@ -131,11 +132,12 @@ public class PreferencesUI
             {
                 try
                 {
-                    Desktop.getDesktop().open(new File(Preferences.DEFAULT_CAPTURE_DIR));
+                    Desktop.getDesktop().open(new File(Preferences.getInstance().getCaptureDirectoryRoot()));
                 } catch (IOException e)
                 {
-                    JOptionPane.showMessageDialog(null, "Unable to open " + Preferences.DEFAULT_CAPTURE_DIR, "Error",
-                            JOptionPane.ERROR_MESSAGE);
+                    JOptionPane.showMessageDialog(null, "Unable to open "
+                        + Preferences.getInstance().getCaptureDirectoryRoot(), "Error",
+                        JOptionPane.ERROR_MESSAGE);
                     e.printStackTrace();
                 }
             }
@@ -297,8 +299,7 @@ public class PreferencesUI
             @Override
             public void actionPerformed(ActionEvent arg0)
             {
-                updatePreferences();
-                Preferences.loadPreferences();
+                Preferences.getInstance().save();
                 frmPreferences.dispose();
             }
         });
@@ -306,10 +307,5 @@ public class PreferencesUI
         // frmPreferences.pack();
         frmPreferences.setVisible(true);
 
-    }
-
-    private void updatePreferences()
-    {
-        Preferences.updatePreferences(this);
     }
 }
