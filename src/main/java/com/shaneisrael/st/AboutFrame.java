@@ -30,28 +30,6 @@ public class AboutFrame
     private String version = Version.getCurrentRunningVersion().getVersionStringWithName();
 
     /**
-     * Launch the application.
-     */
-    public static void main(String[] args)
-    {
-        EventQueue.invokeLater(new Runnable()
-        {
-            @Override
-            public void run()
-            {
-                try
-                {
-                    AboutFrame window = new AboutFrame();
-                    window.frmAbout.setVisible(true);
-                } catch (Exception e)
-                {
-                    e.printStackTrace();
-                }
-            }
-        });
-    }
-
-    /**
      * Create the application.
      */
     public AboutFrame()
@@ -66,7 +44,7 @@ public class AboutFrame
     {
         frmAbout = new JFrame();
         frmAbout.setIconImage(Toolkit.getDefaultToolkit().getImage(
-                AboutFrame.class.getResource("/images/icons/about_icon.png")));
+            AboutFrame.class.getResource("/images/icons/about_icon.png")));
         frmAbout.setTitle("About");
         frmAbout.setBounds(100, 100, 450, 353);
         frmAbout.setResizable(false);
@@ -111,13 +89,13 @@ public class AboutFrame
         dtrpnSnippingToolIs.setEditorKit(kit);
         dtrpnSnippingToolIs.setContentType("text/html");
         dtrpnSnippingToolIs
-                .setText("<center><font size = \"4\">All image uploading is currently powered by the Imgur API.  Snipping Tool++ is completely free. By using this program you agree to not re-distribute it commercially, or sell it for any kind of profit.</font>\r\n<p>\r\n<font size = \"4\">If you are pleased with the tool and would like to see more features added in the future and support me in keeping it up-to-date and bug free, please feel free to donate on my website <a href=\"http://www.snippingtoolplusplus.co.nf\">www.snippingtoolplusplus.co.nf</a></font></center>");
+            .setText("<center><font size = \"4\">All image uploading is currently powered by the Imgur API.  Snipping Tool++ is completely free. By using this program you agree to not re-distribute it commercially, or sell it for any kind of profit.</font>\r\n<p>\r\n<font size = \"4\">If you are pleased with the tool and would like to see more features added in the future and support me in keeping it up-to-date and bug free, please feel free to donate on my website <a href=\"http://snippingtoolpluspl.us\">http://snippingtoolpluspl.us</a></font></center>");
         panel.add(dtrpnSnippingToolIs, "cell 0 4,grow");
 
         JSeparator separator_1 = new JSeparator();
         panel.add(separator_1, "cell 0 5,grow");
 
-        JLabel lblAuthorShaneM = new JLabel("Author: Shane M. Israel");
+        JLabel lblAuthorShaneM = new JLabel("Author: Shane M. Israel & Talon Daniels");
         panel.add(lblAuthorShaneM, "flowx,cell 0 6");
 
         JLabel lblOsXSupporting = new JLabel("OS X support & help: Chad R. Marmon");

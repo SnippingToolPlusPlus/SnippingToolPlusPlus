@@ -22,7 +22,7 @@ my blog site. Links below.
 Websites
 --------
 *  [Like us on Facebook to stay up-to-date on the latest builds](https://www.pivotaltracker.com/projects/564685)
-*  Download latest build at [http://shaneisrael.com/apps/#SnippingTool++](http://shaneisrael.com/apps/#SnippingTool++)
+*  Download latest build at [http://snippingtoolpluspl.us/](http://snippingtoolpluspl.us/)
 
 Credit
 ------
