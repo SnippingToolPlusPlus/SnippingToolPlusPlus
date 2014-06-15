@@ -4,6 +4,7 @@ import java.awt.AWTException;
 import java.awt.Color;
 import java.awt.Desktop;
 import java.awt.Frame;
+import java.awt.HeadlessException;
 import java.awt.SystemTray;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -24,6 +25,7 @@ import javax.swing.UIManager;
 import com.melloware.jintellitype.HotkeyListener;
 import com.melloware.jintellitype.JIntellitype;
 import com.melloware.jintellitype.JIntellitypeConstants;
+import com.melloware.jintellitype.JIntellitypeException;
 import com.shaneisrael.st.data.Locations;
 import com.shaneisrael.st.data.OperatingSystem;
 import com.shaneisrael.st.data.PreferencesUI;
@@ -32,7 +34,6 @@ import com.shaneisrael.st.notification.Notification;
 import com.shaneisrael.st.notification.SlidingNotification;
 import com.shaneisrael.st.overlay.Overlay;
 import com.shaneisrael.st.overlay.OverlayFrame;
-import com.shaneisrael.st.prefs.Preferences;
 import com.shaneisrael.st.prefs.Preferences;
 import com.shaneisrael.st.utilities.CaptureScreen;
 import com.shaneisrael.st.utilities.ClipboardUtilities;
@@ -76,8 +77,17 @@ public class Main extends JFrame implements ActionListener
 
     public static void main(String... args)
     {
-        Main frame = new Main();
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        Main frame = null;
+        try
+        {
+            frame = new Main();
+            frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        } catch (HeadlessException ex)
+        {
+            System.out.println("SnippingTool++ was not designed to take screenshots of terminals.");
+            System.out.println("Feel free to implement the feature and submit a patch though!");
+            System.out.println("Source: https://github.com/ShaneIsrael/Snipping-Tool-Plus-Plus");
+        }
     }
 
     public Main()
@@ -157,14 +167,24 @@ public class Main extends JFrame implements ActionListener
         /*
          * register hotkeys
          */
-        JIntellitype keyhook = JIntellitype.getInstance();
-        keyhook.registerHotKey(1, JIntellitypeConstants.MOD_CONTROL + JIntellitypeConstants.MOD_SHIFT, '1');
-        keyhook.registerHotKey(2, JIntellitypeConstants.MOD_CONTROL + JIntellitypeConstants.MOD_SHIFT, '2');
-        keyhook.registerHotKey(3, JIntellitypeConstants.MOD_CONTROL + JIntellitypeConstants.MOD_SHIFT, '3');
-        keyhook.registerHotKey(4, JIntellitypeConstants.MOD_CONTROL + JIntellitypeConstants.MOD_SHIFT, '4');
-        keyhook.registerHotKey(5, JIntellitypeConstants.MOD_ALT + JIntellitypeConstants.MOD_SHIFT, '1');
-        keyhook.registerHotKey(6, JIntellitypeConstants.MOD_CONTROL + JIntellitypeConstants.MOD_SHIFT, 'X');
-
+        JIntellitype keyhook = null;
+        try
+        {
+            keyhook = JIntellitype.getInstance();
+        } catch (JIntellitypeException ex)
+        {
+            JOptionPane.showMessageDialog(null, "Please only run one copy of Snipping Tool++ at once");
+            System.exit(1);
+        }
+        if (keyhook != null)
+        {
+            keyhook.registerHotKey(1, JIntellitypeConstants.MOD_CONTROL + JIntellitypeConstants.MOD_SHIFT, '1');
+            keyhook.registerHotKey(2, JIntellitypeConstants.MOD_CONTROL + JIntellitypeConstants.MOD_SHIFT, '2');
+            keyhook.registerHotKey(3, JIntellitypeConstants.MOD_CONTROL + JIntellitypeConstants.MOD_SHIFT, '3');
+            keyhook.registerHotKey(4, JIntellitypeConstants.MOD_CONTROL + JIntellitypeConstants.MOD_SHIFT, '4');
+            keyhook.registerHotKey(5, JIntellitypeConstants.MOD_ALT + JIntellitypeConstants.MOD_SHIFT, '1');
+            keyhook.registerHotKey(6, JIntellitypeConstants.MOD_CONTROL + JIntellitypeConstants.MOD_SHIFT, 'X');
+        }
         /*
          * events
          */
