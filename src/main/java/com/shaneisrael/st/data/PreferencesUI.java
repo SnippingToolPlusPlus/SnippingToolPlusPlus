@@ -48,7 +48,6 @@ public class PreferencesUI
     private JFrame frmPreferences;
     public JTextField directoryField;
     public JCheckBox chckbxEnableEditor;
-    public JCheckBox chckbxForceMultisnippetCapture;
     public JCheckBox chckbxAutosaveUploads;
     public JComboBox<?> toolBox;
 
@@ -68,7 +67,6 @@ public class PreferencesUI
     {
         directoryField.setText(Preferences.getInstance().getCaptureDirectoryRoot());
         chckbxEnableEditor.setSelected(Preferences.getInstance().isEditorEnabled());
-        chckbxForceMultisnippetCapture.setSelected(false);
         chckbxAutosaveUploads.setSelected(Preferences.getInstance().isAutoSaveEnabled());
         toolBox.setSelectedIndex((int) Preferences.getInstance().getDefaultTool());
     }
@@ -144,8 +142,33 @@ public class PreferencesUI
         });
         tab1.add(btnOpen, "cell 0 2");
 
+        tab1.add(new JLabel("Preferences Location"), "cell 0 3");
+        String preferencesPath = new Locations().getDataDirectory().getAbsolutePath();
+        JLabel lblPreferencesPath = new JLabel(preferencesPath);
+        lblPreferencesPath.setToolTipText(preferencesPath);
+        tab1.add(lblPreferencesPath, "cell 0 4");
+        JButton prefOpen = new JButton("Open");
+        prefOpen.addActionListener(new ActionListener()
+        {
+            @Override
+            public void actionPerformed(ActionEvent arg0)
+            {
+                try
+                {
+                    Desktop.getDesktop().open(new Locations().getDataDirectory());
+                } catch (IOException e)
+                {
+                    JOptionPane.showMessageDialog(null, "Unable to open "
+                        + new Locations().getDataDirectory(), "Error",
+                        JOptionPane.ERROR_MESSAGE);
+                    e.printStackTrace();
+                }
+            }
+        });
+        tab1.add(prefOpen, "cell 0 5");
+
         JSeparator separator = new JSeparator();
-        tab1.add(separator, "cell 0 3 2 1,grow");
+        tab1.add(separator, "cell 0 6 2 1,grow");
 
         JPanel tab2 = new JPanel();
         tabbedPane.addTab("Snippet", null, tab2, null);
@@ -154,9 +177,6 @@ public class PreferencesUI
         chckbxEnableEditor = new JCheckBox("Enable Editor");
         chckbxEnableEditor.setSelected(true);
         tab2.add(chckbxEnableEditor, "cell 0 0");
-
-        chckbxForceMultisnippetCapture = new JCheckBox("Force Multi-Snippet Capture");
-        tab2.add(chckbxForceMultisnippetCapture, "cell 0 1");
 
         chckbxAutosaveUploads = new JCheckBox("Auto-Save Uploads");
         chckbxAutosaveUploads.setSelected(true);
@@ -299,7 +319,10 @@ public class PreferencesUI
             @Override
             public void actionPerformed(ActionEvent arg0)
             {
-                Preferences.getInstance().save();
+                Preferences.getInstance().setEditorEnabled(chckbxEnableEditor.isSelected());
+                Preferences.getInstance().setAutoSaveEnabled(chckbxAutosaveUploads.isSelected());
+                Preferences.getInstance().setCaptureDirectoryRoot(directoryField.getText());
+                Preferences.getInstance().setDefaultTool(toolBox.getSelectedIndex());
                 frmPreferences.dispose();
             }
         });

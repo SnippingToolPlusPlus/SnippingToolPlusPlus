@@ -1,13 +1,11 @@
 package com.shaneisrael.st.prefs;
 
-import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.shaneisrael.st.data.Locations;
-import com.shaneisrael.st.data.OperatingSystem;
 import com.shaneisrael.st.utilities.FileReader;
 
 public class Preferences
@@ -51,12 +49,14 @@ public class Preferences
         String json = gson.toJson(preferences);
         try
         {
+            locations.getPreferencesFile().mkdirs();
             FileReader.writeFile(locations.getPreferencesFile().getAbsolutePath(), json);
         } catch (FileNotFoundException e)
         {
             e.printStackTrace();
         }
         System.out.println("Saved preferences to " + locations.getPreferencesFile().getAbsolutePath());
+        //System.out.println(json);
     }
 
     /**
@@ -74,13 +74,27 @@ public class Preferences
         Gson gson = new Gson();
         preferences = gson.fromJson(jsonData, PreferenceData.class);
         System.out.println("Refreshed preferences from " + locations.getPreferencesFile().getAbsolutePath());
-        System.out.println(jsonData);
+        //System.out.println(jsonData);
     }
 
     public void setDefaultPreferences()
     {
-        new File(OperatingSystem.getCurrentOS().getDataDirectoryPath()).mkdirs();
-        new File(OperatingSystem.getCurrentOS().getPictureDirectoryPath()).mkdirs();
+        System.out.println("Could not locate existing preferences. Creating defaults...");
+        System.out.println("Creating " + locations.getDataDirectory().getAbsolutePath());
+        System.out.println("Creating " + locations.getPictureDirectory().getAbsolutePath());
+        System.out.println("Creating " + locations.getPreferencesFile().getAbsolutePath());
+
+        locations.getDataDirectory().mkdirs();
+        locations.getPictureDirectory().mkdirs();
+        try
+        {
+            locations.getPreferencesFile().createNewFile();
+        } catch (IOException e)
+        {
+            System.out.println("Could not create default settings at "
+                + locations.getPreferencesFile().getAbsolutePath());
+            e.printStackTrace();
+        }
 
         preferences = new PreferenceData();
         preferences.setAutoSaveEnabled(true);
@@ -107,6 +121,7 @@ public class Preferences
 
     public boolean isAutoSaveEnabled()
     {
+
         return preferences.isAutoSaveEnabled();
     }
 

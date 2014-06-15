@@ -1,5 +1,6 @@
 package com.shaneisrael.st.prefs;
 
+import com.google.gson.Gson;
 import com.google.gson.annotations.SerializedName;
 
 public final class PreferenceData
@@ -102,5 +103,12 @@ public final class PreferenceData
         @SerializedName("default_tool")
         long defaultTool;
 
+    }
+
+    @Override
+    public String toString()
+    {
+        Gson gson = new Gson();
+        return gson.toJson(this);
     }
 }
