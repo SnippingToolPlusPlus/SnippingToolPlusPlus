@@ -106,6 +106,7 @@ public class Preferences
 
     public String getCaptureDirectoryRoot()
     {
+        refresh();
         return preferences.getCaptureDirectoryRoot();
     }
 
@@ -121,7 +122,7 @@ public class Preferences
 
     public boolean isAutoSaveEnabled()
     {
-
+        refresh();
         return preferences.isAutoSaveEnabled();
     }
 
@@ -137,6 +138,7 @@ public class Preferences
 
     public boolean isEditorEnabled()
     {
+        refresh();
         return preferences.isEditorEnabled();
     }
 
@@ -152,6 +154,7 @@ public class Preferences
 
     public long getDefaultTool()
     {
+        refresh();
         return preferences.getDefaultTool();
     }
 

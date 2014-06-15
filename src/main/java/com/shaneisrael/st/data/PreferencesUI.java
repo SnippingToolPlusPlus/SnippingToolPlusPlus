@@ -26,10 +26,9 @@ import javax.swing.ScrollPaneConstants;
 import javax.swing.SwingConstants;
 import javax.swing.WindowConstants;
 
-import com.shaneisrael.st.prefs.Preferences;
-import com.shaneisrael.st.prefs.Preferences;
-
 import net.miginfocom.swing.MigLayout;
+
+import com.shaneisrael.st.prefs.Preferences;
 
 /**
  * 
