@@ -55,8 +55,6 @@ public class Preferences
         {
             e.printStackTrace();
         }
-        System.out.println("Saved preferences to " + locations.getPreferencesFile().getAbsolutePath());
-        //System.out.println(json);
     }
 
     /**
@@ -73,8 +71,6 @@ public class Preferences
         }
         Gson gson = new Gson();
         preferences = gson.fromJson(jsonData, PreferenceData.class);
-        System.out.println("Refreshed preferences from " + locations.getPreferencesFile().getAbsolutePath());
-        //System.out.println(jsonData);
     }
 
     public void setDefaultPreferences()
