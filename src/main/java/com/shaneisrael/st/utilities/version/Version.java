@@ -262,7 +262,7 @@ public final class Version implements Comparable<Version>
         debug.versionName = "Debug";
         return debug;
     }
-    
+
     /**
      * Attempts to read the version number out of the MANIFEST.MF. If not found then Debug is returned as the version.
      * <p>
@@ -282,5 +282,23 @@ public final class Version implements Comparable<Version>
         }
 
         return versionString == null ? Version.getDebugVersion() : Version.fromString(versionString);
+    }
+
+    @Override
+    public boolean equals(Object obj)
+    {
+        if (obj instanceof Version)
+        {
+            return compareTo((Version) obj) == 0;
+        } else
+        {
+            return false;
+        }
+
+    }
+
+    public static boolean isDebug()
+    {
+        return getCurrentRunningVersion().equals(getDebugVersion());
     }
 }

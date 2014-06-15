@@ -79,7 +79,8 @@ public class UpdateChecker implements VersionResponseListener
     public void onSuccess(final Version latestVersion)
     {
         System.out.println("Latest version is " + latestVersion.getVersionStringWithName());
-        if (currentVersion.compareTo(latestVersion) < 0)
+
+        if (!Version.isDebug() && currentVersion.compareTo(latestVersion) < 0)
         {
             updateButton.addActionListener(new ActionListener()
             {
@@ -103,6 +104,9 @@ public class UpdateChecker implements VersionResponseListener
             });
             updateNotification.getPanel().setToolTipText(latestVersion.getVersionStringWithName());
             updateNotification.showBalloon("Update Available!", "");
+        } else
+        {
+            System.out.println("You are running the latest version.");
         }
     }
 
