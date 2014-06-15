@@ -294,7 +294,6 @@ public final class Version implements Comparable<Version>
         {
             return false;
         }
-
     }
 
     public static boolean isDebug()
