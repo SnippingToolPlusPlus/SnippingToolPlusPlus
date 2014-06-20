@@ -21,7 +21,7 @@ my blog site. Links below.
 
 Websites
 --------
-*  [Like us on Facebook to stay up-to-date on the latest builds](https://www.pivotaltracker.com/projects/564685)
+*  [Like us on Facebook to stay up-to-date on the latest builds](https://www.facebook.com/SnippingToolPlusPlus)
 *  Download latest build at [http://snippingtoolpluspl.us/](http://snippingtoolpluspl.us/)
 
 Credit
