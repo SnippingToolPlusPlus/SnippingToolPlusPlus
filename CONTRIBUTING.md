@@ -8,9 +8,9 @@ In order to build ST++ you will need to have the Oracle JDK 1.7 installed and th
 
 1. To build, execute `gradlew jar`. 
 
-You do not need gradle installed for this command to work. The first time it is ran, it will download a project specific version of gradle and place it in `.gradle` at the root of the project.
+  You do not need gradle installed for this command to work. The first time it is ran, it will download a project specific version of gradle and place it in `.gradle` at the root of the project.
 
-The first time you run this will take awhile as it must download gradle as well as the third party libraries. These are then cached so future builds will be quicker.
+  The first time you run this will take awhile as it must download gradle as well as the third party libraries. These are then cached so future builds will be quicker.
 
 2. To run tests, execute `gradlew test`.
 
@@ -38,7 +38,7 @@ In addition to using the eclipse formatter, please use `ctrl-shift-o` to organiz
 
 ### Gradle plugin for eclipse
 
-Although it is optional, it is recommended to install the gradle plugin for eclipse so you can run gradle tasks from within eclipse.
+It is recommended to install the gradle plugin for eclipse so you can run gradle tasks from within eclipse and refresh the project settings after editing the `build.gradle` file.
 
 
 1. It is available through eclipse's `Help -> Install New Software..` dialog.
