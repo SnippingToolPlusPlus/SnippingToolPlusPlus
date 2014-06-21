@@ -12,6 +12,7 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.io.File;
 import java.io.IOException;
+import java.util.Arrays;
 
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
@@ -46,6 +47,7 @@ import com.shaneisrael.st.utilities.version.Version;
 
 public class Main extends JFrame implements ActionListener
 {
+    public static boolean debugging = false;
     public static JXTrayIcon trayIcon;
 
     private OverlayFrame overlay;
@@ -77,6 +79,7 @@ public class Main extends JFrame implements ActionListener
 
     public static void main(String... args)
     {
+        processArguments(args);
         Main frame = null;
         try
         {
@@ -87,6 +90,18 @@ public class Main extends JFrame implements ActionListener
             System.out.println("SnippingTool++ was not designed to take screenshots of terminals.");
             System.out.println("Feel free to implement the feature and submit a patch though!");
             System.out.println("Source: https://github.com/ShaneIsrael/Snipping-Tool-Plus-Plus");
+        }
+    }
+
+    private static void processArguments(String[] args)
+    {
+        if (args.length > 0)
+        {
+            System.out.println("Arguments: " + Arrays.deepToString(args));
+            if (args[0].equals("-d"))
+            {
+                debugging = true;
+            }
         }
     }
 
@@ -128,7 +143,7 @@ public class Main extends JFrame implements ActionListener
             initializeHotkeys();
         } else
         {
-            System.out.println(OperatingSystem.getCurrentOS() + " is not supported.");
+            System.out.println(OperatingSystem.getCurrentOS() + " does not support global hotkeys.");
         }
 
         updater = new UpdateChecker();
@@ -250,8 +265,12 @@ public class Main extends JFrame implements ActionListener
              * Because it can only run on windows (maybe osx) currently, we kill the
              * program if it detects non-windows or non osx before going further.
              */
-            System.out.println("This OS is not yet supported. Exiting");
-            System.exit(0);
+            if (!debugging)
+            {
+                System.out.println("This OS is not yet supported. Exiting.");
+                System.out.println("You can override this by running the application with -d as the first argument.");
+                System.exit(0);
+            }
         }
 
         ImageIcon ii = new ImageIcon(this.getClass().getResource(
