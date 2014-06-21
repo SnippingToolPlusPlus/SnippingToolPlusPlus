@@ -97,7 +97,7 @@ public class UpdateChecker implements VersionResponseListener
                             OpenBrowser.open(new URI("http://snippingtoolpluspl.us/"));
                         } catch (URISyntaxException e2)
                         {
-                            e2.printStackTrace();
+                        	System.out.println("Could not get latest version information.");
                         }
                     }
                 }
