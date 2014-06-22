@@ -18,6 +18,8 @@ import java.awt.event.MouseMotionListener;
 import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.List;
 
 import javax.swing.AbstractAction;
 import javax.swing.Action;
@@ -27,7 +29,6 @@ import javax.swing.KeyStroke;
 
 import com.shaneisrael.st.Main;
 import com.shaneisrael.st.editor.Editor;
-import com.shaneisrael.st.prefs.Preferences;
 import com.shaneisrael.st.prefs.Preferences;
 import com.shaneisrael.st.utilities.CaptureScreen;
 import com.shaneisrael.st.utilities.Save;
@@ -43,6 +44,7 @@ public class Overlay extends JPanel implements MouseListener, MouseMotionListene
 
     private Color selectionColor = new Color(255, 0, 0);
     private Color overlayColor = new Color(0, 0, 0, 100);
+    private Color infoGreenColor = new Color(0, 255, 0, 128);
 
     private Rectangle2D selection;
     private Rectangle screenRectangle;
@@ -54,7 +56,7 @@ public class Overlay extends JPanel implements MouseListener, MouseMotionListene
     private ArrayList<Point> startPointList = new ArrayList<Point>();
     private ArrayList<Point> endPointList = new ArrayList<Point>();
 
-    private Font font = new Font("sansserif", Font.BOLD, 12);
+    private Font infoFont = new Font("sansserif", Font.BOLD, 12);
     private BufferedImage selectionImage;
     private BufferedImage screenshot;
 
@@ -152,8 +154,10 @@ public class Overlay extends JPanel implements MouseListener, MouseMotionListene
         drawOverlay(g2d);
         drawSelection(g2d);
 
-        if (endPoint.x > 0 || endPoint.y > 0)
-            drawHelp(g2d);
+        if (selection.getWidth() > 0 && selection.getHeight() > 0)
+        {
+            drawInfo(g2d);
+        }
         try
         {
             Thread.sleep(5);
@@ -162,46 +166,66 @@ public class Overlay extends JPanel implements MouseListener, MouseMotionListene
             e.printStackTrace();
         }
         this.repaint();
-
     }
 
-    private void drawHelp(Graphics2D g2d)
+    private void drawInfo(Graphics2D g2d)
     {
-        int startX = 0;
-        int startY = 0;
+        List<MultiColorText> messages = new ArrayList<>();
+        messages.add(getHelpText());
+        messages.add(getDimensionText());
+
+        MessageBox helpBox = new MessageBox(messages, infoFont);
+
+        Point infoPoint = calculateInfoPoint(helpBox.getBoundsWithPadding(g2d));
+        helpBox.setLocation(infoPoint.x, infoPoint.y);
+        helpBox.draw(g2d);
+    }
+
+    private MultiColorText getHelpText()
+    {
+        LinkedHashMap<String, Color> helpMessage = new LinkedHashMap<>();
+        helpMessage.put("Press [", infoGreenColor);
+        helpMessage.put("enter", Color.orange);
+        helpMessage.put("] to continue", infoGreenColor);
+        return new MultiColorText(helpMessage);
+    }
+
+    private MultiColorText getDimensionText()
+    {
+        int imageWidth = (int) selection.getWidth();
+        int imageHeight = (int) selection.getHeight();
+        LinkedHashMap<String, Color> sizeMessage = new LinkedHashMap<>();
+        sizeMessage.put("Dimensions: [", infoGreenColor);
+        sizeMessage.put("" + imageWidth, Color.orange);
+        sizeMessage.put(" x ", infoGreenColor);
+        sizeMessage.put("" + imageHeight, Color.orange);
+        sizeMessage.put("]", infoGreenColor);
+        return new MultiColorText(sizeMessage);
+    }
+
+    private Point calculateInfoPoint(Rectangle2D bounds)
+    {
+        int bWidth = (int) bounds.getWidth();
+        int bHeight = (int) bounds.getHeight();
+
+        int infoX = 0;
+        int infoY = 0;
         if (endPoint.x > startPoint.x)
         {
-            startX = (endPoint.x - 90);
+            infoX = endPoint.x - bWidth;
         } else if (endPoint.x < startPoint.x)
         {
-            startX = endPoint.x;
+            infoX = endPoint.x;
         }
 
         if (endPoint.y > startPoint.y)
         {
-            startY = endPoint.y;
+            infoY = endPoint.y;
         } else if (endPoint.y < startPoint.y)
         {
-            startY = endPoint.y - 30;
+            infoY = endPoint.y - bHeight;
         }
-
-        g2d.setFont(font);
-        g2d.setColor(new Color(0, 0, 0, 100));
-        g2d.fillRect(startX, startY, 90, 30);
-        g2d.setColor(Color.white);
-        g2d.drawRect(startX, startY, 90, 30);
-        int tX = startX + 5;
-        int tY = startY + font.getSize() + 2;
-        int tY2 = startY + (font.getSize() * 2) + 4;
-        int tX2 = startX + 11;
-        int tX3 = startX + 43;
-        g2d.setColor(Color.white);
-        g2d.setColor(Color.green);
-        g2d.drawString("Press", tX, tY);
-        g2d.drawString("to continue", tX2, tY2);
-        g2d.setColor(Color.orange);
-        g2d.drawString("[enter]", tX3, tY);
-
+        return new Point(infoX, infoY);
     }
 
     private void drawOverlay(Graphics2D g2d)
