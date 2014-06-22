@@ -48,7 +48,7 @@ public class Upload extends Thread
 
     public Upload(BufferedImage img, boolean reddit)
     {
-        this.image = ImageUtilities.compressImage(img, 1f);
+        this.image = img;
         
         this.reddit = reddit;
         uploadThread = new Thread(this);
