@@ -15,14 +15,13 @@ Features
 
 More Info
 ---------
-Snipping Tool++ is still being developed and ideas are still being implemented. If you
-have feature requests or suggestions please contact me through our facebook page or
-my blog site. Links below.
+Originally developed by me (Shane Israel) as a simple means to share screenshots online with friends, Snipping Tool++ has since grown and has been downloaded by more than 35,0000 people world wide and featured on multiple websites including LifeHacker. Snipping Tool++ is still being developed and ideas are still being implemented. If you have feature requests or suggestions please contact us by email at `contact@snippingtoolpluspl.us'
 
-Websites
+Websites & Contact
 --------
 *  [Like us on Facebook to stay up-to-date on the latest builds](https://www.facebook.com/SnippingToolPlusPlus)
 *  Download latest build at [http://snippingtoolpluspl.us/](http://snippingtoolpluspl.us/)
+*  For more information or feature requests/suggestions, email us at: `contact@snippingtoolpluspl.us`
 
 Credit
 ------
