@@ -89,7 +89,7 @@ public class Editor extends JFrame implements MouseMotionListener
      * 
      * @param mode
      */
-    public Editor(BufferedImage img, int mode)
+    public Editor()
     {
         this.addWindowListener(new WindowListener()
         {
@@ -130,10 +130,16 @@ public class Editor extends JFrame implements MouseMotionListener
             }
         });
 
-        setIconImage(Toolkit.getDefaultToolkit().getImage(Editor.class.getResource("/images/icons/utilities.png")));
+        setIconImage(Toolkit.getDefaultToolkit().getImage(
+            Editor.class.getResource("/images/icons/utilities.png")));
 
-        this.mode = mode;
+    }
 
+    /**
+     * Initialize the contents of the frame.
+     */
+    public void initialize(BufferedImage img, int m)
+    {
         /*
          * this is a much simpler way to handle the key events on the entire
          * frame without losing focus.
@@ -173,11 +179,16 @@ public class Editor extends JFrame implements MouseMotionListener
                         submitToReddit();
                     } else
                     {
-                        if (!(key == KeyEvent.VK_CAPS_LOCK || key == KeyEvent.VK_SHIFT || key == KeyEvent.VK_TAB || key == KeyEvent.VK_BACK_SPACE))
-                            editingPanel.setDrawText(editingPanel.getText() + e.getKeyChar());
-                        if (e.getKeyCode() == KeyEvent.VK_ENTER && editingPanel.getTool().equals("text"))
+                        if (!(key == KeyEvent.VK_CAPS_LOCK
+                            || key == KeyEvent.VK_SHIFT
+                            || key == KeyEvent.VK_TAB || key == KeyEvent.VK_BACK_SPACE))
+                            editingPanel.setDrawText(editingPanel.getText()
+                                + e.getKeyChar());
+                        if (e.getKeyCode() == KeyEvent.VK_ENTER
+                            && editingPanel.getTool().equals("text"))
                         {
-                            editingPanel.setDrawText(editingPanel.getText() + "\n");
+                            editingPanel.setDrawText(editingPanel.getText()
+                                + "\n");
                         }
                     }
 
@@ -189,7 +200,8 @@ public class Editor extends JFrame implements MouseMotionListener
             }
 
         };
-        KeyboardFocusManager.getCurrentKeyboardFocusManager().addKeyEventDispatcher(keyDispatcher);
+        KeyboardFocusManager.getCurrentKeyboardFocusManager()
+            .addKeyEventDispatcher(keyDispatcher);
 
         // manager = KeyboardFocusManager
         // .getCurrentKeyboardFocusManager();
@@ -199,38 +211,27 @@ public class Editor extends JFrame implements MouseMotionListener
         colorChooser = new JColorChooser();
         editingPanel = new EditorPanel(img, this);
         editingPanel.setBackground(new Color(0, 0, 0, 0));
-        //get the height of the screen capture for the scrollpane
+        // get the height of the screen capture for the scrollpane
         imageDimension = new Dimension(img.getWidth(), img.getHeight());
         this.addMouseMotionListener(this);
-        initialize();
+        this.mode = m;
 
-        if (this.mode == Overlay.SAVE)
-        {
-            rdbtnSave.setSelected(true);
-        } else if (this.mode == Overlay.UPLOAD)
-        {
-            rdbtnUpload.setSelected(true);
-        }
-    }
-
-    /**
-     * Initialize the contents of the frame.
-     */
-    private void initialize()
-    {
         colorChooser = new JColorChooser(Color.red);
         ButtonGroup uploadGroup = new ButtonGroup();
         ButtonGroup toolGroup = new ButtonGroup();
 
         JScrollPane imageScrollPane = new JScrollPane();
-        imageScrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
-        imageScrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS);
+        imageScrollPane
+            .setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
+        imageScrollPane
+            .setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS);
         imageScrollPane.setViewportView(editingPanel);
         imageScrollPane.setPreferredSize(imageDimension);
         imageScrollPane.getVerticalScrollBar().setUnitIncrement(16);
         imageScrollPane.getHorizontalScrollBar().setUnitIncrement(16);
         getContentPane().setLayout(
-                new MigLayout("", "[55px][4px][1px][4px][538px,grow]", "[67px][4px][1px][4px][321px,grow]"));
+            new MigLayout("", "[55px][4px][1px][4px][538px,grow]",
+                "[67px][4px][1px][4px][321px,grow]"));
 
         JPanel panel_3 = new JPanel();
         panel_3.setBackground(UIManager.getColor("Button.disabledForeground"));
@@ -248,7 +249,8 @@ public class Editor extends JFrame implements MouseMotionListener
         final ColorSelectionPanel borderColorPanel = new ColorSelectionPanel();
         layeredPane.setLayer(fillColorPanel, 1);
         fillColorPanel.setToolTipText("Fill color");
-        fillColorPanel.setBorder(new LineBorder(UIManager.getColor("CheckBox.light"), 3));
+        fillColorPanel.setBorder(new LineBorder(UIManager
+            .getColor("CheckBox.light"), 3));
         fillColorPanel.setBounds(18, 23, 35, 35);
         fillColorPanel.addMouseListener(new MouseAdapter()
         {
@@ -260,13 +262,15 @@ public class Editor extends JFrame implements MouseMotionListener
 
                 try
                 {
-                    Color c = JColorChooser.showDialog(null, "Fill Color", new Color(255, 0, 0));
-                    fillColor = new Color(c.getRed(), c.getGreen(), c.getBlue(), c.getAlpha());
+                    Color c = JColorChooser.showDialog(null, "Fill Color",
+                        new Color(255, 0, 0));
+                    fillColor = new Color(c.getRed(), c.getGreen(),
+                        c.getBlue(), c.getAlpha());
                     if (c.getTransparency() != 1.0)
                         opacitySlider.setValue((int) (c.getTransparency() * 10));
-                    System.out.println("c.get: " + c.getTransparency());
                     editingPanel.setColor(fillColor);
-                    fillColorPanel.setColor(new Color(c.getRed(), c.getGreen(), c.getBlue(), getOpacitySliderValue()));
+                    fillColorPanel.setColor(new Color(c.getRed(), c.getGreen(),
+                        c.getBlue(), getOpacitySliderValue()));
                 } catch (Exception ex)
                 {
                 }
@@ -276,7 +280,8 @@ public class Editor extends JFrame implements MouseMotionListener
 
         borderColorPanel.setToolTipText("Border color");
         borderColorPanel.setColor(Color.BLACK);
-        borderColorPanel.setBorder(new LineBorder(UIManager.getColor("CheckBox.light"), 3));
+        borderColorPanel.setBorder(new LineBorder(UIManager
+            .getColor("CheckBox.light"), 3));
         borderColorPanel.setBounds(3, 8, 35, 35);
         borderColorPanel.addMouseListener(new MouseAdapter()
         {
@@ -287,13 +292,16 @@ public class Editor extends JFrame implements MouseMotionListener
                 layeredPane.setLayer(fillColorPanel, 0);
                 try
                 {
-                    Color c = JColorChooser.showDialog(null, "Border Color", new Color(255, 255, 255));
-                    borderColor = new Color(c.getRed(), c.getGreen(), c.getBlue(), c.getAlpha());
+                    Color c = JColorChooser.showDialog(null, "Border Color",
+                        new Color(255, 255, 255));
+                    borderColor = new Color(c.getRed(), c.getGreen(), c
+                        .getBlue(), c.getAlpha());
                     if (c.getTransparency() != 1.0)
                         opacitySlider.setValue((int) (c.getTransparency() * 10));
                     System.out.println("c.get: " + c.getTransparency());
                     editingPanel.setBorderColor(borderColor);
-                    borderColorPanel.setColor(new Color(c.getRed(), c.getGreen(), c.getBlue(), getOpacitySliderValue()));
+                    borderColorPanel.setColor(new Color(c.getRed(), c
+                        .getGreen(), c.getBlue(), getOpacitySliderValue()));
                 } catch (Exception ex)
                 {
                 }
@@ -314,7 +322,8 @@ public class Editor extends JFrame implements MouseMotionListener
         gbl_panel_1.columnWidths = new int[] { 10, 0 };
         gbl_panel_1.rowHeights = new int[] { 34, 0, 35, 34, 0, 34, 0, 0, 0, 0 };
         gbl_panel_1.columnWeights = new double[] { 1.0, Double.MIN_VALUE };
-        gbl_panel_1.rowWeights = new double[] { 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, Double.MIN_VALUE };
+        gbl_panel_1.rowWeights = new double[] { 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
+                0.0, 0.0, 1.0, Double.MIN_VALUE };
         panel_1.setLayout(gbl_panel_1);
 
         final JToggleButton pencilToggleButton = new JToggleButton("", true);
@@ -330,14 +339,15 @@ public class Editor extends JFrame implements MouseMotionListener
             }
         });
         pencilToggleButton.setSelectedIcon(new ImageIcon(Editor.class
-                .getResource("/images/icons/buttons/pencil_selected.png")));
+            .getResource("/images/icons/buttons/pencil_selected.png")));
         GridBagConstraints gbc_pencilToggleButton = new GridBagConstraints();
         gbc_pencilToggleButton.fill = GridBagConstraints.BOTH;
         gbc_pencilToggleButton.insets = new Insets(0, 0, 5, 0);
         gbc_pencilToggleButton.gridx = 0;
         gbc_pencilToggleButton.gridy = 0;
         panel_1.add(pencilToggleButton, gbc_pencilToggleButton);
-        pencilToggleButton.setIcon(new ImageIcon(Editor.class.getResource("/images/icons/buttons/pencil.png")));
+        pencilToggleButton.setIcon(new ImageIcon(Editor.class
+            .getResource("/images/icons/buttons/pencil.png")));
         pencilToggleButton.setContentAreaFilled(false);
         pencilToggleButton.setBorder(BorderFactory.createEmptyBorder());
         toolGroup.add(pencilToggleButton);
@@ -358,8 +368,9 @@ public class Editor extends JFrame implements MouseMotionListener
 
         final JToggleButton lineToggleButton = new JToggleButton("");
         lineToggleButton.setSelectedIcon(new ImageIcon(Editor.class
-                .getResource("/images/icons/buttons/line_selected.png")));
-        lineToggleButton.setIcon(new ImageIcon(Editor.class.getResource("/images/icons/buttons/line.png")));
+            .getResource("/images/icons/buttons/line_selected.png")));
+        lineToggleButton.setIcon(new ImageIcon(Editor.class
+            .getResource("/images/icons/buttons/line.png")));
         lineToggleButton.setToolTipText("Draws a line");
         lineToggleButton.setContentAreaFilled(false);
         toolGroup.add(lineToggleButton);
@@ -381,8 +392,9 @@ public class Editor extends JFrame implements MouseMotionListener
         gbc_lineToggleButton.gridy = 1;
         panel_1.add(lineToggleButton, gbc_lineToggleButton);
         rectToggleButton.setSelectedIcon(new ImageIcon(Editor.class
-                .getResource("/images/icons/buttons/rect_selected.png")));
-        rectToggleButton.setIcon(new ImageIcon(Editor.class.getResource("/images/icons/buttons/rect.png")));
+            .getResource("/images/icons/buttons/rect_selected.png")));
+        rectToggleButton.setIcon(new ImageIcon(Editor.class
+            .getResource("/images/icons/buttons/rect.png")));
         rectToggleButton.setContentAreaFilled(false);
         GridBagConstraints gbc_rectToggleButton = new GridBagConstraints();
         gbc_rectToggleButton.fill = GridBagConstraints.BOTH;
@@ -405,9 +417,10 @@ public class Editor extends JFrame implements MouseMotionListener
             }
         });
         filledToggleButton.setSelectedIcon(new ImageIcon(Editor.class
-                .getResource("/images/icons/buttons/filled_selected.png")));
+            .getResource("/images/icons/buttons/filled_selected.png")));
         filledToggleButton.setContentAreaFilled(false);
-        filledToggleButton.setIcon(new ImageIcon(Editor.class.getResource("/images/icons/buttons/filled.png")));
+        filledToggleButton.setIcon(new ImageIcon(Editor.class
+            .getResource("/images/icons/buttons/filled.png")));
         GridBagConstraints gbc_filledToggleButton = new GridBagConstraints();
         gbc_filledToggleButton.fill = GridBagConstraints.BOTH;
         gbc_filledToggleButton.insets = new Insets(0, 0, 5, 0);
@@ -426,7 +439,8 @@ public class Editor extends JFrame implements MouseMotionListener
                 // "Left click to submit text entry, and start again.", null);
             }
         });
-        textToggleButton.setToolTipText("Left click on the image > Start typing");
+        textToggleButton
+            .setToolTipText("Left click on the image > Start typing");
         textToggleButton.addChangeListener(new ChangeListener()
         {
             @Override
@@ -454,9 +468,10 @@ public class Editor extends JFrame implements MouseMotionListener
             }
         });
         bRectToggleButton.setSelectedIcon(new ImageIcon(Editor.class
-                .getResource("/images/icons/buttons/b_rect_selected.png")));
+            .getResource("/images/icons/buttons/b_rect_selected.png")));
         bRectToggleButton.setContentAreaFilled(false);
-        bRectToggleButton.setIcon(new ImageIcon(Editor.class.getResource("/images/icons/buttons/b_rect.png")));
+        bRectToggleButton.setIcon(new ImageIcon(Editor.class
+            .getResource("/images/icons/buttons/b_rect.png")));
         GridBagConstraints gbc_bRectToggleButton = new GridBagConstraints();
         gbc_bRectToggleButton.fill = GridBagConstraints.BOTH;
         gbc_bRectToggleButton.insets = new Insets(0, 0, 5, 0);
@@ -468,8 +483,9 @@ public class Editor extends JFrame implements MouseMotionListener
         JToggleButton blurToggleButton = new JToggleButton("");
         blurToggleButton.setToolTipText("Blur Tool");
         blurToggleButton.setSelectedIcon(new ImageIcon(Editor.class
-                .getResource("/images/icons/buttons/blur_selected.png")));
-        blurToggleButton.setIcon(new ImageIcon(Editor.class.getResource("/images/icons/buttons/blur.png")));
+            .getResource("/images/icons/buttons/blur_selected.png")));
+        blurToggleButton.setIcon(new ImageIcon(Editor.class
+            .getResource("/images/icons/buttons/blur.png")));
         blurToggleButton.setContentAreaFilled(false);
         blurToggleButton.setFocusable(false);
         blurToggleButton.addChangeListener(new ChangeListener()
@@ -490,8 +506,9 @@ public class Editor extends JFrame implements MouseMotionListener
 
         textToggleButton.setContentAreaFilled(false);
         textToggleButton.setSelectedIcon(new ImageIcon(Editor.class
-                .getResource("/images/icons/buttons/text_selected.png")));
-        textToggleButton.setIcon(new ImageIcon(Editor.class.getResource("/images/icons/buttons/text.png")));
+            .getResource("/images/icons/buttons/text_selected.png")));
+        textToggleButton.setIcon(new ImageIcon(Editor.class
+            .getResource("/images/icons/buttons/text.png")));
         GridBagConstraints gbc_tglbtnTexttogglebutton = new GridBagConstraints();
         gbc_tglbtnTexttogglebutton.fill = GridBagConstraints.BOTH;
         gbc_tglbtnTexttogglebutton.insets = new Insets(0, 0, 5, 0);
@@ -508,13 +525,16 @@ public class Editor extends JFrame implements MouseMotionListener
         gbc_separator_3.gridy = 7;
         panel_1.add(separator_3, gbc_separator_3);
 
-        this.getContentPane().add(imageScrollPane, "cell 4 4,alignx left,aligny top");
+        this.getContentPane().add(imageScrollPane,
+            "cell 4 4,alignx left,aligny top");
 
         JPanel northPanel = new JPanel();
-        this.getContentPane().add(northPanel, "cell 4 0,alignx left,aligny top");
+        this.getContentPane()
+            .add(northPanel, "cell 4 0,alignx left,aligny top");
 
         JPanel panel_2 = new JPanel();
-        panel_2.setBorder(new TitledBorder(null, "Snippet Information", TitledBorder.LEFT, TitledBorder.TOP, null, null));
+        panel_2.setBorder(new TitledBorder(null, "Snippet Information",
+            TitledBorder.LEFT, TitledBorder.TOP, null, null));
         // northPanel.add(panel_2);
         panel_2.setLayout(new MigLayout("", "[55.00][66.00]", "[45.00][]"));
 
@@ -526,11 +546,11 @@ public class Editor extends JFrame implements MouseMotionListener
 
         JSeparator separator = new JSeparator();
         panel_2.add(separator, "cell 0 1 2 1,grow");
-        System.out.println(fillColor);
         GridBagLayout gbl_northPanel = new GridBagLayout();
         gbl_northPanel.columnWidths = new int[] { 161, 183, 64, 65, 0, 0 };
         gbl_northPanel.rowHeights = new int[] { 37, 0 };
-        gbl_northPanel.columnWeights = new double[] { 0.0, 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE };
+        gbl_northPanel.columnWeights = new double[] { 0.0, 0.0, 0.0, 0.0, 0.0,
+                Double.MIN_VALUE };
         gbl_northPanel.rowWeights = new double[] { 0.0, Double.MIN_VALUE };
         northPanel.setLayout(gbl_northPanel);
         opacitySlider = new JSlider();
@@ -550,21 +570,26 @@ public class Editor extends JFrame implements MouseMotionListener
                 if (layeredPane.getLayer(fillColorPanel) == 1)
                 {
                     editingPanel.setTransparency(getOpacitySliderValue());
-                    fillColorPanel.setColor(new Color(fillColorPanel.getColor().getRed(), fillColorPanel.getColor()
-                            .getGreen(), fillColorPanel.getColor().getBlue(), getOpacitySliderValue()));
+                    fillColorPanel.setColor(new Color(fillColorPanel.getColor()
+                        .getRed(), fillColorPanel.getColor().getGreen(),
+                        fillColorPanel.getColor().getBlue(),
+                        getOpacitySliderValue()));
                 } else if (layeredPane.getLayer(borderColorPanel) == 1)
                 {
                     editingPanel.setBorderTransparency(getOpacitySliderValue());
-                    borderColorPanel.setColor(new Color(borderColorPanel.getColor().getRed(), borderColorPanel
-                            .getColor().getGreen(), borderColorPanel.getColor().getBlue(), getOpacitySliderValue()));
+                    borderColorPanel.setColor(new Color(borderColorPanel
+                        .getColor().getRed(), borderColorPanel.getColor()
+                        .getGreen(), borderColorPanel.getColor().getBlue(),
+                        getOpacitySliderValue()));
                 }
             }
         });
         opacitySlider.setFont(new Font("Tahoma", Font.PLAIN, 11));
         opacitySlider.setPaintTicks(true);
         opacitySlider.setPaintLabels(true);
-        opacitySlider.setBorder(new TitledBorder(new EmptyBorder(0, 0, 0, 0), "Opacity Level", TitledBorder.TRAILING,
-                TitledBorder.BELOW_TOP, null, null));
+        opacitySlider.setBorder(new TitledBorder(new EmptyBorder(0, 0, 0, 0),
+            "Opacity Level", TitledBorder.TRAILING, TitledBorder.BELOW_TOP,
+            null, null));
         opacitySlider.setToolTipText("Opacity level");
         opacitySlider.setMajorTickSpacing(25);
         opacitySlider.setValue(255);
@@ -591,8 +616,9 @@ public class Editor extends JFrame implements MouseMotionListener
         labelTable2.put(new Integer(90), new JLabel("9"));
         labelTable2.put(new Integer(100), new JLabel("10"));
         strokeSlider = new JSlider();
-        strokeSlider.setBorder(new TitledBorder(new EmptyBorder(0, 0, 0, 0), "Stroke Size", TitledBorder.TRAILING,
-                TitledBorder.BELOW_TOP, null, null));
+        strokeSlider.setBorder(new TitledBorder(new EmptyBorder(0, 0, 0, 0),
+            "Stroke Size", TitledBorder.TRAILING, TitledBorder.BELOW_TOP,
+            null, null));
         strokeSlider.setPaintLabels(true);
         strokeSlider.setMinorTickSpacing(5);
         strokeSlider.setToolTipText("Stroke Width");
@@ -703,6 +729,14 @@ public class Editor extends JFrame implements MouseMotionListener
         this.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
         this.repaint();
 
+        if (mode == Overlay.SAVE)
+        {
+            rdbtnSave.setSelected(true);
+        } else if (mode == Overlay.UPLOAD)
+        {
+            rdbtnUpload.setSelected(true);
+        }
+
     }
 
     protected int getOpacitySliderValue()
@@ -735,7 +769,6 @@ public class Editor extends JFrame implements MouseMotionListener
 
     public void submit()
     {
-        // if there is text that has not been processed yet
         if (!editingPanel.getText().equals(""))
         {
             editingPanel.forceDrawText();
@@ -755,7 +788,6 @@ public class Editor extends JFrame implements MouseMotionListener
 
     public void submitToReddit()
     {
-        // if there is text that has notbeen processed yet
         if (!editingPanel.getText().equals(""))
         {
             editingPanel.forceDrawText();
@@ -766,7 +798,9 @@ public class Editor extends JFrame implements MouseMotionListener
 
     public void exit()
     {
-        KeyboardFocusManager.getCurrentKeyboardFocusManager().removeKeyEventDispatcher(keyDispatcher);
+        KeyboardFocusManager.getCurrentKeyboardFocusManager()
+            .removeKeyEventDispatcher(keyDispatcher);
+        keyDispatcher = null;
         Main.closeCurrentEditor();
     }
 

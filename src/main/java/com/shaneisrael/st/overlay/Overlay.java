@@ -82,7 +82,8 @@ public class Overlay extends JPanel implements MouseListener, MouseMotionListene
                 if (Preferences.getInstance().isEditorEnabled())
                 {
                     Main.closeCurrentEditor();
-                    editor = new Editor(selectionImage, mode); // send the snippet to the editor
+                    editor = new Editor(); // send the snippet to the editor
+                    editor.initialize(selectionImage, mode);
                     Main.pointToEditor(editor);
                 } else
                 {

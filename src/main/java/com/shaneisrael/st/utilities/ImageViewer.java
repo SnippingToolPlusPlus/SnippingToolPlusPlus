@@ -316,7 +316,7 @@ public class ImageViewer
             {
                 BufferedImage temp = new BufferedImage(image.getWidth(), image.getHeight(), image.getType());
                 temp.setData(image.getData());
-                new Editor(temp, Overlay.UPLOAD);
+                new Editor().initialize(temp, Overlay.UPLOAD);
             }
         });
         panel.add(btnSendToEditor, "cell 1 0");
