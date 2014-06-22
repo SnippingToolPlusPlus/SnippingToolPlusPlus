@@ -43,65 +43,64 @@ public class VersionOutputTests
         try
         {
             Version version = gson.fromJson(versionWithEverything, Version.class);
-            System.out.println(version);
-            assertEquals(versionWithEverythingOutput.trim(), version.toString().trim());
+            assertEquals(versionWithEverythingOutput.trim(), version.toString().trim().replaceAll("\r", ""));
         } catch (Exception e)
         {
             e.printStackTrace();
         }
     }
 
-    private static final String versionWithEverything = "{\r\n" +
-        "    \"version_name\": \"5.3.5 - Fuzzy Foo\",\r\n" +
-        "    \"major\": \"5\",\r\n" +
-        "    \"minor\": \"3\",\r\n" +
-        "    \"patch\": \"5\",\r\n" +
-        "    \"download\": \"http://snippingtoolpluspl.us/download/Snipping Tool++ (v5.3.5).jar\",\r\n" +
-        "    \"changes\": {\r\n" +
-        "        \"added\": [\r\n" +
-        "            \"this is a list\", \"of additions\", \"for this patch\"\r\n" +
-        "        ],\r\n" +
-        "        \"removed\": [\r\n" +
-        "            \"this is a list\", \"of things that\", \"were removed\"\r\n" +
-        "        ],\r\n" +
-        "        \"changed\": [\r\n" +
-        "            \"a list of things\", \"that have changed\"\r\n" +
-        "        ],\r\n" +
-        "        \"fixed\": [\r\n" +
-        "            \"all the bugs\", \"that don't exist now\"\r\n" +
-        "        ]\r\n" +
-        "    },\r\n" +
-        "    \"note\": \"Just some extra information from the developer\"\r\n" +
+    private static final String versionWithEverything = "{\n" +
+        "    \"version_name\": \"5.3.5 - Fuzzy Foo\",\n" +
+        "    \"major\": \"5\",\n" +
+        "    \"minor\": \"3\",\n" +
+        "    \"patch\": \"5\",\n" +
+        "    \"download\": \"http://snippingtoolpluspl.us/download/Snipping Tool++ (v5.3.5).jar\",\n" +
+        "    \"changes\": {\n" +
+        "        \"added\": [\n" +
+        "            \"this is a list\", \"of additions\", \"for this patch\"\n" +
+        "        ],\n" +
+        "        \"removed\": [\n" +
+        "            \"this is a list\", \"of things that\", \"were removed\"\n" +
+        "        ],\n" +
+        "        \"changed\": [\n" +
+        "            \"a list of things\", \"that have changed\"\n" +
+        "        ],\n" +
+        "        \"fixed\": [\n" +
+        "            \"all the bugs\", \"that don't exist now\"\n" +
+        "        ]\n" +
+        "    },\n" +
+        "    \"note\": \"Just some extra information from the developer\"\n" +
         "}";
 
-    private static final String versionWithEverythingOutput = "5.3.5 [5.3.5 - Fuzzy Foo]\r\n" +
-        "\r\n" +
-        "Added:\r\n" +
-        "+ this is a list\r\n" +
-        "+ of additions\r\n" +
-        "+ for this patch\r\n" +
-        "\r\n" +
-        "Removed:\r\n" +
-        "- this is a list\r\n" +
-        "- of things that\r\n" +
-        "- were removed\r\n" +
-        "\r\n" +
-        "Changed:\r\n" +
-        "* a list of things\r\n" +
-        "* that have changed\r\n" +
-        "\r\n" +
-        "Bug Fixes:\r\n" +
-        "# all the bugs\r\n" +
-        "# that don't exist now\r\n" +
-        "\r\n" +
-        "\r\n" +
-        "Note: Just some extra information from the developer\r\n" +
+    private static final String versionWithEverythingOutput = "5.3.5 [5.3.5 - Fuzzy Foo]\n" +
+        "\n" +
+        "Added:\n" +
+        "+ this is a list\n" +
+        "+ of additions\n" +
+        "+ for this patch\n" +
+        "\n" +
+        "Removed:\n" +
+        "- this is a list\n" +
+        "- of things that\n" +
+        "- were removed\n" +
+        "\n" +
+        "Changed:\n" +
+        "* a list of things\n" +
+        "* that have changed\n" +
+        "\n" +
+        "Bug Fixes:\n" +
+        "# all the bugs\n" +
+        "# that don't exist now\n" +
+        "\n" +
+        "\n" +
+        "Note: Just some extra information from the developer\n" +
         "Download: http://snippingtoolpluspl.us/download/Snipping Tool++ (v5.3.5).jar";
 
-    private static final String versionWithName = "{ \"version_name\": \"5.3.5 - Fuzzy Foo\",\r\n" +
-        "    \"major\": \"5\",\r\n" +
-        "    \"minor\": \"3\",\r\n" +
-        "    \"patch\": \"1\"\r\n" +
+    private static final String versionWithName = "{ \"version_name\": \"5.3.5 - Fuzzy Foo\",\n" +
+        "    \"major\": \"5\",\n" +
+        "    \"minor\": \"3\",\n" +
+        "    \"patch\": \"1\"\n" +
         "}";
 
 }
