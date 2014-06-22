@@ -512,6 +512,5 @@ public class EditorPanel extends JPanel implements MouseMotionListener, MouseLis
     public void copyImageToClipboard()
     {
         ClipboardUtilities.setClipboardImage(getImage());
-        Main.displayInfoMessage("Copied!", "The image has been copied to the clipboard!");
     }
 }

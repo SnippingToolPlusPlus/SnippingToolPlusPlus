@@ -75,6 +75,8 @@ public abstract class ClipboardUtilities implements ClipboardOwner
                 return img;
             }
         }, null);
+        
+        Main.displayInfoMessage("Copied!", "The image has been copied to the clipboard!");
     }
 
     /**

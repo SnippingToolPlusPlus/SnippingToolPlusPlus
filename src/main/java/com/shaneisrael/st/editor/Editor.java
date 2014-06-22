@@ -87,7 +87,6 @@ public class Editor extends JFrame implements MouseMotionListener
     /**
      * Create the application.
      * 
-     * @param mode
      */
     public Editor()
     {

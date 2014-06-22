@@ -126,7 +126,7 @@ public class ImageViewer
             }
         });
         viewer.setIconImage(Toolkit.getDefaultToolkit().getImage(
-                ImageViewer.class.getResource("/images/icons/folder.png")));
+            ImageViewer.class.getResource("/images/icons/folder.png")));
         viewer.setTitle("Viewer");
         viewer.setBounds(100, 100, 612, 458);
         viewer.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
@@ -187,9 +187,10 @@ public class ImageViewer
                             if (btnUploads.isSelected())
                             {
                                 if (new File(Preferences.getInstance().getCaptureDirectoryRoot() + "/Uploads/"
-                                        + list.getSelectedValue().toString().replace(" ", "")) != null)
-                                    image = ImageIO.read(new File(Preferences.getInstance().getCaptureDirectoryRoot() + "/Uploads/"
-                                            + list.getSelectedValue().toString().replace(" ", "")));
+                                    + list.getSelectedValue().toString().replace(" ", "")) != null)
+                                    image = ImageIO.read(new File(Preferences.getInstance().getCaptureDirectoryRoot()
+                                        + "/Uploads/"
+                                        + list.getSelectedValue().toString().replace(" ", "")));
                                 else
                                     image = new BufferedImage(250, 250, BufferedImage.TYPE_INT_ARGB); // set
                                                                                                       // it
@@ -204,10 +205,11 @@ public class ImageViewer
                             {
                                 linkField.setText("");
                                 deleteField.setText("");
-                                image = ImageIO.read(new File(Preferences.getInstance().getCaptureDirectoryRoot() + "/Captures/capture("
-                                        + (list.getSelectedIndex() + 1) + ").png"));
+                                image = ImageIO.read(new File(Preferences.getInstance().getCaptureDirectoryRoot()
+                                    + "/Captures/capture("
+                                    + (list.getSelectedIndex() + 1) + ").png"));
                                 imageURL = Preferences.getInstance().getCaptureDirectoryRoot() + "/Captures/capture("
-                                        + (list.getSelectedIndex() + 1) + ").png";
+                                    + (list.getSelectedIndex() + 1) + ").png";
                             }
                         } catch (IOException e1)
                         {
@@ -335,8 +337,9 @@ public class ImageViewer
     {
         try
         {
-            BufferedReader reader = new BufferedReader(new FileReader(new File(Preferences.getInstance().getCaptureDirectoryRoot()
-                    + "/Uploads/imgur_links.txt")));
+            BufferedReader reader = new BufferedReader(new FileReader(new File(Preferences.getInstance()
+                .getCaptureDirectoryRoot()
+                + "/Uploads/imgur_links.txt")));
             String line;
             String parsedLine[];
             int skip = 2;
@@ -396,7 +399,8 @@ public class ImageViewer
             do
             {
                 index++;
-                file = new File(Preferences.getInstance().getCaptureDirectoryRoot() + "/Captures/capture(" + index + ").png");
+                file = new File(Preferences.getInstance().getCaptureDirectoryRoot() + "/Captures/capture(" + index
+                    + ").png");
                 items.add(file.getName());
             } while (file.exists());
 

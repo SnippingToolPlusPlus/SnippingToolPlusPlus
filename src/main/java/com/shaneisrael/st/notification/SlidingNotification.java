@@ -46,7 +46,8 @@ public class SlidingNotification extends Notification
      */
     public void initialize()
     {
-        if(OperatingSystem.isWindows()) {
+        if (OperatingSystem.isWindows())
+        {
             this.setType(Type.UTILITY);
         }
         panel = new JPanel();
@@ -122,11 +123,11 @@ public class SlidingNotification extends Notification
                 {
                     int o = (int) (currOpacity * 255);
                     setBackground(new Color(backgroundColor.getRed(), backgroundColor.getGreen(),
-                            backgroundColor.getBlue(), o));
+                        backgroundColor.getBlue(), o));
                     lblTitle.setForeground(new Color((titleColor.getRed()), (titleColor.getGreen()), (titleColor
-                            .getBlue()), o));
+                        .getBlue()), o));
                     lblMessage.setForeground(new Color(messageColor.getRed(), messageColor.getGreen(), messageColor
-                            .getBlue(), o));
+                        .getBlue(), o));
                     getContentPane().repaint();
                 } else
                 {
@@ -147,11 +148,11 @@ public class SlidingNotification extends Notification
                 {
                     int o = (int) (currOpacity * 255);
                     setBackground(new Color(backgroundColor.getRed(), backgroundColor.getGreen(),
-                            backgroundColor.getBlue(), o));
+                        backgroundColor.getBlue(), o));
                     lblTitle.setForeground(new Color((titleColor.getRed()), (titleColor.getGreen()), (titleColor
-                            .getBlue()), o));
+                        .getBlue()), o));
                     lblMessage.setForeground(new Color(messageColor.getRed(), messageColor.getGreen(), messageColor
-                            .getBlue(), o));
+                        .getBlue(), o));
                     getContentPane().repaint();
                 } else
                 {
