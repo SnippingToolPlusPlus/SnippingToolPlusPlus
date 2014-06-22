@@ -48,13 +48,14 @@ public class Upload extends Thread
 
     public Upload(BufferedImage img, boolean reddit)
     {
-        this.image = img;
+        this.image = ImageUtilities.compressImage(img, 1f);
+        
         this.reddit = reddit;
         uploadThread = new Thread(this);
         uploadThread.start();
 
     }
-
+    
     @Override
     public void run()
     {
@@ -157,7 +158,8 @@ public class Upload extends Thread
         {
             // Creates Byte Array from picture
             baos = new ByteArrayOutputStream();
-            Image image = ImageIO.read(file);
+            BufferedImage image = ImageIO.read(file);
+            image = ImageUtilities.compressImage(image, 1f);
             ImageIO.write((RenderedImage) image, type, baos);
             image = null;
             URL url = new URL(IMGUR_POST_URI);

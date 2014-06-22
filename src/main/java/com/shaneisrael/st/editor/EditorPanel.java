@@ -23,7 +23,7 @@ import javax.swing.JPanel;
 import com.shaneisrael.st.Main;
 import com.shaneisrael.st.data.OperatingSystem;
 import com.shaneisrael.st.utilities.ClipboardUtilities;
-import com.shaneisrael.st.utilities.ImageManipulator;
+import com.shaneisrael.st.utilities.ImageUtilities;
 
 public class EditorPanel extends JPanel implements MouseMotionListener, MouseListener
 {
@@ -311,7 +311,7 @@ public class EditorPanel extends JPanel implements MouseMotionListener, MouseLis
 
         blurredSelection = draggedRect();
         Image blur = getSubImage(blurredSelection);
-        blur = ImageManipulator.simpleBlur(blur);
+        blur = ImageUtilities.simpleBlur(blur);
         g.drawImage(blur, blurredSelection.x, blurredSelection.y, null);
     }
 
