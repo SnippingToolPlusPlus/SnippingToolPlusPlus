@@ -14,12 +14,12 @@ jar {
     manifest {
         attributes ('Main-Class': 'com.shaneisrael.st.Main',
                     'Application-Version': version,
-                    'Author': 'Shane Israel',
+                    'Author': 'http://snippingtoolpluspl.us',
                     'Built-By': System.getProperty("user.name"),
                     'Built-On': new Date().toString())
     }
     
-    archiveName = 'SnippingToolPlusPlus-' + version + '.jar'
+    archiveName = project.name + '-' + version + '.jar'
 }
 
 repositories {
@@ -63,4 +63,9 @@ uploadArchives {
            dirs 'repos'
        }
     }
+}
+
+//run gradlew wrapper to update the project's gradle version
+task wrapper(type: Wrapper) {
+    gradleVersion = '1.12'
 }
