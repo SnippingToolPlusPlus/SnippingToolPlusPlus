@@ -1,0 +1,24 @@
+{
+    "version_name": "NextGen",
+    "major": "5",
+    "minor": "4",
+    "patch": "0",
+    "download": "http://snippingtoolpluspl.us/downloads/SnippingToolPlusPlus-5.4.0.jar",
+    "changes": {
+        "added": [
+            "Image dimensions are now displayed when dragging a selection"
+        ],
+        "removed": [
+            ""
+        ],
+        "changed": [
+            "The location of prefs.json has been changed to ~/.snippingtool++/data/prefs.json",
+            "The names of some preference keys in the json file have been changed",
+            "for more info see https://github.com/SnippingToolPlusPlus/SnippingToolPlusPlus/pull/3"
+        ],
+        "fixed": [
+            "editor no longer uploads multiple copies of image under certain conditions"
+        ]
+    },
+    "note": "You will have to reconfigure your settings as the location of the prefs.json file has change."
+}
