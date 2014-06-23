@@ -4,7 +4,7 @@ apply plugin: 'jacoco'
 apply plugin: 'sonar-runner'
 
 sourceCompatibility = 1.7
-project.version = '5.4.0'
+project.version = '5.4.1'
 
 repositories {
     mavenCentral()
