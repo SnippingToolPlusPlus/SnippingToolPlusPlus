@@ -144,6 +144,8 @@ public class Upload extends Thread
             delUrl = delUrl[1].split("</delete_page>");
 
             in.close();
+            baos.close();
+            wr.close();
             return true;
         } catch (Exception e)
         {
@@ -185,6 +187,7 @@ public class Upload extends Thread
             }
             in.close();
             baos.close();
+            wr.close();
             return response;
         } catch (Exception e)
         {
