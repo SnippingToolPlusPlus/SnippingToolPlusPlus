@@ -42,6 +42,8 @@ public class Upload extends Thread
 
     private boolean reddit = false;
 
+    private static AnimatedTrayIcon animatedIcon = new AnimatedTrayIcon("/images/upload/", 14, 38);
+
     public Upload()
     {
     }
@@ -49,20 +51,18 @@ public class Upload extends Thread
     public Upload(BufferedImage img, boolean reddit)
     {
         this.image = img;
-        
         this.reddit = reddit;
         uploadThread = new Thread(this);
         uploadThread.start();
-
     }
-    
+
     @Override
     public void run()
     {
         // set working image
         if (OperatingSystem.isWindows())
         {
-            Main.trayIcon.setImage(new ImageIcon(this.getClass().getResource("/images/upload.gif")).getImage());
+            new Thread(animatedIcon, "upload-animation").start();
         } else
         {
             Main.trayIcon.setImage(new ImageIcon(this.getClass().getResource("/images/uploadMac.png")).getImage());
@@ -92,11 +92,16 @@ public class Upload extends Thread
             SoundNotifications.playDing();
 
         } else
+        {
             Main.displayErrorMessage("Upload Failed!", "An unexpected error has occurred");
+        }
 
         if (OperatingSystem.isWindows())
         {
-            Main.trayIcon.setImage(new ImageIcon(this.getClass().getResource("/images/trayIcon.png")).getImage());
+            if (Upload.animatedIcon != null)
+            {
+                Upload.animatedIcon.stopAnimating();
+            }
         } else
         {
             Main.trayIcon.setImage(new ImageIcon(this.getClass().getResource("/images/trayIconMac.png")).getImage());
