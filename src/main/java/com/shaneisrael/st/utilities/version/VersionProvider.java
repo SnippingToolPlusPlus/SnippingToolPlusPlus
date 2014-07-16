@@ -1,6 +1,6 @@
 package com.shaneisrael.st.utilities.version;
 
-public interface VersionProvider
+interface VersionProvider
 {
     /**
      * Retrieves the latest version information and alerts the given {@link VersionResponseListener}

@@ -13,9 +13,6 @@ import com.shaneisrael.st.notification.Notification;
 import com.shaneisrael.st.notification.SlidingNotification;
 import com.shaneisrael.st.utilities.OpenBrowser;
 
-/*
- * This class just checks my tools webpage and notifies the user if there is a new update to the program.
- */
 public class UpdateChecker implements VersionResponseListener
 {
     private final Version currentVersion;
@@ -76,7 +73,7 @@ public class UpdateChecker implements VersionResponseListener
     }
 
     @Override
-    public void onSuccess(final Version latestVersion)
+    public void onVersionResponseSuccess(final Version latestVersion)
     {
         System.out.println("Latest version is " + latestVersion.getVersionStringWithName());
 
@@ -111,7 +108,7 @@ public class UpdateChecker implements VersionResponseListener
     }
 
     @Override
-    public void onFailure(String reason)
+    public void onVersionResponseFailure(String reason)
     {
         System.out.println("Could not find latest version information because: " + reason);
     }

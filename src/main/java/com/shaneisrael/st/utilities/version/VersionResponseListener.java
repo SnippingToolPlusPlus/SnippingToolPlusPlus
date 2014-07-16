@@ -8,7 +8,7 @@ public interface VersionResponseListener
      * 
      * @param latestVersion
      */
-    public void onSuccess(Version latestVersion);
+    public void onVersionResponseSuccess(Version latestVersion);
 
     /**
      * Called when checking for the latest version is not successful.
@@ -16,5 +16,5 @@ public interface VersionResponseListener
      * @param reason
      *            the reason for the failure, should be end-user understandable.
      */
-    public void onFailure(String reason);
+    public void onVersionResponseFailure(String reason);
 }
