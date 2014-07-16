@@ -1,6 +1,5 @@
 package com.shaneisrael.st.utilities;
 
-import java.awt.Image;
 import java.awt.image.BufferedImage;
 import java.awt.image.RenderedImage;
 import java.io.BufferedReader;
@@ -20,7 +19,6 @@ import org.apache.commons.codec.binary.Base64;
 import com.shaneisrael.st.Main;
 import com.shaneisrael.st.data.LinkDataSaver;
 import com.shaneisrael.st.data.OperatingSystem;
-import com.shaneisrael.st.prefs.Preferences;
 import com.shaneisrael.st.prefs.Preferences;
 
 public class Upload extends Thread

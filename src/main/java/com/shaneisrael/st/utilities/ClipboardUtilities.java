@@ -124,9 +124,4 @@ public abstract class ClipboardUtilities implements ClipboardOwner
 
         return null;
     }
-
-    public static void sendTextToPastebin()
-    {
-        new PastebinUploader(getClipboardText());
-    }
 }

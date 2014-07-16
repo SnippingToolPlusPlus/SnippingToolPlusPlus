@@ -197,8 +197,7 @@ public class Main extends JFrame implements ActionListener
             keyhook.registerHotKey(2, JIntellitypeConstants.MOD_CONTROL + JIntellitypeConstants.MOD_SHIFT, '2');
             keyhook.registerHotKey(3, JIntellitypeConstants.MOD_CONTROL + JIntellitypeConstants.MOD_SHIFT, '3');
             keyhook.registerHotKey(4, JIntellitypeConstants.MOD_CONTROL + JIntellitypeConstants.MOD_SHIFT, '4');
-            keyhook.registerHotKey(5, JIntellitypeConstants.MOD_ALT + JIntellitypeConstants.MOD_SHIFT, '1');
-            keyhook.registerHotKey(6, JIntellitypeConstants.MOD_CONTROL + JIntellitypeConstants.MOD_SHIFT, 'X');
+            keyhook.registerHotKey(5, JIntellitypeConstants.MOD_CONTROL + JIntellitypeConstants.MOD_SHIFT, 'X');
         }
         /*
          * events
@@ -222,10 +221,7 @@ public class Main extends JFrame implements ActionListener
                 } else if (identifier == 4) // CTRL + SHIFT + 4
                 {
                     sScreenshot.doClick();
-                } else if (identifier == 5) // ALT + SHIFT + 1
-                {
-                    ClipboardUtilities.sendTextToPastebin();
-                } else if (identifier == 6) // CTRL + SHIFT + X
+                } else if (identifier == 5) // CTRL + SHIFT + X
                 {
                     uClipboardImg.doClick();
                 }
@@ -307,10 +303,6 @@ public class Main extends JFrame implements ActionListener
         uSnippet.setIcon(new ImageIcon(this.getClass().getResource("/images/icons/snippet.png")));
         uSnippet.addActionListener(this);
         uSnippet.setActionCommand("uSnippet");
-        JMenuItem uClipboard = new JMenuItem("Clipboard Text [Alt+Shift+1]");
-        uClipboard.setIcon(new ImageIcon(this.getClass().getResource("/images/icons/text.png")));
-        uClipboard.addActionListener(this);
-        uClipboard.setActionCommand("uClipboard");
 
         uClipboardImg = new JMenuItem("Clipboard Image [Ctrl+Shift+X]");
         uClipboardImg.setIcon(new ImageIcon(this.getClass().getResource("/images/icons/image_upload.png")));
@@ -337,8 +329,6 @@ public class Main extends JFrame implements ActionListener
         aboutItem.setIcon(new ImageIcon(this.getClass().getResource("/images/icons/about_icon.png")));
         aboutItem.addActionListener(this);
         aboutItem.setActionCommand("about");
-        uploadMenu.add(uClipboard);
-        uploadMenu.addSeparator();
         uploadMenu.add(uSnippet);
         uploadMenu.add(uScreenshot);
         uploadMenu.add(uClipboardImg);
@@ -451,9 +441,6 @@ public class Main extends JFrame implements ActionListener
         {
             save = new Save();
             save.save(capture.getScreenCapture());
-        } else if (command.equals("uClipboard"))
-        {
-            ClipboardUtilities.sendTextToPastebin();
         } else if (command.equals("uClipboardImg"))
         {
             ClipboardUtilities.uploadImage();
