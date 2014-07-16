@@ -4,7 +4,7 @@ import java.awt.Desktop;
 import java.net.URI;
 import java.net.URISyntaxException;
 
-public class OpenBrowser
+public class Browser
 {
     private static final String REDDIT_SUBMIT_LINK = "www.reddit.com/submit?url=";
 
@@ -48,6 +48,17 @@ public class OpenBrowser
             {
                 e.printStackTrace();
             }
+        }
+    }
+
+    public static void open(String websiteUrl)
+    {
+        try
+        {
+            Browser.open(new URI(websiteUrl));
+        } catch (URISyntaxException e)
+        {
+            e.printStackTrace();
         }
     }
 }

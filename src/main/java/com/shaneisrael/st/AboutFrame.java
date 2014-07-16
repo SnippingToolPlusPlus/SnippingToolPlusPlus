@@ -5,13 +5,12 @@ import java.awt.Toolkit;
 import javax.swing.JFrame;
 import javax.swing.WindowConstants;
 
-import com.shaneisrael.st.utilities.ImagePanel;
-import com.shaneisrael.st.utilities.version.Version;
+import com.shaneisrael.st.utilities.AboutPanel;
 
 public class AboutFrame
 {
     private JFrame aboutFrame;
-    private ImagePanel logoPanel;
+    private AboutPanel logoPanel;
 
     public AboutFrame()
     {
@@ -26,12 +25,12 @@ public class AboutFrame
                 getClass().getResource("/images/st-icon.png")
                 )
             );
-        aboutFrame.setTitle("Snipping Tool++ v" + Version.getCurrentRunningVersion().getVersionString());
+        aboutFrame.setTitle("Snipping Tool++");
         aboutFrame.setResizable(false);
         aboutFrame.setAlwaysOnTop(true);
         aboutFrame.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 
-        logoPanel = new ImagePanel("/images/logo-background.png");
+        logoPanel = new AboutPanel();
         aboutFrame.getContentPane().add(logoPanel);
 
         aboutFrame.pack();

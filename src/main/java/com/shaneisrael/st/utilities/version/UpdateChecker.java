@@ -11,7 +11,7 @@ import javax.swing.JButton;
 
 import com.shaneisrael.st.notification.Notification;
 import com.shaneisrael.st.notification.SlidingNotification;
-import com.shaneisrael.st.utilities.OpenBrowser;
+import com.shaneisrael.st.utilities.Browser;
 
 public class UpdateChecker implements VersionResponseListener
 {
@@ -86,12 +86,12 @@ public class UpdateChecker implements VersionResponseListener
                 {
                     try
                     {
-                        OpenBrowser.open(new URI(latestVersion.getDownloadLocation()));
+                        Browser.open(new URI(latestVersion.getDownloadLocation()));
                     } catch (URISyntaxException e1)
                     {
                         try
                         {
-                            OpenBrowser.open(new URI("http://snippingtoolpluspl.us/"));
+                            Browser.open(new URI("http://snippingtoolpluspl.us/"));
                         } catch (URISyntaxException e2)
                         {
                             System.out.println("Could not get latest version information.");

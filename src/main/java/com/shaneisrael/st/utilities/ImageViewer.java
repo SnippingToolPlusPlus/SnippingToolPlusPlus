@@ -66,7 +66,7 @@ public class ImageViewer
 
     int correctedIndex = 0;
 
-    private OpenBrowser browser = new OpenBrowser();
+    private Browser browser = new Browser();
 
     private ButtonGroup bGroup = new ButtonGroup();
 
@@ -282,7 +282,7 @@ public class ImageViewer
                 try
                 {
                     if (btnUploads.isSelected())
-                        OpenBrowser.open(new URI(linkField.getText()));
+                        Browser.open(new URI(linkField.getText()));
                     else
                         Desktop.getDesktop().open(new File(imageURL));
 

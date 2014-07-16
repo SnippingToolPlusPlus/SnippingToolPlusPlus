@@ -312,4 +312,9 @@ public final class Version implements Comparable<Version>
     {
         return getCurrentRunningVersion().equals(getDebugVersion());
     }
+
+    public boolean isUpToDate(Version latest)
+    {
+        return this.compareTo(latest) >= 0;
+    }
 }

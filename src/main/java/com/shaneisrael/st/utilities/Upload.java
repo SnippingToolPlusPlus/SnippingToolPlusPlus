@@ -85,7 +85,7 @@ public class Upload extends Thread
                 Main.displayInfoMessage("Upload Successful!", "Link has been copied to your clipboard");
             } else
             {
-                OpenBrowser.openToReddit(imgUrl[0]);
+                Browser.openToReddit(imgUrl[0]);
                 Main.displayInfoMessage("Upload Successful!", "Submitting link to Reddit");
             }
 
