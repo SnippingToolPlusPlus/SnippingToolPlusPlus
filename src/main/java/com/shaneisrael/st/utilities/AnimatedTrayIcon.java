@@ -22,12 +22,12 @@ public class AnimatedTrayIcon implements Runnable
         {
             frames.add(new ImageIcon(this.getClass().getResource(basePath + i + ".png")).getImage());
         }
-        animate = true;
     }
 
     @Override
     public void run()
     {
+        animate = true;
         while (animate)
         {
             for (Image frame : frames)
