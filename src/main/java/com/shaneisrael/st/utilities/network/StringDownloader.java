@@ -8,10 +8,10 @@ import java.io.IOException;
  * @author Talon
  * 
  */
-public class URLDownloader implements Runnable, DownloadResponseListener
+public class StringDownloader implements Runnable, ServerResponseListener
 {
     private String url;
-    private DownloadResponseListener listener;
+    private ServerResponseListener listener;
 
     private String downloadedContent;;
     private String errorMessage;
@@ -25,7 +25,7 @@ public class URLDownloader implements Runnable, DownloadResponseListener
      * @param listener
      *            the listener to notify when finished
      */
-    public void downloadAsync(String url, DownloadResponseListener listener)
+    public void downloadAsync(String url, ServerResponseListener listener)
     {
         this.url = url;
         this.listener = listener;
@@ -39,7 +39,7 @@ public class URLDownloader implements Runnable, DownloadResponseListener
      *            the url to download from
      * @return
      */
-    public String download(String url)
+    private String download(String url)
     {
         this.url = url;
         this.listener = this;
@@ -57,20 +57,20 @@ public class URLDownloader implements Runnable, DownloadResponseListener
             serverResponse = urlReader.downloadString(url);
         } catch (IOException e)
         {
-            listener.onFailure(e.getMessage());
+            listener.onServerResponseFail(e.getMessage());
         }
-        listener.onSuccess(serverResponse);
+        listener.onServerResponseSuccess(serverResponse);
     }
 
     @Override
-    public void onSuccess(String content)
+    public void onServerResponseSuccess(String content)
     {
         wasSuccessful = true;
         downloadedContent = content;
     }
 
     @Override
-    public void onFailure(String reason)
+    public void onServerResponseFail(String reason)
     {
         wasSuccessful = false;
         errorMessage = reason;
@@ -85,6 +85,6 @@ public class URLDownloader implements Runnable, DownloadResponseListener
      */
     public static String downloadString(String url)
     {
-        return new URLDownloader().download(url);
+        return new StringDownloader().download(url);
     }
 }
