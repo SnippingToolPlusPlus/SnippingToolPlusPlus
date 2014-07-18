@@ -15,7 +15,7 @@ import java.nio.file.Paths;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-public class HTTPFileUploader
+class HTTPFileUploader
 {
     private static final String CRLF = "\r\n";
     private final String boundary;
@@ -32,7 +32,7 @@ public class HTTPFileUploader
     private PrintWriter out;
     private OutputStream outputStream;
 
-    public HTTPFileUploader(String endpoint, String userAgent)
+    HTTPFileUploader(String endpoint, String userAgent)
     {
         boundary = generateBoundary();
         this.endpoint = endpoint;
@@ -42,23 +42,23 @@ public class HTTPFileUploader
         fields = new LinkedHashMap<>();
     }
 
-    public void setHeader(String fieldName, String value)
+    void setHeader(String fieldName, String value)
     {
         headers.put(fieldName, value);
     }
 
-    public void setField(String fieldName, String value)
+    void setField(String fieldName, String value)
     {
         fields.put(fieldName, value);
     }
 
-    public void setFile(String fieldName, File fileToUpload)
+    void setFile(String fieldName, File fileToUpload)
     {
         this.fileField = fieldName;
         this.fileToUpload = fileToUpload;
     }
 
-    public void startUpload() throws IOException
+    void startUpload() throws IOException
     {
         URL url = new URL(endpoint);
         connection = (HttpURLConnection) url.openConnection();
@@ -74,7 +74,7 @@ public class HTTPFileUploader
         generateRequest(outputStream);
     }
 
-    public String finish() throws IOException
+    String finish() throws IOException, UploadException
     {
         StringBuilder response = new StringBuilder();
 
@@ -97,8 +97,12 @@ public class HTTPFileUploader
         int status = connection.getResponseCode();
         if (status != HttpURLConnection.HTTP_OK)
         {
-            System.err.println(response.toString());
-            throw new IOException("Server returned non-OK status: " + status);
+            String message = "Server returned non-OK status: " + status;
+            if (status == HttpURLConnection.HTTP_FORBIDDEN)
+            {
+                message = "Server could not authenticated, did you set the client id?";
+            }
+            throw new UploadException(message, status);
         }
         return response.toString();
     }
@@ -179,9 +183,10 @@ public class HTTPFileUploader
 
     /**
      * Sets the Authorization header to Client-ID {clientId}
+     * 
      * @param clientId
      */
-    public void setClientId(String clientId)
+    void setClientId(String clientId)
     {
         this.clientId = clientId;
     }

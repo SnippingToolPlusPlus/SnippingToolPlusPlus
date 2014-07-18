@@ -31,7 +31,6 @@ public class MultiUploader extends JFrame
     private JPanel contentPane;
     private JTextArea linkBox;
     private JTextArea pathBox;
-    private MultiUploaderThread mut;
     private JButton btnUpload;
 
     private int total_uploads = 0;
@@ -72,7 +71,7 @@ public class MultiUploader extends JFrame
                 {
                     evt.acceptDrop(DnDConstants.ACTION_LINK);
                     List<File> droppedFiles = (List<File>) evt.getTransferable().getTransferData(
-                            DataFlavor.javaFileListFlavor);
+                        DataFlavor.javaFileListFlavor);
                     for (File file : droppedFiles)
                     {
                         /*
@@ -176,7 +175,7 @@ public class MultiUploader extends JFrame
         {
             file = new File(path);
             String[] type = file.getPath().split("\\.");
-            mut = new MultiUploaderThread(file, type[type.length - 1], this);
+            new MultiUploaderThread(file, type[type.length - 1], this);
         }
     }
 

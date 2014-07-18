@@ -7,48 +7,69 @@ import java.io.IOException;
 import javax.imageio.ImageIO;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonSyntaxException;
 import com.shaneisrael.st.Config;
-import com.shaneisrael.st.upload.HTTPFileUploader;
+import com.shaneisrael.st.upload.SimpleFileUploader;
+import com.shaneisrael.st.upload.UploadListener;
 
-public class ImgurUploader
+public class ImgurUploader implements UploadListener
 {
+    private static final Gson gson = new Gson();
     private static final String IMGUR_URI = "https://api.imgur.com/3";
-    public static final String CLIENT_ID = "6311d570cd54953";
+    private static final String CLIENT_ID = "6311d570cd54953";
 
-    private final HTTPFileUploader imgur;
+    private ImgurResponseListener listener;
 
-    public ImgurUploader(String userAgent)
+    public void upload(BufferedImage image, ImgurResponseListener listener)
     {
-        imgur = new HTTPFileUploader(IMGUR_URI + "/image.json", userAgent);
-        imgur.setClientId(CLIENT_ID);
-        imgur.setHeader("Authorization", "Client-ID " + CLIENT_ID);
-        imgur.setField("type", "file");
-        imgur.setField("description", "Uploaded via " + Config.WEBSITE_URL);
+        upload(saveTemporarily(image), listener);
     }
 
-    public String upload(BufferedImage image) throws IOException
+    public void upload(File imageFile, ImgurResponseListener listener)
     {
-        return upload(saveTemporarily(image));
+        this.listener = listener;
+        SimpleFileUploader uploader = new SimpleFileUploader(
+            IMGUR_URI + "/image.json",
+            imageFile,
+            Config.STPP_USER_AGENT,
+            CLIENT_ID);
+        uploader.uploadAsync(this);
     }
 
-    public String upload(File imageFile) throws IOException
+    @Override
+    public void onUploadSuccess(String content)
     {
-        imgur.setFile("image", imageFile);
-        imgur.startUpload(); //blocking call
-        String imgurJson = imgur.finish();
-        Gson gson = new Gson();
-        ImgurResponse imgurResponse = gson.fromJson(imgurJson, ImgurResponse.class);
-        String link = "";
+        ImgurResponse response = null;
+
         try
         {
-            ImgurImage imageInfo = imgurResponse.getDataAsImage();
-            link = imageInfo.getLink();
-        } catch (ImgurException e)
+            response = gson.fromJson(content, ImgurResponse.class);
+        } catch (JsonSyntaxException ex)
         {
-            e.printStackTrace();
-            link = "Could not communicate with imgur: " + e.getMessage();
+            listener.onImgurResponseFail(response);
         }
-        return link;
+
+        if (response != null && response.wasSuccessful())
+        {
+            ImgurImage uploadedImage = gson.fromJson(response.getRawData(), ImgurImage.class);
+            if (uploadedImage != null)
+            {
+                listener.onImgurResponseSuccess(uploadedImage);
+            } else
+            {
+                listener.onImgurResponseFail(response);
+            }
+        } else
+        {
+            listener.onImgurResponseFail(response);
+        }
+    }
+
+    @Override
+    public void onUploadFail(int statusCode, String reason)
+    {
+        System.out.println(statusCode + ": Failed to upload image: " + reason);
+        listener.onImgurResponseFail(null);
     }
 
     private File saveTemporarily(BufferedImage image)

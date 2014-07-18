@@ -4,44 +4,49 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 
+import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 
-import com.shaneisrael.st.Config;
 import com.shaneisrael.st.Main;
 import com.shaneisrael.st.data.LinkDataSaver;
 import com.shaneisrael.st.data.OperatingSystem;
+import com.shaneisrael.st.imgur.ImgurImage;
+import com.shaneisrael.st.imgur.ImgurResponse;
+import com.shaneisrael.st.imgur.ImgurResponseListener;
 import com.shaneisrael.st.imgur.ImgurUploader;
 import com.shaneisrael.st.prefs.Preferences;
 
-public class Upload extends Thread
+public class Upload implements ImgurResponseListener
 {
-    private Thread uploadThread;
+    private static final AnimatedTrayIcon animatedIcon = AnimatedTrayIcon.getDefaultIcon();
 
-    private BufferedImage image;
-    private Save save = new Save();
+    private final BufferedImage image;
+    private final boolean uploadToreddit;
+    private final Save save;
 
-    private boolean reddit = false;
-
-    private static AnimatedTrayIcon animatedIcon = new AnimatedTrayIcon("/images/upload/", 14, 38);
-
-    private String imageUrl, deleteUrl;
-
-    public Upload()
+    public Upload(BufferedImage image)
     {
+        this(image, false);
     }
 
-    public Upload(BufferedImage img, boolean reddit)
+    public Upload(BufferedImage image, boolean uploadToReddit)
     {
-        this.image = img;
-        this.reddit = reddit;
-        uploadThread = new Thread(this);
-        uploadThread.start();
+        this.image = image;
+        this.uploadToreddit = uploadToReddit;
+        this.save = new Save();
+
+        upload();
     }
 
-    @Override
-    public void run()
+    private void upload()
     {
-        // set working image
+        doBeforeUpload();
+        ImgurUploader uploader = new ImgurUploader();
+        uploader.upload(image, this);
+    }
+
+    private void doBeforeUpload()
+    {
         if (OperatingSystem.isWindows())
         {
             new Thread(animatedIcon, "upload-animation").start();
@@ -50,34 +55,10 @@ public class Upload extends Thread
             Main.trayIcon.setImage(new ImageIcon(this.getClass().getResource("/images/uploadMac.png")).getImage());
         }
         Main.displayInfoMessage("Uploading...", "Link will be available shortly");
+    }
 
-        boolean uploaded = uploadToImgur(image);
-
-        if (uploaded)
-        {
-            if (Preferences.getInstance().isAutoSaveEnabled())
-            {
-                save.saveUpload(image);
-                new LinkDataSaver(imageUrl, deleteUrl, "upload(" + Preferences.TOTAL_SAVED_UPLOADS + ")");
-            }
-
-            if (!reddit)
-            {
-                ClipboardUtilities.setClipboard(imageUrl);
-                Main.displayInfoMessage("Upload Successful!", "Link has been copied to your clipboard");
-            } else
-            {
-                Browser.openToReddit(imageUrl);
-                Main.displayInfoMessage("Upload Successful!", "Submitting link to Reddit");
-            }
-
-            SoundNotifications.playDing();
-
-        } else
-        {
-            Main.displayErrorMessage("Upload Failed!", "An unexpected error has occurred");
-        }
-
+    private void doAfterUpload()
+    {
         if (OperatingSystem.isWindows())
         {
             if (Upload.animatedIcon != null)
@@ -88,41 +69,41 @@ public class Upload extends Thread
         {
             Main.trayIcon.setImage(new ImageIcon(this.getClass().getResource("/images/trayIconMac.png")).getImage());
         }
-
-        System.gc(); //garbage collect any unused memory by the upload thread and editor.
-        this.interrupt();
     }
 
-    private boolean uploadToImgur(BufferedImage img)
+    @Override
+    public void onImgurResponseSuccess(ImgurImage uploadedImage)
     {
-        ImgurUploader uploader = new ImgurUploader(Config.USER_AGENT);
-        boolean success = false;
-        try
+        if (Preferences.getInstance().isAutoSaveEnabled())
         {
-            imageUrl = uploader.upload(img);
-            success = true;
-        } catch (IOException e)
-        {
-            System.out.println("Failed to upload image to server");
-            success = false;
-            e.printStackTrace();
+            save.saveUpload(image);
+            new LinkDataSaver(uploadedImage.getLink(), uploadedImage.getDeleteLink(),
+                "upload(" + Preferences.TOTAL_SAVED_UPLOADS + ")");
         }
-        return success;
+
+        if (!uploadToreddit)
+        {
+            ClipboardUtilities.setClipboard(uploadedImage.getLink());
+            Main.displayInfoMessage("Upload Successful!", "Link has been copied to your clipboard");
+        } else
+        {
+            Browser.openToReddit(uploadedImage.getLink());
+            Main.displayInfoMessage("Upload Successful!", "Submitting link to Reddit");
+        }
+
+        SoundNotifications.playDing();
+        doAfterUpload();
     }
 
-    public String uploadImageFile(File file, String type)
+    @Override
+    public void onImgurResponseFail(ImgurResponse response)
     {
-        ImgurUploader uploader;
-        uploader = new ImgurUploader(Config.USER_AGENT);
-        String urlOrMessage;
-        try
-        {
-            urlOrMessage = uploader.upload(file);
-        } catch (IOException e)
-        {
-            System.out.println("Failed to upload image to server");
-            urlOrMessage = "Failed to upload file: " + e.getMessage();
-        }
-        return urlOrMessage;
+        Main.displayErrorMessage("Upload Failed!", "An unexpected error has occurred");
+        doAfterUpload();
+    }
+
+    public static Upload uploadFile(File imageFile, boolean uploadToReddit) throws IOException
+    {
+        return new Upload(ImageIO.read(imageFile), uploadToReddit);
     }
 }

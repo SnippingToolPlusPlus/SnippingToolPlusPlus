@@ -7,7 +7,6 @@ public class MultiUploaderThread extends Thread
     Thread thread;
     MultiUploader mu;
     String type;
-    Upload upload = new Upload();
     File file;
 
     public MultiUploaderThread(File file, String type, MultiUploader mu)
@@ -22,7 +21,9 @@ public class MultiUploaderThread extends Thread
     @Override
     public void run()
     {
-        String response = upload.uploadImageFile(file, type);
+        //temporarily ruining functionality until refactor for v3 api is complete
+        String response = null; //upload.uploadImageFile(file, type);
+
         if (response != null)
         {
             String upLink[] = response.split("<large_thumbnail>");
@@ -30,6 +31,7 @@ public class MultiUploaderThread extends Thread
             upLink[0] += ".png";
             String delLink[] = response.split("<delete_page>");
             delLink = delLink[1].split("</delete_page>");
+
             mu.addLink(upLink[0]);
             mu.addDeletionLink(delLink[0]);
         } else

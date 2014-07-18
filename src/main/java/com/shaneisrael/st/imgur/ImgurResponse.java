@@ -38,4 +38,19 @@ public class ImgurResponse
         }
         return image;
     }
+
+    public int getHttpStatusCode()
+    {
+        return httpStatusCode;
+    }
+
+    public boolean wasSuccessful()
+    {
+        return success;
+    }
+
+    public JsonObject getRawData()
+    {
+        return data;
+    }
 }
