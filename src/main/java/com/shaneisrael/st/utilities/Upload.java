@@ -10,8 +10,8 @@ import com.shaneisrael.st.Config;
 import com.shaneisrael.st.Main;
 import com.shaneisrael.st.data.LinkDataSaver;
 import com.shaneisrael.st.data.OperatingSystem;
+import com.shaneisrael.st.imgur.ImgurUploader;
 import com.shaneisrael.st.prefs.Preferences;
-import com.shaneisrael.st.upload.ImgurUploader;
 
 public class Upload extends Thread
 {

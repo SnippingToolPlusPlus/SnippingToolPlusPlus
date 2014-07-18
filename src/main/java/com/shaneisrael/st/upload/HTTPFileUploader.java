@@ -21,6 +21,7 @@ public class HTTPFileUploader
     private final String boundary;
     private final String endpoint;
     private final String userAgent;
+    private String clientId;
     private String fileField;
     private File fileToUpload;
 
@@ -67,7 +68,7 @@ public class HTTPFileUploader
             "Content-Type", "multipart/form-data; boundary=" + boundary
             );
         connection.setRequestProperty("User-Agent", userAgent);
-        connection.setRequestProperty("Authorization", "Client-ID " + ImgurUploader.CLIENT_ID);
+        connection.setRequestProperty("Authorization", "Client-ID " + clientId);
         outputStream = connection.getOutputStream();
         out = new PrintWriter(new OutputStreamWriter(outputStream, "UTF-8"));
         generateRequest(outputStream);
@@ -174,5 +175,14 @@ public class HTTPFileUploader
     private static String generateBoundary()
     {
         return "===" + System.currentTimeMillis() + "===";
+    }
+
+    /**
+     * Sets the Authorization header to Client-ID {clientId}
+     * @param clientId
+     */
+    public void setClientId(String clientId)
+    {
+        this.clientId = clientId;
     }
 }

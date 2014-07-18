@@ -1,4 +1,4 @@
-package com.shaneisrael.st.upload;
+package com.shaneisrael.st.imgur;
 
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -7,8 +7,8 @@ import java.io.IOException;
 import javax.imageio.ImageIO;
 
 import com.google.gson.Gson;
-import com.google.gson.JsonObject;
 import com.shaneisrael.st.Config;
+import com.shaneisrael.st.upload.HTTPFileUploader;
 
 public class ImgurUploader
 {
@@ -20,6 +20,7 @@ public class ImgurUploader
     public ImgurUploader(String userAgent)
     {
         imgur = new HTTPFileUploader(IMGUR_URI + "/image.json", userAgent);
+        imgur.setClientId(CLIENT_ID);
         imgur.setHeader("Authorization", "Client-ID " + CLIENT_ID);
         imgur.setField("type", "file");
         imgur.setField("description", "Uploaded via " + Config.WEBSITE_URL);
@@ -36,8 +37,17 @@ public class ImgurUploader
         imgur.startUpload(); //blocking call
         String imgurJson = imgur.finish();
         Gson gson = new Gson();
-        JsonObject imgurResponse = gson.fromJson(imgurJson, JsonObject.class);
-        String link = imgurResponse.get("data").getAsJsonObject().get("link").getAsString();
+        ImgurResponse imgurResponse = gson.fromJson(imgurJson, ImgurResponse.class);
+        String link = "";
+        try
+        {
+            ImgurImage imageInfo = imgurResponse.getDataAsImage();
+            link = imageInfo.getLink();
+        } catch (ImgurException e)
+        {
+            e.printStackTrace();
+            link = "Could not communicate with imgur: " + e.getMessage();
+        }
         return link;
     }
 
