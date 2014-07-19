@@ -1,5 +1,6 @@
 package com.shaneisrael.st.utilities;
 
+import java.awt.Cursor;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
@@ -42,6 +43,7 @@ public class AboutPanel extends ImagePanel implements MouseListener, VersionResp
             message = "...";
         }
 
+        setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
     }
 
     @Override
@@ -103,13 +105,14 @@ public class AboutPanel extends ImagePanel implements MouseListener, VersionResp
     public void onVersionResponseSuccess(Version latestVersion)
     {
         this.latestVersion = latestVersion;
-        System.out.println("Version.isDebug() = " + Version.isDebug());
         if (currentVersion.isUpToDate(latestVersion))
         {
+            setToolTipText("Click to go to the Snipping Tool++ website");
             message = String.format("v%s %s", currentVersion.getVersionString(), "Snipping Tool++ is up to date");
         } else
         {
             message = "Click to update to v" + latestVersion.getVersionStringWithName();
+            setToolTipText(message);
         }
         repaint();
     }
