@@ -116,7 +116,6 @@ public class MultiUploader extends JFrame implements ImgurResponseListener
             @Override
             public void actionPerformed(ActionEvent e)
             {
-                // upload each image and get the return link and add it to the link box
                 if (!pathBox.getText().equals(""))
                 {
                     uploadFiles();
@@ -180,7 +179,6 @@ public class MultiUploader extends JFrame implements ImgurResponseListener
         {
             file = new File(path);
             uploader.upload(file, this);
-            //            new MultiUploaderThread(file, this);
         }
     }
 

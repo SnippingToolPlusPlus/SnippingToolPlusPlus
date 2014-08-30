@@ -33,6 +33,7 @@ public class ImgurUploader implements UploadListener
             imageFile,
             Config.STPP_USER_AGENT,
             CLIENT_ID);
+        uploader.addField("description", "Uploaded via " + Config.WEBSITE_URL);
         uploader.uploadAsync(this);
     }
 

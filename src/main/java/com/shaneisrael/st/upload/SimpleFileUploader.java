@@ -2,8 +2,8 @@ package com.shaneisrael.st.upload;
 
 import java.io.File;
 import java.io.IOException;
-
-import com.shaneisrael.st.Config;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 public class SimpleFileUploader implements Runnable
 {
@@ -11,6 +11,7 @@ public class SimpleFileUploader implements Runnable
     private final File image;
     private final String clientId;
     private final String userAgent;
+    private final Map<String, String> fields;
 
     private UploadListener listener;
     private Thread self;
@@ -21,6 +22,7 @@ public class SimpleFileUploader implements Runnable
         this.image = image;
         this.userAgent = userAgent;
         this.clientId = clientId;
+        fields = new LinkedHashMap<>();
     }
 
     public void uploadAsync(UploadListener listener)
@@ -30,6 +32,11 @@ public class SimpleFileUploader implements Runnable
         self.start();
     }
 
+    public void addField(String key, String value)
+    {
+        fields.put(key, value);
+    }
+
     @Override
     public void run()
     {
@@ -37,8 +44,12 @@ public class SimpleFileUploader implements Runnable
         fileUploader.setClientId(clientId);
         fileUploader.setHeader("Authorization", "Client-ID " + clientId);
         fileUploader.setField("type", "file");
-        fileUploader.setField("description", "Uploaded via " + Config.WEBSITE_URL);
+        for (Map.Entry<String, String> field : fields.entrySet())
+        {
+            fileUploader.setField(field.getKey(), field.getValue());
+        }
         fileUploader.setFile("image", image);
+
         String serverResponse = "";
         try
         {
