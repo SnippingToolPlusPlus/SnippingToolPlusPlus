@@ -1,4 +1,4 @@
-package com.shaneisrael.st.utilities;
+package com.shaneisrael.st.multiuploader;
 
 import java.io.File;
 

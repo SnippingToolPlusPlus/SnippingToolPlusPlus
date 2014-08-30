@@ -55,7 +55,6 @@ public class SimpleFileUploader implements Runnable
         {
             try
             {
-
                 self.join();
             } catch (InterruptedException e)
             {

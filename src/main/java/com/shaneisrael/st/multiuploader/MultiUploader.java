@@ -1,10 +1,12 @@
-package com.shaneisrael.st.utilities;
+package com.shaneisrael.st.multiuploader;
 
 import java.awt.BorderLayout;
+
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 import javax.swing.JTextArea;
+
 import java.awt.datatransfer.DataFlavor;
 import java.awt.dnd.DnDConstants;
 import java.awt.dnd.DropTarget;
@@ -13,6 +15,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.util.List;
+
 import net.miginfocom.swing.MigLayout;
 
 import javax.swing.BorderFactory;
@@ -21,6 +24,8 @@ import javax.swing.JScrollPane;
 import javax.swing.JButton;
 import javax.swing.ScrollPaneConstants;
 import javax.swing.WindowConstants;
+
+import com.shaneisrael.st.utilities.ClipboardUtilities;
 
 import java.awt.GridLayout;
 
