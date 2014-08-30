@@ -31,15 +31,14 @@ import java.awt.GridLayout;
 
 public class MultiUploader extends JFrame
 {
-
     private static final long serialVersionUID = 5181546503719168014L;
     private JPanel contentPane;
     private JTextArea linkBox;
     private JTextArea pathBox;
     private JButton btnUpload;
 
-    private int total_uploads = 0;
-    private int current_upload = 0;
+    private int totalUploads = 0;
+    private int currentUpload = 0;
     private JTextArea deletionBox;
 
     public MultiUploader()
@@ -174,7 +173,7 @@ public class MultiUploader extends JFrame
     {
         File file;
         disableUploadButton();
-        total_uploads = pathBox.getText().split("\\n").length;
+        totalUploads = pathBox.getText().split("\\n").length;
 
         for (String path : pathBox.getText().split("\\n"))
         {
@@ -200,10 +199,10 @@ public class MultiUploader extends JFrame
 
     public void addLink(String link)
     {
-        current_upload++;
+        currentUpload++;
         linkBox.setText(link + "\n" + linkBox.getText());
 
-        if (current_upload == total_uploads)
+        if (currentUpload == totalUploads)
         {
             enableUploadButton();
         }
