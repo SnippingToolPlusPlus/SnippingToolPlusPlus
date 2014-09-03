@@ -69,11 +69,8 @@ public class ImageViewer
 
     int correctedIndex = 0;
 
-    private Browser browser = new Browser();
-
     private ButtonGroup bGroup = new ButtonGroup();
 
-    private ArrayList<String> links = new ArrayList<String>();
     private HashMap<String, String> uploadsLinkMap = new HashMap<String, String>();
     private HashMap<String, String> uploadsDeletionMap = new HashMap<String, String>();
 
