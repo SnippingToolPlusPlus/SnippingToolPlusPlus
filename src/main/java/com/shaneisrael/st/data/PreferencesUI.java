@@ -50,8 +50,6 @@ public class PreferencesUI
     public JCheckBox chckbxAutosaveUploads;
     public JComboBox<?> toolBox;
 
-    private DataUtils dataUtils = new DataUtils();
-
     /**
      * Create the application.
      */
@@ -292,25 +290,6 @@ public class PreferencesUI
         scrollPane.getVerticalScrollBar().setUnitIncrement(8);
         // scrollPane.setMaximumSize(new Dimension(200,100));
         tab3.add(scrollPane, BorderLayout.EAST);
-
-        JPanel panel = new JPanel();
-        tabbedPane.addTab("Upload Data", null, panel, null);
-        panel.setLayout(new MigLayout("", "[150.00]", "[][][][]"));
-
-        JLabel lblImgurUploadsLeft = new JLabel("Imgur uploads left: ");
-        panel.add(lblImgurUploadsLeft, "flowx,cell 0 0");
-
-        JLabel lblTimeUntilRefresh = new JLabel("Time until reset: ");
-        panel.add(lblTimeUntilRefresh, "flowx,cell 0 1");
-
-        JSeparator separator_2 = new JSeparator();
-        panel.add(separator_2, "cell 0 2,grow");
-
-        JLabel lblUploadsLeft = new JLabel(dataUtils.getRemainingUploads() + "/50");
-        panel.add(lblUploadsLeft, "cell 0 0");
-
-        JLabel lblTimeLeft = new JLabel(dataUtils.getRefreshTimeMins() + " mins");
-        panel.add(lblTimeLeft, "cell 0 1");
 
         JButton btnApply = new JButton("Apply");
         btnApply.addActionListener(new ActionListener()

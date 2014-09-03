@@ -1,10 +1,7 @@
-package com.shaneisrael.st.utilities;
+package com.shaneisrael.st.multiuploader;
 
 import java.awt.BorderLayout;
-import javax.swing.JFrame;
-import javax.swing.JPanel;
-import javax.swing.border.EmptyBorder;
-import javax.swing.JTextArea;
+import java.awt.GridLayout;
 import java.awt.datatransfer.DataFlavor;
 import java.awt.dnd.DnDConstants;
 import java.awt.dnd.DropTarget;
@@ -13,33 +10,42 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.util.List;
-import net.miginfocom.swing.MigLayout;
 
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
-import javax.swing.JScrollPane;
 import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTextArea;
 import javax.swing.ScrollPaneConstants;
 import javax.swing.WindowConstants;
+import javax.swing.border.EmptyBorder;
 
-import java.awt.GridLayout;
+import net.miginfocom.swing.MigLayout;
 
-public class MultiUploader extends JFrame
+import com.shaneisrael.st.imgur.ImgurImage;
+import com.shaneisrael.st.imgur.ImgurResponse;
+import com.shaneisrael.st.imgur.ImgurResponseListener;
+import com.shaneisrael.st.imgur.ImgurUploader;
+import com.shaneisrael.st.utilities.ClipboardUtilities;
+
+public class MultiUploader extends JFrame implements ImgurResponseListener
 {
-
     private static final long serialVersionUID = 5181546503719168014L;
-    private JPanel contentPane;
-    private JTextArea linkBox;
-    private JTextArea pathBox;
-    private MultiUploaderThread mut;
-    private JButton btnUpload;
+    private final JPanel contentPane;
+    private final JTextArea linkBox;
+    private final JTextArea pathBox;
+    private final JButton btnUpload;
 
-    private int total_uploads = 0;
-    private int current_upload = 0;
-    private JTextArea deletionBox;
+    private final JTextArea deletionBox;
+    private final ImgurUploader uploader;
+    private int totalUploads = 0;
+    private int currentUpload = 0;
 
     public MultiUploader()
     {
+        uploader = new ImgurUploader();
         setTitle("Multi Image Uploader");
         setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
         setBounds(100, 100, 450, 450);
@@ -65,27 +71,25 @@ public class MultiUploader extends JFrame
         scrollPane.setViewportView(pathBox);
         pathBox.setDropTarget(new DropTarget()
         {
+            private static final long serialVersionUID = 9144941390359411732L;
+
+            @SuppressWarnings("unchecked")
             @Override
-            public synchronized void drop(DropTargetDropEvent evt)
+            public synchronized void drop(DropTargetDropEvent event)
             {
                 try
                 {
-                    evt.acceptDrop(DnDConstants.ACTION_LINK);
-                    List<File> droppedFiles = (List<File>) evt.getTransferable().getTransferData(
-                            DataFlavor.javaFileListFlavor);
-                    for (File file : droppedFiles)
+                    event.acceptDrop(DnDConstants.ACTION_LINK);
+                    Object transferData = event.getTransferable().getTransferData(DataFlavor.javaFileListFlavor);
+                    if (transferData instanceof List)
                     {
-                        /*
-                         * NOTE: When I change this to a println, it prints the
-                         * correct path
-                         */
-                        pathBox.setText(file.getPath() + "\n" + pathBox.getText());
-
+                        for (File file : (List<File>) transferData)
+                        {
+                            pathBox.append(file.getPath() + "\n");
+                        }
                     }
                 } catch (Exception ex)
                 {
-                    // JOptionPane.showMessageDialog(null,
-                    // "Only image files can be uploaded.","Invalid File!",JOptionPane.WARNING_MESSAGE);
                     ex.printStackTrace();
                 }
             }
@@ -112,7 +116,6 @@ public class MultiUploader extends JFrame
             @Override
             public void actionPerformed(ActionEvent e)
             {
-                // upload each image and get the return link and add it to the link box
                 if (!pathBox.getText().equals(""))
                 {
                     uploadFiles();
@@ -170,13 +173,12 @@ public class MultiUploader extends JFrame
     {
         File file;
         disableUploadButton();
-        total_uploads = pathBox.getText().split("\\n").length;
+        totalUploads = pathBox.getText().split("\\n").length;
 
         for (String path : pathBox.getText().split("\\n"))
         {
             file = new File(path);
-            String[] type = file.getPath().split("\\.");
-            mut = new MultiUploaderThread(file, type[type.length - 1], this);
+            uploader.upload(file, this);
         }
     }
 
@@ -196,10 +198,10 @@ public class MultiUploader extends JFrame
 
     public void addLink(String link)
     {
-        current_upload++;
-        linkBox.setText(link + "\n" + linkBox.getText());
+        currentUpload++;
+        linkBox.append(link + "\n");
 
-        if (current_upload == total_uploads)
+        if (currentUpload == totalUploads)
         {
             enableUploadButton();
         }
@@ -207,6 +209,19 @@ public class MultiUploader extends JFrame
 
     public void addDeletionLink(String link)
     {
-        deletionBox.setText(link + "\n" + deletionBox.getText());
+        deletionBox.append(link + "\n");
+    }
+
+    @Override
+    public void onImgurResponseSuccess(ImgurImage uploadedImage)
+    {
+        addLink(uploadedImage.getLink());
+        addDeletionLink(uploadedImage.getDeleteLink());
+    }
+
+    @Override
+    public void onImgurResponseFail(ImgurResponse response)
+    {
+        addLink("Did not successfully upload to imgur." + response.getHttpStatusCode());
     }
 }

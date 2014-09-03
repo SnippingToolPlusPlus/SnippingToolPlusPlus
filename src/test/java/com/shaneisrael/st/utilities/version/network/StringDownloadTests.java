@@ -4,7 +4,7 @@ import static org.junit.Assert.*;
 
 import org.junit.Test;
 
-import com.shaneisrael.st.utilities.network.URLDownloader;
+import com.shaneisrael.st.utilities.network.StringDownloader;
 
 public class StringDownloadTests
 {
@@ -12,7 +12,7 @@ public class StringDownloadTests
     @Test
     public void testCanDownloadString()
     {
-        String downloaded = URLDownloader.downloadString("http://nolat.org/tests/string");
+        String downloaded = StringDownloader.downloadString("http://nolat.org/tests/string");
         assertEquals("a string", downloaded);
     }
 }

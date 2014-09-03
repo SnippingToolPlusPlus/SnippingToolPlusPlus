@@ -6,6 +6,7 @@ import java.util.List;
 
 import javax.swing.ImageIcon;
 
+import com.shaneisrael.st.Config;
 import com.shaneisrael.st.Main;
 
 public class AnimatedTrayIcon implements Runnable
@@ -13,6 +14,7 @@ public class AnimatedTrayIcon implements Runnable
     private final int delayMs;
     private List<Image> frames;
     private boolean animate;
+    private String originalIconPath;
 
     public AnimatedTrayIcon(String basePath, int numFrames, int delayMs)
     {
@@ -42,11 +44,26 @@ public class AnimatedTrayIcon implements Runnable
                 }
             }
         }
-        Main.trayIcon.setImage(new ImageIcon(this.getClass().getResource("/images/trayIcon.png")).getImage());
+        Main.trayIcon.setImage(new ImageIcon(this.getClass().getResource(originalIconPath)).getImage());
     }
 
     public void stopAnimating()
     {
         animate = false;
+    }
+
+    public void setOriginalIconPath(String iconPath)
+    {
+        this.originalIconPath = iconPath;
+    }
+
+    public static AnimatedTrayIcon getDefaultIcon()
+    {
+        AnimatedTrayIcon defaultIcon = new AnimatedTrayIcon(
+            Config.TRAY_ICON_BASE_DIR,
+            Config.TRAY_ICON_NUM_FRAMES,
+            Config.TRAY_ICON_FRAME_DELAY_MS);
+        defaultIcon.setOriginalIconPath(Config.TRAY_ICON_STATIC);
+        return defaultIcon;
     }
 }

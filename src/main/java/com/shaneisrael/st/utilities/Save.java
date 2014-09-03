@@ -7,7 +7,6 @@ import javax.imageio.ImageIO;
 
 import com.shaneisrael.st.Main;
 import com.shaneisrael.st.prefs.Preferences;
-import com.shaneisrael.st.prefs.Preferences;
 
 public class Save
 {
