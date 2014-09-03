@@ -37,6 +37,7 @@ import com.shaneisrael.st.notification.SlidingNotification;
 import com.shaneisrael.st.overlay.Overlay;
 import com.shaneisrael.st.overlay.OverlayFrame;
 import com.shaneisrael.st.prefs.Preferences;
+import com.shaneisrael.st.ui.AboutFrame;
 import com.shaneisrael.st.utilities.CaptureScreen;
 import com.shaneisrael.st.utilities.ClipboardUtilities;
 import com.shaneisrael.st.utilities.ImageViewer;
