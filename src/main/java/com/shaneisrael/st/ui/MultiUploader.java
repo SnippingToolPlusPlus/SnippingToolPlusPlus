@@ -1,4 +1,4 @@
-package com.shaneisrael.st.multiuploader;
+package com.shaneisrael.st.ui;
 
 import java.awt.BorderLayout;
 import java.awt.GridLayout;
