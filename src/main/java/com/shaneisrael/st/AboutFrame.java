@@ -5,7 +5,7 @@ import java.awt.Toolkit;
 import javax.swing.JFrame;
 import javax.swing.WindowConstants;
 
-import com.shaneisrael.st.utilities.AboutPanel;
+import com.shaneisrael.st.ui.AboutPanel;
 
 public class AboutFrame
 {

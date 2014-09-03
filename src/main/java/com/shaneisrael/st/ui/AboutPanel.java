@@ -1,4 +1,4 @@
-package com.shaneisrael.st.utilities;
+package com.shaneisrael.st.ui;
 
 import java.awt.Cursor;
 import java.awt.Font;
@@ -9,6 +9,8 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 
 import com.shaneisrael.st.Config;
+import com.shaneisrael.st.utilities.Browser;
+import com.shaneisrael.st.utilities.ImagePanel;
 import com.shaneisrael.st.utilities.version.LatestVersionChecker;
 import com.shaneisrael.st.utilities.version.Version;
 import com.shaneisrael.st.utilities.version.VersionResponseListener;
@@ -35,7 +37,7 @@ public class AboutPanel extends ImagePanel implements MouseListener, VersionResp
 
         if (Version.isDebug())
         {
-            message = "SnippingTool++ development mode";
+            message = "Snipping Tool++ development mode";
         } else
         {
             versionChecker = new LatestVersionChecker();
@@ -82,6 +84,7 @@ public class AboutPanel extends ImagePanel implements MouseListener, VersionResp
     @Override
     public void mouseEntered(MouseEvent arg0)
     {
+        setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         repaint();
     }
 
