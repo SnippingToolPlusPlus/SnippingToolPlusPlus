@@ -450,7 +450,7 @@ public class Main extends JFrame implements ActionListener
             new AboutFrame();
         } else if (command.equals("viewer"))
         {
-            new ImageViewer();
+            new com.shaneisrael.st.ui.imageviewer.ImageViewer();
         } else if (command.equals("preferences"))
         {
             preferencesUI = new PreferencesUI();
