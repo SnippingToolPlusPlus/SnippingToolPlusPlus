@@ -37,8 +37,8 @@ import com.shaneisrael.st.overlay.Overlay;
 import com.shaneisrael.st.overlay.OverlayFrame;
 import com.shaneisrael.st.prefs.Preferences;
 import com.shaneisrael.st.ui.AboutFrame;
-import com.shaneisrael.st.ui.ImageViewer;
 import com.shaneisrael.st.ui.MultiUploader;
+import com.shaneisrael.st.ui.imageviewer.ImageViewer;
 import com.shaneisrael.st.utilities.CaptureScreen;
 import com.shaneisrael.st.utilities.ClipboardUtilities;
 import com.shaneisrael.st.utilities.Save;
@@ -450,7 +450,7 @@ public class Main extends JFrame implements ActionListener
             new AboutFrame();
         } else if (command.equals("viewer"))
         {
-            new com.shaneisrael.st.ui.imageviewer.ImageViewer();
+            new ImageViewer();
         } else if (command.equals("preferences"))
         {
             preferencesUI = new PreferencesUI();
