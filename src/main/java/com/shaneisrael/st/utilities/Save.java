@@ -5,6 +5,8 @@ import java.io.File;
 
 import javax.imageio.ImageIO;
 
+import us.snippingtoolpluspl.notifications.STNotificationType;
+
 import com.shaneisrael.st.Main;
 import com.shaneisrael.st.prefs.Preferences;
 
@@ -36,7 +38,7 @@ public class Save
         {
             e.printStackTrace();
         }
-        Main.displayInfoMessage("Saved!", "Click here to open file location.");
+        Main.showNotification("saved", STNotificationType.SUCCESS);
     }
 
     public void saveUpload(BufferedImage img)

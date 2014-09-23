@@ -1,7 +1,6 @@
 package com.shaneisrael.st;
 
 import java.awt.AWTException;
-import java.awt.Color;
 import java.awt.Desktop;
 import java.awt.Frame;
 import java.awt.HeadlessException;
@@ -14,7 +13,6 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
 
-import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JMenu;
@@ -22,6 +20,11 @@ import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPopupMenu;
 import javax.swing.UIManager;
+
+import us.snippingtoolpluspl.notifications.STNotification;
+import us.snippingtoolpluspl.notifications.STNotificationQueue;
+import us.snippingtoolpluspl.notifications.STNotificationType;
+import us.snippingtoolpluspl.notifications.STTheme;
 
 import com.melloware.jintellitype.HotkeyListener;
 import com.melloware.jintellitype.JIntellitype;
@@ -31,8 +34,6 @@ import com.shaneisrael.st.data.Locations;
 import com.shaneisrael.st.data.OperatingSystem;
 import com.shaneisrael.st.data.PreferencesUI;
 import com.shaneisrael.st.editor.Editor;
-import com.shaneisrael.st.notification.Notification;
-import com.shaneisrael.st.notification.SlidingNotification;
 import com.shaneisrael.st.overlay.Overlay;
 import com.shaneisrael.st.overlay.OverlayFrame;
 import com.shaneisrael.st.prefs.Preferences;
@@ -63,8 +64,8 @@ public class Main extends JFrame implements ActionListener
     private JMenuItem sSnippet;
     private JMenuItem uClipboardImg;
     private CaptureScreen capture = new CaptureScreen();
-    private static Notification infoNotification;
-    private static Notification errorNotification;
+    private static STNotificationQueue notificationQueue;
+    private static STNotification notification;
 
     private UpdateChecker updater;
 
@@ -153,29 +154,8 @@ public class Main extends JFrame implements ActionListener
 
     private void initializeNotifications()
     {
-        infoNotification = new SlidingNotification(null);
-        infoNotification.createRoundedNotification(true);
-        infoNotification.setTitleColor(new Color(1f, 1f, .1f));
-        infoNotification.setBorder(BorderFactory.createLineBorder(new Color(255, 255, 25, 200), 2, false));
-        infoNotification.setAlwaysOnTop(true);
-        errorNotification = new SlidingNotification(null);
-        errorNotification.createRoundedNotification(true);
-        errorNotification.setTitleColor(new Color(255, 185, 25));
-        errorNotification.setBorder(BorderFactory.createLineBorder(new Color(255, 0, 0, 200), 2, false));
-        errorNotification.setAlwaysOnTop(true);
-
-        /*
-         * initialize() has to be called after any variable changes. e.x.
-         * infoNotification.setTitleColor(); so that it can re-create the
-         * notification with the new variable changes in mind.
-         * 
-         * If initialize() is not called at all, a nullPointer will be thrown,
-         * if initialize() is not called after any NEW variable changes the
-         * changes will not take affect.
-         */
-        errorNotification.initialize();
-        infoNotification.initialize();
-
+        STTheme.setThemePath("/theme/cloudy/");
+        notificationQueue = new STNotificationQueue(1500, 17);
     }
 
     private void initializeHotkeys()
@@ -240,14 +220,10 @@ public class Main extends JFrame implements ActionListener
         }
     }
 
-    public static void displayInfoMessage(String title, String message)
+    public static void showNotification(String title, STNotificationType type)
     {
-        infoNotification.showBalloon(title, message);
-    }
-
-    public static void displayErrorMessage(String title, String message)
-    {
-        errorNotification.showBalloon(title, message);
+        notification = new STNotification(title, type);
+        notificationQueue.add(notification);
     }
 
     private void initializeTray()
@@ -359,7 +335,7 @@ public class Main extends JFrame implements ActionListener
         try
         {
             tray.add(trayIcon);
-            displayInfoMessage("Snipping Tool++", "Right click tray icon for more options!");
+            showNotification("welcome", STNotificationType.SUCCESS);
         } catch (AWTException e)
         {
             System.out.println("TrayIcon could not be added.");

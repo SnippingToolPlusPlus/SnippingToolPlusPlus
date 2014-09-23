@@ -18,6 +18,7 @@ import javax.swing.JScrollPane;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
+import us.snippingtoolpluspl.notifications.STNotificationType;
 import net.miginfocom.swing.MigLayout;
 
 import com.shaneisrael.st.Main;
@@ -82,7 +83,7 @@ public class ImageViewer extends JFrame implements ListSelectionListener
             public void actionPerformed(ActionEvent e)
             {
                 ClipboardUtilities.setClipboardImage(getCurrentImage());
-                Main.displayInfoMessage("Copied to Clipboard", "The image has been copied.");
+                Main.showNotification("copied", STNotificationType.SUCCESS);
             }
 
         });

@@ -9,6 +9,8 @@ import java.awt.datatransfer.UnsupportedFlavorException;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 
+import us.snippingtoolpluspl.notifications.STNotificationType;
+
 import com.shaneisrael.st.Main;
 
 public abstract class ClipboardUtilities implements ClipboardOwner
@@ -76,7 +78,7 @@ public abstract class ClipboardUtilities implements ClipboardOwner
             }
         }, null);
         
-        Main.displayInfoMessage("Copied!", "The image has been copied to the clipboard!");
+        Main.showNotification("copied", STNotificationType.SUCCESS);
     }
 
     /**
@@ -95,7 +97,7 @@ public abstract class ClipboardUtilities implements ClipboardOwner
 
         if (img == null)
         {
-            Main.displayErrorMessage("Upload Error", "An image could not be found in the clipboard.");
+            Main.showNotification("upload-failed", STNotificationType.ERROR);
         } else
         {
             new Upload(img, false);

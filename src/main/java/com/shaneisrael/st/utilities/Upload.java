@@ -7,6 +7,8 @@ import java.io.IOException;
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 
+import us.snippingtoolpluspl.notifications.STNotificationType;
+
 import com.shaneisrael.st.Main;
 import com.shaneisrael.st.data.LinkDataSaver;
 import com.shaneisrael.st.data.OperatingSystem;
@@ -54,7 +56,7 @@ public class Upload implements ImgurResponseListener
         {
             Main.trayIcon.setImage(new ImageIcon(this.getClass().getResource("/images/uploadMac.png")).getImage());
         }
-        Main.displayInfoMessage("Uploading...", "Link will be available shortly");
+        Main.showNotification("uploading", STNotificationType.INFO);
     }
 
     private void doAfterUpload()
@@ -84,11 +86,11 @@ public class Upload implements ImgurResponseListener
         if (!uploadToreddit)
         {
             ClipboardUtilities.setClipboard(uploadedImage.getLink());
-            Main.displayInfoMessage("Upload Successful!", "Link has been copied to your clipboard");
+            Main.showNotification("upload-done", STNotificationType.SUCCESS);
         } else
         {
             Browser.openToReddit(uploadedImage.getLink());
-            Main.displayInfoMessage("Upload Successful!", "Submitting link to Reddit");
+            Main.showNotification("upload-done-reddit", STNotificationType.SUCCESS);
         }
 
         SoundNotifications.playDing();
@@ -98,7 +100,7 @@ public class Upload implements ImgurResponseListener
     @Override
     public void onImgurResponseFail(ImgurResponse response)
     {
-        Main.displayErrorMessage("Upload Failed!", "An unexpected error has occurred");
+        Main.showNotification("upload-failed", STNotificationType.ERROR);
         doAfterUpload();
     }
 
