@@ -9,9 +9,8 @@ import java.awt.datatransfer.UnsupportedFlavorException;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 
-import us.snippingtoolpluspl.notifications.STNotificationType;
-
 import com.shaneisrael.st.Main;
+import com.shaneisrael.st.notification.STNotificationType;
 
 public abstract class ClipboardUtilities implements ClipboardOwner
 {

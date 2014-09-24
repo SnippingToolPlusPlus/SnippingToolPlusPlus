@@ -21,11 +21,6 @@ import javax.swing.JOptionPane;
 import javax.swing.JPopupMenu;
 import javax.swing.UIManager;
 
-import us.snippingtoolpluspl.notifications.STNotification;
-import us.snippingtoolpluspl.notifications.STNotificationQueue;
-import us.snippingtoolpluspl.notifications.STNotificationType;
-import us.snippingtoolpluspl.notifications.STTheme;
-
 import com.melloware.jintellitype.HotkeyListener;
 import com.melloware.jintellitype.JIntellitype;
 import com.melloware.jintellitype.JIntellitypeConstants;
@@ -34,6 +29,10 @@ import com.shaneisrael.st.data.Locations;
 import com.shaneisrael.st.data.OperatingSystem;
 import com.shaneisrael.st.data.PreferencesUI;
 import com.shaneisrael.st.editor.Editor;
+import com.shaneisrael.st.notification.STNotification;
+import com.shaneisrael.st.notification.STNotificationQueue;
+import com.shaneisrael.st.notification.STNotificationType;
+import com.shaneisrael.st.notification.STTheme;
 import com.shaneisrael.st.overlay.Overlay;
 import com.shaneisrael.st.overlay.OverlayFrame;
 import com.shaneisrael.st.prefs.Preferences;

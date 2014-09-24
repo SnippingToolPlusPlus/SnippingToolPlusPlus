@@ -18,11 +18,11 @@ import javax.swing.JScrollPane;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
-import us.snippingtoolpluspl.notifications.STNotificationType;
 import net.miginfocom.swing.MigLayout;
 
 import com.shaneisrael.st.Main;
 import com.shaneisrael.st.editor.Editor;
+import com.shaneisrael.st.notification.STNotificationType;
 import com.shaneisrael.st.overlay.Overlay;
 import com.shaneisrael.st.utilities.Browser;
 import com.shaneisrael.st.utilities.ClipboardUtilities;

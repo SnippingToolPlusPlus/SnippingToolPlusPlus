@@ -7,8 +7,6 @@ import java.io.IOException;
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 
-import us.snippingtoolpluspl.notifications.STNotificationType;
-
 import com.shaneisrael.st.Main;
 import com.shaneisrael.st.data.LinkDataSaver;
 import com.shaneisrael.st.data.OperatingSystem;
@@ -16,6 +14,7 @@ import com.shaneisrael.st.imgur.ImgurImage;
 import com.shaneisrael.st.imgur.ImgurResponse;
 import com.shaneisrael.st.imgur.ImgurResponseListener;
 import com.shaneisrael.st.imgur.ImgurUploader;
+import com.shaneisrael.st.notification.STNotificationType;
 import com.shaneisrael.st.prefs.Preferences;
 
 public class Upload implements ImgurResponseListener
