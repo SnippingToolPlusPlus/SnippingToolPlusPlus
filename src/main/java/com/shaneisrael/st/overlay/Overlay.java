@@ -34,6 +34,7 @@ import com.shaneisrael.st.editor.Editor;
 import com.shaneisrael.st.prefs.Preferences;
 import com.shaneisrael.st.utilities.CaptureScreen;
 import com.shaneisrael.st.utilities.Save;
+import com.shaneisrael.st.utilities.SoundNotifications;
 import com.shaneisrael.st.utilities.Upload;
 
 @SuppressWarnings("serial")
@@ -48,7 +49,7 @@ public class Overlay extends JPanel implements MouseListener, MouseMotionListene
     private int mode = 0;
 
     private Color selectionColor = new Color(255, 0, 0);
-    private Color overlayColor = new Color(0, 0, 0, 175);
+    private Color overlayColor = new Color(0, 0, 0, 150);
     private Color infoGreenColor = new Color(0, 255, 0, 128);
 
     private Rectangle2D selection;
@@ -298,6 +299,7 @@ public class Overlay extends JPanel implements MouseListener, MouseMotionListene
     {
         if (e.getButton() == MIDDLE_MOUSE_BUTTON)
         {
+            SoundNotifications.playShutter();
             float op = parent.getOpacity();
             parent.setOpacity(0f);
             screenshot = capture.getScreenCapture();

@@ -29,4 +29,27 @@ public class SoundNotifications
             }
         }).start();
     }
+    public static void playShutter()
+    {
+        new Thread(new Runnable()
+        {
+            @Override
+            public void run()
+            {
+                try
+                {
+                    Clip clip = AudioSystem.getClip();
+                    URL url = SoundNotifications.class.getResource("/sounds/shutter.wav");
+                    AudioInputStream inputStream = AudioSystem.getAudioInputStream(url);
+                    clip.open(inputStream);
+                    clip.start();
+                } catch (Exception e)
+                {
+                    System.err.println(e.getMessage());
+                }
+            }
+        }).start();
+    }
+    
+    
 }
