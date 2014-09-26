@@ -15,6 +15,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
+import java.awt.event.MouseWheelEvent;
+import java.awt.event.MouseWheelListener;
 import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
@@ -35,7 +37,7 @@ import com.shaneisrael.st.utilities.Save;
 import com.shaneisrael.st.utilities.Upload;
 
 @SuppressWarnings("serial")
-public class Overlay extends JPanel implements MouseListener, MouseMotionListener
+public class Overlay extends JPanel implements MouseListener, MouseMotionListener, MouseWheelListener
 {
     public static final int SAVE = 0;
     public static final int UPLOAD = 1;
@@ -43,7 +45,7 @@ public class Overlay extends JPanel implements MouseListener, MouseMotionListene
     private int mode = 0;
 
     private Color selectionColor = new Color(255, 0, 0);
-    private Color overlayColor = new Color(0, 0, 0, 100);
+    private Color overlayColor = new Color(0, 0, 0, 175);
     private Color infoGreenColor = new Color(0, 255, 0, 128);
 
     private Rectangle2D selection;
@@ -73,6 +75,7 @@ public class Overlay extends JPanel implements MouseListener, MouseMotionListene
         parent = of;
         selection = new Rectangle2D.Double();
         addMouseListener(this);
+        addMouseWheelListener(this);
         addMouseMotionListener(this);
         Action submit = new AbstractAction()
         {
@@ -270,10 +273,13 @@ public class Overlay extends JPanel implements MouseListener, MouseMotionListene
     @Override
     public void mouseDragged(MouseEvent me)
     {
-        mouseX = me.getX();
-        mouseY = me.getY();
-        endPoint = new Point(mouseX, mouseY);
-        repaint();
+        if (me.getButton() != MouseEvent.BUTTON2)
+        {
+            mouseX = me.getX();
+            mouseY = me.getY();
+            endPoint = new Point(mouseX, mouseY);
+            repaint();
+        }
     }
 
     @Override
@@ -285,8 +291,16 @@ public class Overlay extends JPanel implements MouseListener, MouseMotionListene
     }
 
     @Override
-    public void mouseClicked(MouseEvent arg0)
+    public void mouseClicked(MouseEvent e)
     {
+        if (e.getButton() == MouseEvent.BUTTON2)
+        {
+            float op = parent.getOpacity();
+            parent.setOpacity(0f);
+            screenshot = capture.getScreenCapture();
+            parent.setOpacity(op);
+            parent.repaint();
+        }
     }
 
     @Override
@@ -319,6 +333,25 @@ public class Overlay extends JPanel implements MouseListener, MouseMotionListene
             mouseY = e.getY();
             endPoint = new Point(mouseX, mouseY);
             endPointList.add(endPoint);
+        }
+
+    }
+
+    @Override
+    public void mouseWheelMoved(MouseWheelEvent e)
+    {
+        int notches = e.getWheelRotation();
+        if (notches < 0)
+        {
+            if (parent.getOpacity() - .1f >= .005f)
+                parent.setOpacity(parent.getOpacity() - .1f);
+        }
+        else
+        {
+            if (parent.getOpacity() + .1f <= 1f)
+                parent.setOpacity(parent.getOpacity() + .1f);
+            else
+                parent.setOpacity(1f);
         }
 
     }
