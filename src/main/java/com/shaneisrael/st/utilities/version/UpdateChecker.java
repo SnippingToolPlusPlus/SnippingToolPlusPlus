@@ -3,27 +3,30 @@ package com.shaneisrael.st.utilities.version;
 import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.net.URI;
 import java.net.URISyntaxException;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 
-import com.shaneisrael.st.notification.Notification;
-import com.shaneisrael.st.notification.SlidingNotification;
+import com.shaneisrael.st.Main;
+import com.shaneisrael.st.notification.STNotification;
+import com.shaneisrael.st.notification.STNotificationType;
 import com.shaneisrael.st.utilities.Browser;
 
 public class UpdateChecker implements VersionResponseListener
 {
     private final Version currentVersion;
-    private final Notification updateNotification;
+    private Version latestVersion;
+    private STNotification updateNotification;
     private final LatestVersionChecker versionChecker;
     private JButton updateButton;
 
     public UpdateChecker()
     {
         currentVersion = Version.getCurrentRunningVersion();
-        updateNotification = new SlidingNotification(null);
         initilizeNotification();
 
         versionChecker = new LatestVersionChecker();
@@ -40,67 +43,71 @@ public class UpdateChecker implements VersionResponseListener
 
     private void initilizeNotification()
     {
-        updateButton = new JButton("Update Now");
-        updateButton.setBounds(54, 44, 95, 25);
-        updateButton.setFocusable(false);
-        updateButton.setOpaque(false);
-        updateButton.addActionListener(new ActionListener()
+        updateNotification = new STNotification("update-now", STNotificationType.WARNING);
+        updateNotification.addMouseListener(new MouseListener()
         {
+            
             @Override
-            public void actionPerformed(ActionEvent e)
+            public void mouseReleased(MouseEvent arg0)
             {
-                updateNotification.hideBalloon();
-
+                // TODO Auto-generated method stub
+                
+            }
+            
+            @Override
+            public void mousePressed(MouseEvent arg0)
+            {
+                // TODO Auto-generated method stub
+                
+            }
+            
+            @Override
+            public void mouseExited(MouseEvent arg0)
+            {
+                // TODO Auto-generated method stub
+                
+            }
+            
+            @Override
+            public void mouseEntered(MouseEvent arg0)
+            {
+                // TODO Auto-generated method stub
+                
+            }
+            
+            @Override
+            public void mouseClicked(MouseEvent arg0)
+            {
+                try
+                {
+                    Browser.open(new URI(latestVersion.getDownloadLocation()));
+                } catch (URISyntaxException e1)
+                {
+                    try
+                    {
+                        Browser.open(new URI("http://snippingtoolpluspl.us/"));
+                    } catch (URISyntaxException e2)
+                    {
+                        System.out.println("Could not get latest version information.");
+                    }
+                }
+                updateNotification.dispose();
+                
             }
         });
-        updateNotification.add(updateButton);
-        updateNotification.setBorder(BorderFactory.createLineBorder(new Color(0, 255, 0, 200), 1, false)); //give it a green border
-        updateNotification.setAlwaysOnTop(true);
-        updateNotification.setWaitTime(10000); //wait 10 seconds before displaying
-        updateNotification.setPauseTime(300000); //wait on screen for 5 mins or until user manually closes it.
-        updateNotification.setTitleColor(Color.green);
-        updateNotification.setSeperatorWidth(140);
-        updateNotification.getPanel().setToolTipText("Snipping Tool++ Notification");
-        updateNotification.setBounds(updateNotification.getX(), updateNotification.getY(), 200,
-            updateNotification.getHeight());
-
-        /*
-         * Creates the notification box. Must always be called with each new Notification instance. 
-         * This method must be called any time the default variables are changed or else changes will not be made.
-         */
-        updateNotification.initialize();
-
+        updateNotification.setPauseTime(10000); //Wait 10 seconds
+        
     }
 
     @Override
     public void onVersionResponseSuccess(final Version latestVersion)
     {
+        this.latestVersion = latestVersion;
         System.out.println("Latest version is " + latestVersion.getVersionStringWithName());
 
         if (!Version.isDebug() && currentVersion.compareTo(latestVersion) < 0)
         {
-            updateButton.addActionListener(new ActionListener()
-            {
-                @Override
-                public void actionPerformed(ActionEvent e)
-                {
-                    try
-                    {
-                        Browser.open(new URI(latestVersion.getDownloadLocation()));
-                    } catch (URISyntaxException e1)
-                    {
-                        try
-                        {
-                            Browser.open(new URI("http://snippingtoolpluspl.us/"));
-                        } catch (URISyntaxException e2)
-                        {
-                            System.out.println("Could not get latest version information.");
-                        }
-                    }
-                }
-            });
-            updateNotification.getPanel().setToolTipText(latestVersion.getVersionStringWithName());
-            updateNotification.showBalloon("Update Available!", "");
+            Main.showNotification(updateNotification);
         } else
         {
             System.out.println("You are running the latest version.");

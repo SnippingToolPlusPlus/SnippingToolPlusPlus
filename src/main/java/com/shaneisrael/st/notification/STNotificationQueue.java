@@ -13,17 +13,16 @@ import java.util.Queue;
 public class STNotificationQueue implements Runnable
 {
     private Queue<STNotification> queue;
-    private int pauseTime;
+    private int pauseTime = 1000;
     private int rate;
 
     private boolean running = false;
 
     private Thread thread;
 
-    public STNotificationQueue(int pause,int rate)
+    public STNotificationQueue(int rate)
     {
         queue = new LinkedList<STNotification>();
-        pauseTime = pause;
         this.rate = rate;
         if (this.rate > 20)
             rate = 20;
@@ -51,9 +50,11 @@ public class STNotificationQueue implements Runnable
         while (!queue.isEmpty())
         {
             STNotification next = queue.poll();
+            
             next.setAutoRequestFocus(false);
             next.setAlwaysOnTop(true);
             next.setVisible(true);
+            this.pauseTime = next.getPauseTime();
             int start = next.getLocation().y;
             int travelLocation = STTheme.getTravelLocation();
             

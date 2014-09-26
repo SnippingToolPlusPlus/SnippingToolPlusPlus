@@ -154,7 +154,7 @@ public class Main extends JFrame implements ActionListener
     private void initializeNotifications()
     {
         STTheme.setThemePath("/theme/cloudy/");
-        notificationQueue = new STNotificationQueue(1500, 17);
+        notificationQueue = new STNotificationQueue(17);
     }
 
     private void initializeHotkeys()
@@ -222,9 +222,13 @@ public class Main extends JFrame implements ActionListener
     public static void showNotification(String title, STNotificationType type)
     {
         notification = new STNotification(title, type);
+        notification.setPauseTime(1500);
         notificationQueue.add(notification);
     }
-
+    public static void showNotification(STNotification notification)
+    {
+        notificationQueue.add(notification);
+    }
     private void initializeTray()
     {
         final String icon = "trayIcon.png";

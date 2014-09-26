@@ -15,6 +15,7 @@ public class STNotification extends JFrame
 
     private STNotificationWindow window;
     private boolean alive;
+    private int pauseTime = 1000;
 
     public STNotification(String imgTitle, STNotificationType type)
     {
@@ -36,7 +37,14 @@ public class STNotification extends JFrame
         this.setUndecorated(true);
         this.setBackground(new Color(0, 0, 0, 0));
     }
-
+    public void setPauseTime(int delay)
+    {
+        this.pauseTime = delay;
+    }
+    public int getPauseTime()
+    {
+        return pauseTime;
+    }
     public boolean isAlive()
     {
         return alive;
