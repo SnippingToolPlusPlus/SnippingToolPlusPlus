@@ -39,6 +39,9 @@ import com.shaneisrael.st.utilities.Upload;
 @SuppressWarnings("serial")
 public class Overlay extends JPanel implements MouseListener, MouseMotionListener, MouseWheelListener
 {
+    private static final int LEFT_MOUSE_BUTTON = MouseEvent.BUTTON1;
+    private static final int MIDDLE_MOUSE_BUTTON = MouseEvent.BUTTON2;
+
     public static final int SAVE = 0;
     public static final int UPLOAD = 1;
 
@@ -273,7 +276,7 @@ public class Overlay extends JPanel implements MouseListener, MouseMotionListene
     @Override
     public void mouseDragged(MouseEvent me)
     {
-        if (me.getButton() != MouseEvent.BUTTON2)
+        if (me.getButton() != MIDDLE_MOUSE_BUTTON)
         {
             mouseX = me.getX();
             mouseY = me.getY();
@@ -293,7 +296,7 @@ public class Overlay extends JPanel implements MouseListener, MouseMotionListene
     @Override
     public void mouseClicked(MouseEvent e)
     {
-        if (e.getButton() == MouseEvent.BUTTON2)
+        if (e.getButton() == MIDDLE_MOUSE_BUTTON)
         {
             float op = parent.getOpacity();
             parent.setOpacity(0f);
@@ -316,7 +319,7 @@ public class Overlay extends JPanel implements MouseListener, MouseMotionListene
     @Override
     public void mousePressed(MouseEvent e)
     {
-        if (e.getButton() == MouseEvent.BUTTON1)
+        if (e.getButton() == LEFT_MOUSE_BUTTON)
         {
             startPoint = new Point(mouseX, mouseY);
             endPoint = new Point(mouseX, mouseY);
@@ -327,7 +330,7 @@ public class Overlay extends JPanel implements MouseListener, MouseMotionListene
     @Override
     public void mouseReleased(MouseEvent e)
     {
-        if (e.getButton() == MouseEvent.BUTTON1)
+        if (e.getButton() == LEFT_MOUSE_BUTTON)
         {
             mouseX = e.getX();
             mouseY = e.getY();

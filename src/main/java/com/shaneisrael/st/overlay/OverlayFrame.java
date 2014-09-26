@@ -1,6 +1,5 @@
 package com.shaneisrael.st.overlay;
 
-import java.awt.Color;
 import java.awt.GraphicsConfiguration;
 import java.awt.GraphicsDevice;
 import java.awt.GraphicsEnvironment;
