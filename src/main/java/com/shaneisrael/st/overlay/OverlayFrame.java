@@ -35,7 +35,7 @@ public class OverlayFrame extends JFrame
 
         overlayPanel = new Overlay(this);
         this.add(overlayPanel);
-        this.setOpacity(.6f);
+        this.setOpacity(.8f);
         this.setVisible(true);
         this.addWindowListener(new WindowListener()
         {

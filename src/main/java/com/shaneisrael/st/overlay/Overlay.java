@@ -343,13 +343,13 @@ public class Overlay extends JPanel implements MouseListener, MouseMotionListene
         int notches = e.getWheelRotation();
         if (notches < 0)
         {
-            if (parent.getOpacity() - .1f >= .005f)
-                parent.setOpacity(parent.getOpacity() - .1f);
+            if (parent.getOpacity() - .05f >= .005f)
+                parent.setOpacity(parent.getOpacity() - .05f);
         }
         else
         {
-            if (parent.getOpacity() + .1f <= 1f)
-                parent.setOpacity(parent.getOpacity() + .1f);
+            if (parent.getOpacity() + .05f <= 1f)
+                parent.setOpacity(parent.getOpacity() + .05f);
             else
                 parent.setOpacity(1f);
         }
