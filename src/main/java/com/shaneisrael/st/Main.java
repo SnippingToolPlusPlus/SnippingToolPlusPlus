@@ -153,7 +153,7 @@ public class Main extends JFrame implements ActionListener
 
     private void initializeNotifications()
     {
-        STTheme.setThemePath("/theme/cloudy/");
+        STTheme.setThemePath("/theme/cloudy");
         notificationQueue = new STNotificationQueue(17);
     }
 

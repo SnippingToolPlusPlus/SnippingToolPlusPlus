@@ -25,7 +25,7 @@ import javax.swing.JFrame;
  */
 public class STTheme
 {
-    private static String themePath = "src/main/resources/themes/cloudy/";
+    private static String themePath = "/theme/cloudy";
     private static int width;
     private static int height;
 
