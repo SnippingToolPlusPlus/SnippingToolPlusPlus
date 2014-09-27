@@ -1,9 +1,9 @@
 {
     "version_name": "NextGen",
-    "major": "5",
-    "minor": "4",
+    "major": "6",
+    "minor": "0",
     "patch": "0",
-    "download": "http://snippingtoolpluspl.us/downloads/SnippingToolPlusPlus-5.4.0.jar",
+    "download": "http://snippingtoolpluspl.us/downloads/SnippingToolPlusPlus-6.0.0.zip",
     "changes": {
         "added": [
             "Image dimensions are now displayed when dragging a selection"
