@@ -5,8 +5,6 @@ import java.awt.event.MouseListener;
 import java.net.URI;
 import java.net.URISyntaxException;
 
-import javax.swing.JButton;
-
 import com.shaneisrael.st.Main;
 import com.shaneisrael.st.notification.STNotification;
 import com.shaneisrael.st.notification.STNotificationType;
@@ -18,7 +16,6 @@ public class UpdateChecker implements VersionResponseListener
     private Version latestVersion;
     private STNotification updateNotification;
     private final LatestVersionChecker versionChecker;
-    private JButton updateButton;
 
     public UpdateChecker()
     {

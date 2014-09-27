@@ -59,8 +59,6 @@ dependencies {
     testCompile 'junit:junit:4.11'
     compile 'com.miglayout:miglayout:3.7.4' //bsd
     compile 'com.google.code.gson:gson:2.2.4' //apache v2
-
-    compile 'us.snippingtoolpluspl:stnotifications:1.0.0' //gpl v2
 }
 
 eclipse {
