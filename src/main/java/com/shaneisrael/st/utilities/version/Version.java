@@ -275,7 +275,7 @@ public final class Version implements Comparable<Version>
         try
         {
             final Properties pomProperties = new Properties();
-            pomProperties.load(Preferences.class.getResourceAsStream("/META-INF/MANIFEST.MF"));
+            pomProperties.load(Preferences.class.getResourceAsStream("/metadata.prefs"));
             versionString = pomProperties.getProperty("Application-Version");
         } catch (Exception e)
         {
