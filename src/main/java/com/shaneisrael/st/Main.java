@@ -225,6 +225,12 @@ public class Main extends JFrame implements ActionListener
         notification.setPauseTime(1500);
         notificationQueue.add(notification);
     }
+    public static void showNotification(String title, STNotificationType type, int pauseTime)
+    {
+        notification = new STNotification(title, type);
+        notification.setPauseTime(pauseTime);
+        notificationQueue.add(notification);
+    }
     public static void showNotification(STNotification notification)
     {
         notificationQueue.add(notification);
@@ -338,7 +344,7 @@ public class Main extends JFrame implements ActionListener
         try
         {
             tray.add(trayIcon);
-            showNotification("welcome", STNotificationType.SUCCESS);
+            showNotification("welcome", STNotificationType.SUCCESS, 3000);
         } catch (AWTException e)
         {
             System.out.println("TrayIcon could not be added.");
