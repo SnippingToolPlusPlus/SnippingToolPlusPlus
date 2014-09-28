@@ -43,7 +43,7 @@ launch4j {
     icon = '../../launch4j/icon.ico'
     jar = '../../build/libs/' + project.name + '-' + project.version + '.jar'
     outfile =  '../libs/' + project.name + '-' + project.version + '.exe'
-    maxHeapSize = 2000000
+    maxHeapSize = 200
     mainClassName = project.ext.mainClass
 }
 
