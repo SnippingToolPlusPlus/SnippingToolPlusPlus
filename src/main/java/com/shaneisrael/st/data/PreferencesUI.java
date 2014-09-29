@@ -77,9 +77,9 @@ public class PreferencesUI
         frmPreferences.setIconImage(Toolkit.getDefaultToolkit().getImage(
             PreferencesUI.class.getResource("/images/icons/pref.png")));
         frmPreferences.setTitle("Preferences");
-        frmPreferences.setBounds(100, 100, 299, 304);
+        frmPreferences.setBounds(100, 100, 314, 325);
         frmPreferences.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
-        frmPreferences.getContentPane().setLayout(new MigLayout("", "[263px]", "[355.00px][20.00][]"));
+        frmPreferences.getContentPane().setLayout(new MigLayout("", "[263px]", "[240.00px][20.00]"));
 
         JTabbedPane tabbedPane = new JTabbedPane(SwingConstants.TOP);
         frmPreferences.getContentPane().add(tabbedPane, "cell 0 0,grow");
@@ -169,7 +169,7 @@ public class PreferencesUI
 
         JPanel tab2 = new JPanel();
         tabbedPane.addTab("Snippet", null, tab2, null);
-        tab2.setLayout(new MigLayout("", "[123.00]", "[][][][][]"));
+        tab2.setLayout(new MigLayout("", "[123.00]", "[][][][]"));
 
         chckbxEnableEditor = new JCheckBox("Enable Editor");
         chckbxEnableEditor.setSelected(true);
@@ -177,18 +177,18 @@ public class PreferencesUI
 
         chckbxAutosaveUploads = new JCheckBox("Auto-Save Uploads");
         chckbxAutosaveUploads.setSelected(true);
-        tab2.add(chckbxAutosaveUploads, "cell 0 2");
+        tab2.add(chckbxAutosaveUploads, "cell 0 1");
 
         JSeparator separator_1 = new JSeparator();
-        tab2.add(separator_1, "cell 0 3,grow");
+        tab2.add(separator_1, "cell 0 2,grow");
 
         JLabel lblDefaultTool = new JLabel("Default Tool: ");
-        tab2.add(lblDefaultTool, "flowx,cell 0 4");
+        tab2.add(lblDefaultTool, "flowx,cell 0 3");
 
         toolBox = new JComboBox();
         toolBox.setModel(new DefaultComboBoxModel(new String[] { "Pencil", "Rectangle", "Filled Rectangle",
                 "Bordered Rectangle" }));
-        tab2.add(toolBox, "cell 0 4");
+        tab2.add(toolBox, "cell 0 3");
 
         JPanel tab3 = new JPanel();
         tabbedPane.addTab("Controls/Hotkeys", null, tab3, null);
@@ -196,7 +196,7 @@ public class PreferencesUI
 
         JPanel panel_1 = new JPanel();
         // tab3.add(panel_1, BorderLayout.CENTER);
-        panel_1.setLayout(new MigLayout("", "[120.00][39.00]", "[][][][][][][][][][][][][][]"));
+        panel_1.setLayout(new MigLayout("", "[120.00][39.00]", "[][][][][][][][][][][][][][][][][]"));
 
         JLabel lblEditor = new JLabel("Editor");
         lblEditor.setFont(new Font("Tahoma", Font.BOLD, 18));
@@ -260,31 +260,54 @@ public class PreferencesUI
         lblCtrlShift_2.setFont(new Font("Tahoma", Font.BOLD, 11));
         panel_1.add(lblCtrlShift_2, "cell 1 9");
 
-        JLabel lblUploadText = new JLabel("Upload Text");
-        lblUploadText.setFont(new Font("Tahoma", Font.PLAIN, 13));
-        panel_1.add(lblUploadText, "cell 0 10");
-
-        JLabel lblAltShift = new JLabel("ALT + SHIFT + 1");
-        lblAltShift.setFont(new Font("Tahoma", Font.BOLD, 11));
-        panel_1.add(lblAltShift, "cell 1 10");
-
         JLabel lblSaveSnippet = new JLabel("Save Snippet");
         lblSaveSnippet.setFont(new Font("Tahoma", Font.PLAIN, 13));
-        panel_1.add(lblSaveSnippet, "cell 0 11");
+        panel_1.add(lblSaveSnippet, "cell 0 10");
 
         JLabel lblCtrlShift_3 = new JLabel("CTRL + SHIFT + 3");
         lblCtrlShift_3.setFont(new Font("Tahoma", Font.BOLD, 11));
-        panel_1.add(lblCtrlShift_3, "cell 1 11");
+        panel_1.add(lblCtrlShift_3, "cell 1 10");
 
         JLabel lblSaveScreenshot = new JLabel("Save Screenshot");
         lblSaveScreenshot.setFont(new Font("Tahoma", Font.PLAIN, 13));
-        panel_1.add(lblSaveScreenshot, "cell 0 12");
+        panel_1.add(lblSaveScreenshot, "cell 0 11");
 
         JLabel lblCtrlshift = new JLabel("CTRL +SHIFT + 4");
         lblCtrlshift.setFont(new Font("Tahoma", Font.BOLD, 11));
-        panel_1.add(lblCtrlshift, "cell 1 12");
+        panel_1.add(lblCtrlshift, "cell 1 11");
 
         JScrollPane scrollPane = new JScrollPane(panel_1);
+        
+        JLabel lblOverlayControls = new JLabel("Overlay");
+        lblOverlayControls.setFont(new Font("Tahoma", Font.BOLD, 18));
+        panel_1.add(lblOverlayControls, "cell 0 12");
+        
+        JSeparator separator_2 = new JSeparator();
+        panel_1.add(separator_2, "cell 0 13 2 1,growx");
+        
+        JLabel lblIncreaseTransparency = new JLabel("Inc. Transparency");
+        lblIncreaseTransparency.setFont(new Font("Tahoma", Font.PLAIN, 13));
+        panel_1.add(lblIncreaseTransparency, "cell 0 14");
+        
+        JLabel lblMousewheelUp = new JLabel("WHEEL DOWN");
+        lblMousewheelUp.setFont(new Font("Tahoma", Font.BOLD, 13));
+        panel_1.add(lblMousewheelUp, "cell 1 14");
+        
+        JLabel lblDecreaseTransparency = new JLabel("Dec. Transparency");
+        lblDecreaseTransparency.setFont(new Font("Tahoma", Font.PLAIN, 13));
+        panel_1.add(lblDecreaseTransparency, "cell 0 15");
+        
+        JLabel lblWheelUp = new JLabel("WHEEL UP");
+        lblWheelUp.setFont(new Font("Tahoma", Font.BOLD, 13));
+        panel_1.add(lblWheelUp, "cell 1 15");
+        
+        JLabel lblUpdateOverlay = new JLabel("Update Overlay");
+        lblUpdateOverlay.setFont(new Font("Tahoma", Font.PLAIN, 13));
+        panel_1.add(lblUpdateOverlay, "cell 0 16");
+        
+        JLabel lblMiddleClick = new JLabel("MIDDLE CLICK");
+        lblMiddleClick.setFont(new Font("Tahoma", Font.BOLD, 13));
+        panel_1.add(lblMiddleClick, "cell 1 16");
         scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
         scrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
         scrollPane.getVerticalScrollBar().setUnitIncrement(8);
