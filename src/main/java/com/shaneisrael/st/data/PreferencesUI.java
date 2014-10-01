@@ -29,6 +29,7 @@ import javax.swing.WindowConstants;
 import net.miginfocom.swing.MigLayout;
 
 import com.shaneisrael.st.prefs.Preferences;
+import javax.swing.JSlider;
 
 /**
  * 
@@ -48,7 +49,6 @@ public class PreferencesUI
     public JTextField directoryField;
     public JCheckBox chckbxEnableEditor;
     public JCheckBox chckbxAutosaveUploads;
-    public JComboBox<?> toolBox;
 
     /**
      * Create the application.
@@ -65,7 +65,6 @@ public class PreferencesUI
         directoryField.setText(Preferences.getInstance().getCaptureDirectoryRoot());
         chckbxEnableEditor.setSelected(Preferences.getInstance().isEditorEnabled());
         chckbxAutosaveUploads.setSelected(Preferences.getInstance().isAutoSaveEnabled());
-        toolBox.setSelectedIndex((int) Preferences.getInstance().getDefaultTool());
     }
 
     /**
@@ -169,7 +168,7 @@ public class PreferencesUI
 
         JPanel tab2 = new JPanel();
         tabbedPane.addTab("Snippet", null, tab2, null);
-        tab2.setLayout(new MigLayout("", "[123.00]", "[][][][]"));
+        tab2.setLayout(new MigLayout("", "[123.00]", "[][][][24.00][]"));
 
         chckbxEnableEditor = new JCheckBox("Enable Editor");
         chckbxEnableEditor.setSelected(true);
@@ -182,13 +181,17 @@ public class PreferencesUI
         JSeparator separator_1 = new JSeparator();
         tab2.add(separator_1, "cell 0 2,grow");
 
-        JLabel lblDefaultTool = new JLabel("Default Tool: ");
+        JLabel lblDefaultTool = new JLabel("Quality");
+        lblDefaultTool.setFont(new Font("Tahoma", Font.BOLD, 16));
         tab2.add(lblDefaultTool, "flowx,cell 0 3");
-
-        toolBox = new JComboBox();
-        toolBox.setModel(new DefaultComboBoxModel(new String[] { "Pencil", "Rectangle", "Filled Rectangle",
-                "Bordered Rectangle" }));
-        tab2.add(toolBox, "cell 0 3");
+        
+        JSlider qualitySlider = new JSlider();
+        qualitySlider.setToolTipText("Higher quality = Larger file size");
+        qualitySlider.setPaintLabels(true);
+        qualitySlider.setValue(100);
+        qualitySlider.setPaintTicks(true);
+        qualitySlider.setMajorTickSpacing(25);
+        tab2.add(qualitySlider, "cell 0 4");
 
         JPanel tab3 = new JPanel();
         tabbedPane.addTab("Controls/Hotkeys", null, tab3, null);
@@ -323,7 +326,8 @@ public class PreferencesUI
                 Preferences.getInstance().setEditorEnabled(chckbxEnableEditor.isSelected());
                 Preferences.getInstance().setAutoSaveEnabled(chckbxAutosaveUploads.isSelected());
                 Preferences.getInstance().setCaptureDirectoryRoot(directoryField.getText());
-                Preferences.getInstance().setDefaultTool(toolBox.getSelectedIndex());
+                //Preferences.getInstance().setUploadQuality(qualitySlider.getValue() / 100f);
+                Preferences.getInstance().setDefaultTool(0);
                 frmPreferences.dispose();
             }
         });

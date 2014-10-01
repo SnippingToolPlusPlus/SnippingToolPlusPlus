@@ -39,6 +39,7 @@ import com.shaneisrael.st.prefs.Preferences;
 import com.shaneisrael.st.ui.AboutFrame;
 import com.shaneisrael.st.ui.MultiUploader;
 import com.shaneisrael.st.ui.imageviewer.ImageViewer;
+import com.shaneisrael.st.upload.SimpleFTPUploader;
 import com.shaneisrael.st.utilities.CaptureScreen;
 import com.shaneisrael.st.utilities.ClipboardUtilities;
 import com.shaneisrael.st.utilities.Save;
@@ -414,6 +415,7 @@ public class Main extends JFrame implements ActionListener
         Object command = e.getActionCommand();
         if (command.equals("uSnippet"))
         {
+            new SimpleFTPUploader("", "", "", "", "");
             displayOverlay();
             overlay.setMode(Overlay.UPLOAD);
         } else if (command.equals("uScreen"))
