@@ -81,7 +81,9 @@ public class Preferences
         System.out.println("Creating " + locations.getPreferencesFile().getAbsolutePath());
 
         locations.getDataDirectory().mkdirs();
-        locations.getPictureDirectory().mkdirs();
+        locations.getUploadsDirectory().mkdirs();
+        locations.getSavesDirectory().mkdirs();
+        
         try
         {
             locations.getPreferencesFile().createNewFile();
@@ -115,6 +117,19 @@ public class Preferences
         preferences.captureDirectoryRoot = captureDirectoryRoot;
         save();
     }
+    
+    /**
+     * @return Checks if the capture directories exist. Creates them if they don't.
+     */
+	public void checkDirectories() 
+	{
+		if(!locations.getDataDirectory().exists())
+			setDefaultPreferences();
+		if(!locations.getUploadsDirectory().exists())
+			locations.getUploadsDirectory().mkdirs();
+		if(!locations.getSavesDirectory().exists())
+			locations.getSavesDirectory().mkdirs();
+	}
 
     public boolean isAutoSaveEnabled()
     {

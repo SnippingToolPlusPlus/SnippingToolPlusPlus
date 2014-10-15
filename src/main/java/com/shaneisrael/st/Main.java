@@ -110,6 +110,8 @@ public class Main extends JFrame implements ActionListener
     public Main()
     {
         Preferences.getInstance().refresh();
+        Preferences.getInstance().checkDirectories();
+        
         System.out.println("Version: " + Version.getCurrentRunningVersion());
         System.out.println("Locations: " + new Locations().toString());
         setUndecorated(true);
@@ -415,7 +417,7 @@ public class Main extends JFrame implements ActionListener
         Object command = e.getActionCommand();
         if (command.equals("uSnippet"))
         {
-            new SimpleFTPUploader("", "", "", "", "");
+            //new SimpleFTPUploader("", "", "", "", "");
             displayOverlay();
             overlay.setMode(Overlay.UPLOAD);
         } else if (command.equals("uScreen"))

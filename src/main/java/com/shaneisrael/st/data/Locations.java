@@ -86,6 +86,27 @@ public class Locations
     {
         return new File(dataRoot, operatingSystem.getPictureDirectoryPath());
     }
+    
+    /**
+     * This location is not guaranteed to exist yet.
+     * 
+     * @return the directory for storing local saved uploads, no trailing slash.
+     */
+    public File getUploadsDirectory()
+    {
+    	return new File(dataRoot, operatingSystem.getPictureDirectoryPath() + "/Uploads");
+    }
+    
+    /**
+     * This location is not guaranteed to exist yet.
+     * 
+     * @return the directory for storing local (non uploaded) captures, no trailing slash.
+     */
+    public File getSavesDirectory()
+    {
+    	return new File(dataRoot, operatingSystem.getPictureDirectoryPath() + "/Captures");
+    }
+    
 
     /**
      * This location is not guaranteed to exist yet.

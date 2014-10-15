@@ -323,6 +323,7 @@ public class PreferencesUI
             @Override
             public void actionPerformed(ActionEvent arg0)
             {
+                Preferences.getInstance().checkDirectories();
                 Preferences.getInstance().setEditorEnabled(chckbxEnableEditor.isSelected());
                 Preferences.getInstance().setAutoSaveEnabled(chckbxAutosaveUploads.isSelected());
                 Preferences.getInstance().setCaptureDirectoryRoot(directoryField.getText());
