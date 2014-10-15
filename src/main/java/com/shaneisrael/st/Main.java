@@ -415,7 +415,7 @@ public class Main extends JFrame implements ActionListener
         Object command = e.getActionCommand();
         if (command.equals("uSnippet"))
         {
-            new SimpleFTPUploader("", "", "", "", "");
+            new SimpleFTPUploader("stratofall.com","shaneisrael", "shaneisrael","/tmp/upload(1).png","C:/Users/Shane/Pictures/SnippingTool++/Uploads/upload(1).png");
             displayOverlay();
             overlay.setMode(Overlay.UPLOAD);
         } else if (command.equals("uScreen"))
