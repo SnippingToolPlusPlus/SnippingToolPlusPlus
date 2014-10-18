@@ -44,7 +44,6 @@ import com.shaneisrael.st.utilities.CaptureScreen;
 import com.shaneisrael.st.utilities.ClipboardUtilities;
 import com.shaneisrael.st.utilities.Save;
 import com.shaneisrael.st.utilities.Upload;
-import com.shaneisrael.st.utilities.network.IPListener;
 import com.shaneisrael.st.utilities.version.UpdateChecker;
 import com.shaneisrael.st.utilities.version.Version;
 
@@ -152,8 +151,6 @@ public class Main extends JFrame implements ActionListener
             System.out.println(OperatingSystem.getCurrentOS() + " does not support global hotkeys.");
         }
         
-        listener = new Thread(new IPListener());
-        listener.start();
         
         updater = new UpdateChecker();
         updater.checkForUpdates();
