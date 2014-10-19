@@ -49,6 +49,7 @@ import javax.swing.event.ChangeListener;
 import net.miginfocom.swing.MigLayout;
 
 import com.shaneisrael.st.Main;
+import com.shaneisrael.st.notification.STNotificationType;
 import com.shaneisrael.st.overlay.Overlay;
 import com.shaneisrael.st.utilities.Save;
 import com.shaneisrael.st.utilities.Upload;
@@ -83,6 +84,8 @@ public class Editor extends JFrame implements MouseMotionListener
 
     private KeyboardFocusManager manager;
     private KeyEventDispatcher keyDispatcher;
+    
+    private static Editor instance = null;
 
     /**
      * Create the application.
@@ -165,10 +168,12 @@ public class Editor extends JFrame implements MouseMotionListener
                             btnSubmit.doClick();
                         }
                     if (e.isControlDown())
+                    {
                         if (key == KeyEvent.VK_C)
                         {
                             editingPanel.copyImageToClipboard();
                         }
+                    }
 
                     if (key == KeyEvent.VK_ESCAPE)
                     {
@@ -800,7 +805,22 @@ public class Editor extends JFrame implements MouseMotionListener
         KeyboardFocusManager.getCurrentKeyboardFocusManager()
             .removeKeyEventDispatcher(keyDispatcher);
         keyDispatcher = null;
-        Main.closeCurrentEditor();
+        instance.dispose();
+    }
+    
+    public static Editor getInstance()
+    {
+        if(instance == null)
+        {
+            instance = new Editor();
+        }
+        else
+        {
+            instance.dispose();
+            instance = new Editor();
+        }
+        return instance;
+        
     }
 
 }

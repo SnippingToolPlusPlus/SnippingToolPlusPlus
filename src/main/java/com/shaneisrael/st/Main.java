@@ -28,7 +28,6 @@ import com.melloware.jintellitype.JIntellitypeException;
 import com.shaneisrael.st.data.Locations;
 import com.shaneisrael.st.data.OperatingSystem;
 import com.shaneisrael.st.data.PreferencesUI;
-import com.shaneisrael.st.editor.Editor;
 import com.shaneisrael.st.notification.STNotification;
 import com.shaneisrael.st.notification.STNotificationQueue;
 import com.shaneisrael.st.notification.STNotificationType;
@@ -39,7 +38,6 @@ import com.shaneisrael.st.prefs.Preferences;
 import com.shaneisrael.st.ui.AboutFrame;
 import com.shaneisrael.st.ui.MultiUploader;
 import com.shaneisrael.st.ui.imageviewer.ImageViewer;
-import com.shaneisrael.st.upload.SimpleFTPUploader;
 import com.shaneisrael.st.utilities.CaptureScreen;
 import com.shaneisrael.st.utilities.ClipboardUtilities;
 import com.shaneisrael.st.utilities.Save;
@@ -54,7 +52,6 @@ public class Main extends JFrame implements ActionListener
 
     private OverlayFrame overlay;
     private PreferencesUI preferencesUI;
-    private Preferences preferences;
     private Save save;
     private Upload upload;
 
@@ -68,14 +65,6 @@ public class Main extends JFrame implements ActionListener
     private static STNotification notification;
 
     private UpdateChecker updater;
-
-    /* because the overlay panel is destroyed and remade,
-     * it needs a way to point to the editor that it created,
-     * that way it can be closed. So we will have a pointer 
-     * located in the main class that points to the last
-     * created editor. That way we can close it after its been created.
-     */
-    private static Editor pointerEditor;
     final String iconMac = "trayIconMac.png";
     final String iconPressedMac = "trayIconPressedMac.png";
 
@@ -460,19 +449,6 @@ public class Main extends JFrame implements ActionListener
         } else if (command.equals("exit"))
         {
             System.exit(0);
-        }
-    }
-
-    public static void pointToEditor(Editor pointer)
-    {
-        pointerEditor = pointer;
-    }
-
-    public static void closeCurrentEditor()
-    {
-        if (pointerEditor != null)
-        {
-            pointerEditor.dispose();
         }
     }
 }
