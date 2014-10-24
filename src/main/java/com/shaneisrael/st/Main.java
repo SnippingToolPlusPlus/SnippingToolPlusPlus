@@ -112,7 +112,7 @@ public class Main extends JFrame implements ActionListener
     {
         Preferences.getInstance().refresh();
         Preferences.getInstance().checkDirectories();
-        
+        System.out.println(Preferences.getInstance().getCaptureDirectoryRoot());
         System.out.println("Version: " + Version.getCurrentRunningVersion());
         System.out.println("Locations: " + new Locations().toString());
         setUndecorated(true);

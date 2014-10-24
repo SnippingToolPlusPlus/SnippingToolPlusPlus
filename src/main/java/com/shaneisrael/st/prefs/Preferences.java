@@ -1,5 +1,6 @@
 package com.shaneisrael.st.prefs;
 
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 
@@ -107,6 +108,14 @@ public class Preferences
         refresh();
         return preferences.getCaptureDirectoryRoot();
     }
+    public File getUploadsDirectoryRoot()
+    {
+    	return new File(preferences.getCaptureDirectoryRoot() + locations.getUploadsDirectory());
+    }
+    public File getSavesDirectoryRoot()
+    {
+    	return new File(preferences.getCaptureDirectoryRoot() + locations.getSavesDirectory());
+    }
 
     /**
      * @param captureDirectoryRoot
@@ -125,10 +134,11 @@ public class Preferences
 	{
 		if(!locations.getDataDirectory().exists())
 			setDefaultPreferences();
-		if(!locations.getUploadsDirectory().exists())
-			locations.getUploadsDirectory().mkdirs();
-		if(!locations.getSavesDirectory().exists())
-			locations.getSavesDirectory().mkdirs();
+		if(!getUploadsDirectoryRoot().exists())
+			getUploadsDirectoryRoot().mkdirs();
+		if(!getSavesDirectoryRoot().exists())
+			getSavesDirectoryRoot().mkdirs();
+
 	}
 
     public boolean isAutoSaveEnabled()

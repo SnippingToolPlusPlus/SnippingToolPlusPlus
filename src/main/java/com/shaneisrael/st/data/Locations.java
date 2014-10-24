@@ -94,7 +94,7 @@ public class Locations
      */
     public File getUploadsDirectory()
     {
-    	return new File(dataRoot, operatingSystem.getPictureDirectoryPath() + "/Uploads");
+    	return new File("/Uploads");
     }
     
     /**
@@ -104,7 +104,7 @@ public class Locations
      */
     public File getSavesDirectory()
     {
-    	return new File(dataRoot, operatingSystem.getPictureDirectoryPath() + "/Captures");
+    	return new File("/Captures");
     }
     
 
