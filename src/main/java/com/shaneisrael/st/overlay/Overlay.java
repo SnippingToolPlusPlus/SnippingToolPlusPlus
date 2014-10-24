@@ -90,10 +90,8 @@ public class Overlay extends JPanel implements MouseListener, MouseMotionListene
                 // setOverlayVisible(false); //remove the overlay
                 if (Preferences.getInstance().isEditorEnabled())
                 {
-                    Main.closeCurrentEditor();
-                    editor = new Editor(); // send the snippet to the editor
-                    editor.initialize(selectionImage, mode);
-                    Main.pointToEditor(editor);
+                    // send the snippet to the editor
+                    Editor.getInstance().initialize(selectionImage, mode);
                 } else
                 {
                     // send the snippet directly to the upload/save queue
