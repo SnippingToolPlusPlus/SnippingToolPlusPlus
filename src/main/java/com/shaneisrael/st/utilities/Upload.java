@@ -26,7 +26,7 @@ public class Upload implements ImgurResponseListener
     private final Save save;
 
     public Upload(BufferedImage image)
-    {
+    {   
         this(image, false);
     }
 

@@ -99,6 +99,7 @@ public class Preferences
         preferences.setAutoSaveEnabled(true);
         preferences.setEditorEnabled(true);
         preferences.setDefaultTool(0);
+        preferences.setUploadQuality(1f);
         preferences.setCaptureDirectoryRoot(locations.getPictureDirectory().getAbsolutePath());
         save();
     }
@@ -156,7 +157,25 @@ public class Preferences
         preferences.autoSaveEnabled = autoSaveEnabled;
         save();
     }
+    
+    /**
+     * @param uploadQuality
+     *            the uploadQuality to set
+     */
+    public void setUploadQuality(float f)
+    {
+        preferences.uploadQuality = f;
+        save();
+    }
 
+    /**
+     * 
+     * @return the current upload quality setting
+     */
+    public float getUploadQuality()
+    {
+        return preferences.getUploadQuality();
+    }
     public boolean isEditorEnabled()
     {
         refresh();

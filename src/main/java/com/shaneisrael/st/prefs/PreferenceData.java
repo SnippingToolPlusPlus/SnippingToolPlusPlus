@@ -14,6 +14,9 @@ public final class PreferenceData
     @SerializedName("editor")
     EditorPreferences editor;
 
+    @SerializedName("upload_quality")
+    public float uploadQuality;
+
     PreferenceData()
     {
         editor = new EditorPreferences();
@@ -60,6 +63,16 @@ public final class PreferenceData
     {
         this.autoSaveEnabled = autoSaveEnabled;
     }
+    
+    /**
+     * 
+     * @param setUploadQuality
+     *          the quality level of the uploads
+     */
+    void setUploadQuality(float quality)
+    {
+        this.uploadQuality = quality;
+    }
 
     /**
      * @param enabled
@@ -86,7 +99,15 @@ public final class PreferenceData
     {
         return getEditor().enabled;
     }
-
+    
+    /**
+     * 
+     * @return the quality setting of uploads
+     */
+    float getUploadQuality()
+    {
+        return uploadQuality;
+    }
     /**
      * @return the defaultTool
      */

@@ -9,8 +9,10 @@ import javax.imageio.ImageIO;
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 import com.shaneisrael.st.Config;
+import com.shaneisrael.st.prefs.Preferences;
 import com.shaneisrael.st.upload.SimpleFileUploader;
 import com.shaneisrael.st.upload.UploadListener;
+import com.shaneisrael.st.utilities.ImageUtilities;
 
 public class ImgurUploader implements UploadListener
 {
@@ -22,6 +24,10 @@ public class ImgurUploader implements UploadListener
 
     public void upload(BufferedImage image, ImgurResponseListener listener)
     {
+        float quality = Preferences.getInstance().getUploadQuality();
+        if(quality < 1f)
+            image = ImageUtilities.compressImage(image, quality);
+        
         upload(saveTemporarily(image), listener);
     }
 

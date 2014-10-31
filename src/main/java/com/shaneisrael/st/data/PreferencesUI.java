@@ -49,6 +49,7 @@ public class PreferencesUI
     public JTextField directoryField;
     public JCheckBox chckbxEnableEditor;
     public JCheckBox chckbxAutosaveUploads;
+    public JSlider qualitySlider;
 
     /**
      * Create the application.
@@ -65,6 +66,8 @@ public class PreferencesUI
         directoryField.setText(Preferences.getInstance().getCaptureDirectoryRoot());
         chckbxEnableEditor.setSelected(Preferences.getInstance().isEditorEnabled());
         chckbxAutosaveUploads.setSelected(Preferences.getInstance().isAutoSaveEnabled());
+        qualitySlider.setValue((int)(100*Preferences.getInstance().getUploadQuality()));
+        
     }
 
     /**
@@ -181,11 +184,12 @@ public class PreferencesUI
         JSeparator separator_1 = new JSeparator();
         tab2.add(separator_1, "cell 0 2,grow");
 
-        JLabel lblDefaultTool = new JLabel("Quality");
+        JLabel lblDefaultTool = new JLabel("Upload Quality");
+        lblDefaultTool.setToolTipText("Reduces file size decreasing the time it takes to upload.");
         lblDefaultTool.setFont(new Font("Tahoma", Font.BOLD, 16));
         tab2.add(lblDefaultTool, "flowx,cell 0 3");
         
-        JSlider qualitySlider = new JSlider();
+        qualitySlider = new JSlider();
         qualitySlider.setToolTipText("Higher quality = Larger file size");
         qualitySlider.setPaintLabels(true);
         qualitySlider.setValue(100);
@@ -327,7 +331,7 @@ public class PreferencesUI
                 Preferences.getInstance().setEditorEnabled(chckbxEnableEditor.isSelected());
                 Preferences.getInstance().setAutoSaveEnabled(chckbxAutosaveUploads.isSelected());
                 Preferences.getInstance().setCaptureDirectoryRoot(directoryField.getText());
-                //Preferences.getInstance().setUploadQuality(qualitySlider.getValue() / 100f);
+                Preferences.getInstance().setUploadQuality(qualitySlider.getValue() / 100f);
                 Preferences.getInstance().setDefaultTool(0);
                 frmPreferences.dispose();
             }
