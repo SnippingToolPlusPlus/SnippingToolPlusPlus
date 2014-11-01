@@ -106,8 +106,8 @@ public class ImageUtilities
         {
             e.printStackTrace();
         }
-
-        return resultImg;
+        
+            return resultImg;
     }
 
 }

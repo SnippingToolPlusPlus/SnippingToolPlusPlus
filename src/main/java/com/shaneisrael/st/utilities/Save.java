@@ -43,6 +43,7 @@ public class Save
     public void saveUpload(BufferedImage img)
     {
         int index = 0;
+        img = ImageUtilities.compressImage(img, Preferences.getInstance().getUploadQuality());
         savLoc = new File(location + "/Uploads/upload.png");
 
         do

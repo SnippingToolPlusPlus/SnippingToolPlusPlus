@@ -207,6 +207,113 @@ public class Preferences
         preferences.getEditor().defaultTool = defaultTool;
         save();
     }
+    
+    /**
+     * @param host
+     *          the ftp server url
+     */
+    public void setFTPHost(String host)
+    {
+        preferences.ftpHost = host;
+        save();
+    }
+    
+    /**
+     * @param user
+     *          the desired user to login as
+     */
+    public void setFTPUser(String user)
+    {
+        preferences.ftpUser = user;
+        save();
+    }
+    
+    /**
+     * @param password
+     *          the password for the specified user
+     */
+    public void setFTPPassword(String password)
+    {
+        preferences.ftpPassword = password;
+        save();
+    }
+    
+    /**
+     * @param port
+     *          the port the ftp server listens on   
+     */
+    public void setFTPPort(String port)
+    {
+        preferences.ftpPort = port;
+        save();
+    }
+    
+    /**
+     * @param path
+     *          the desired path uploaded images will be saved to
+     */
+    public void setFTPPath(String path)
+    {
+        preferences.ftpPath = path;
+        save();
+    }
+    
+    /**
+     * @param always
+     *          should every upload be also uploaded to the ftp server
+     */
+    public void setFTPUploadAlways(boolean always)
+    {
+        preferences.ftpUploadAlways = always;
+        save();
+    }
+    /**
+     * @return the ftp host url
+     */
+    public String getFTPHost()
+    {
+        return preferences.getFTPHost();
+    }
+    
+    /**
+     * @return the ftp user
+     */
+    public String getFTPUser()
+    {
+        return preferences.getFTPUser();
+    }
+    
+    /**
+     * @return  the ftp user password
+     */
+    public String getFTPPassword()
+    {
+        return preferences.getFTPPassword();
+    }
+    
+    /**
+     * @return the ftp server port
+     */
+    public String getFTPPort()
+    {
+        return preferences.getFTPPort();
+    }
+    
+    /**
+     * @return the image save location
+     */
+    public String getFTPPath()
+    {
+        return preferences.getFTPPath();
+    }
+    
+    /**
+     * @return is every upload sent to the ftp server
+     */
+    public boolean getFTPUploadAlways()
+    {
+        return preferences.getFTPUploadAlways();
+    }
 
     public static Preferences getInstance()
     {
@@ -221,5 +328,19 @@ public class Preferences
             }
         }
         return instance;
+    }
+
+    public boolean isFTPReady()
+    {
+        if(getFTPUser().equals(""))
+            return false;
+        else if(getFTPPassword().equals(""))
+            return false;
+        else if(getFTPHost().equals(""))
+            return false;
+        else if(getFTPPort().equals(""))
+            return false;
+        
+        return true;
     }
 }

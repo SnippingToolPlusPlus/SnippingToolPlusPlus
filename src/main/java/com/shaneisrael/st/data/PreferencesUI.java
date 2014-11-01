@@ -6,6 +6,8 @@ import java.awt.Font;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.io.File;
 import java.io.IOException;
 
@@ -29,7 +31,9 @@ import javax.swing.WindowConstants;
 import net.miginfocom.swing.MigLayout;
 
 import com.shaneisrael.st.prefs.Preferences;
+
 import javax.swing.JSlider;
+import javax.swing.JPasswordField;
 
 /**
  * 
@@ -49,7 +53,13 @@ public class PreferencesUI
     public JTextField directoryField;
     public JCheckBox chckbxEnableEditor;
     public JCheckBox chckbxAutosaveUploads;
+    public JCheckBox chckbxAlwaysSaveToFTP;
     public JSlider qualitySlider;
+    private JTextField hostField;
+    private JTextField userField;
+    private JTextField portField;
+    private JPasswordField passwordField;
+    private JTextField ftpPathField;
 
     /**
      * Create the application.
@@ -67,7 +77,12 @@ public class PreferencesUI
         chckbxEnableEditor.setSelected(Preferences.getInstance().isEditorEnabled());
         chckbxAutosaveUploads.setSelected(Preferences.getInstance().isAutoSaveEnabled());
         qualitySlider.setValue((int)(100*Preferences.getInstance().getUploadQuality()));
-        
+        hostField.setText(Preferences.getInstance().getFTPHost());
+        userField.setText(Preferences.getInstance().getFTPUser());
+        portField.setText(Preferences.getInstance().getFTPPort());
+        passwordField.setText(Preferences.getInstance().getFTPPassword());
+        ftpPathField.setText(Preferences.getInstance().getFTPPath());
+        chckbxAlwaysSaveToFTP.setSelected(Preferences.getInstance().getFTPUploadAlways());
     }
 
     /**
@@ -79,7 +94,7 @@ public class PreferencesUI
         frmPreferences.setIconImage(Toolkit.getDefaultToolkit().getImage(
             PreferencesUI.class.getResource("/images/icons/pref.png")));
         frmPreferences.setTitle("Preferences");
-        frmPreferences.setBounds(100, 100, 314, 325);
+        frmPreferences.setBounds(100, 100, 314, 327);
         frmPreferences.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
         frmPreferences.getContentPane().setLayout(new MigLayout("", "[263px]", "[240.00px][20.00]"));
 
@@ -196,6 +211,97 @@ public class PreferencesUI
         qualitySlider.setPaintTicks(true);
         qualitySlider.setMajorTickSpacing(25);
         tab2.add(qualitySlider, "cell 0 4");
+        
+        JPanel tab4 = new JPanel();
+        tabbedPane.addTab("FTP", null, tab4, null);
+        tab4.setLayout(new MigLayout("", "[84.00][205.00,grow]", "[][][27.00][][][-17.00][][]"));
+        
+        JLabel lblHost = new JLabel("Host:");
+        tab4.add(lblHost, "flowx,cell 0 0,alignx right");
+        
+        hostField = new JTextField();
+        tab4.add(hostField, "cell 1 0,growx");
+        hostField.setColumns(10);
+        
+        JLabel lblUser = new JLabel("User:");
+        tab4.add(lblUser, "flowx,cell 0 1,alignx right");
+        
+        userField = new JTextField();
+        tab4.add(userField, "flowx,cell 1 1,alignx center");
+        userField.setColumns(10);
+        
+        JLabel lblPassword = new JLabel("Password:");
+        tab4.add(lblPassword, "flowx,cell 0 2,alignx trailing");
+        
+        JLabel lblPort = new JLabel("Port:");
+        tab4.add(lblPort, "cell 1 1");
+        
+        portField = new JTextField();
+        portField.setText("21");
+        tab4.add(portField, "cell 1 1");
+        portField.setColumns(10);
+        
+        passwordField = new JPasswordField();
+        tab4.add(passwordField, "cell 1 2,growx");
+        
+        JLabel lblSavePath = new JLabel("Save Path:");
+        lblSavePath.setToolTipText("The path from the /home directory");
+        tab4.add(lblSavePath, "cell 0 3,alignx trailing");
+        
+        ftpPathField = new JTextField();
+        ftpPathField.setToolTipText("example ../../var/www/downloads/");
+        ftpPathField.addMouseListener(new MouseListener()
+        {
+            
+            @Override
+            public void mouseReleased(MouseEvent e)
+            {
+                // TODO Auto-generated method stub
+                
+            }
+            
+            @Override
+            public void mousePressed(MouseEvent e)
+            {
+                // TODO Auto-generated method stub
+                
+            }
+            
+            @Override
+            public void mouseExited(MouseEvent e)
+            {
+                // TODO Auto-generated method stub
+                
+            }
+            
+            @Override
+            public void mouseEntered(MouseEvent e)
+            {
+                // TODO Auto-generated method stub
+                
+            }
+            
+            @Override
+            public void mouseClicked(MouseEvent e)
+            {
+                ftpPathField.selectAll();
+            }
+        });
+        ftpPathField.setText("example ../../var/www/etc");
+        ftpPathField.selectAll();
+        tab4.add(ftpPathField, "cell 1 3,growx");
+        ftpPathField.setColumns(10);
+        
+        JSeparator separator_5 = new JSeparator();
+        tab4.add(separator_5, "cell 0 4 2 1,growx");
+        
+        chckbxAlwaysSaveToFTP = new JCheckBox("Backup to FTP");
+        chckbxAlwaysSaveToFTP.setToolTipText("Will save a copy of the image to the desired server via FTP");
+        tab4.add(chckbxAlwaysSaveToFTP, "cell 1 6");
+        
+        JCheckBox chckbxAskForFileName = new JCheckBox("Timestamp as file name");
+        chckbxAskForFileName.setSelected(true);
+        tab4.add(chckbxAskForFileName, "cell 1 7");
 
         JPanel tab3 = new JPanel();
         tabbedPane.addTab("Controls/Hotkeys", null, tab3, null);
@@ -332,6 +438,12 @@ public class PreferencesUI
                 Preferences.getInstance().setAutoSaveEnabled(chckbxAutosaveUploads.isSelected());
                 Preferences.getInstance().setCaptureDirectoryRoot(directoryField.getText());
                 Preferences.getInstance().setUploadQuality(qualitySlider.getValue() / 100f);
+                Preferences.getInstance().setFTPHost(hostField.getText());
+                Preferences.getInstance().setFTPUser(userField.getText());
+                Preferences.getInstance().setFTPPort(portField.getText());
+                Preferences.getInstance().setFTPPassword(new String(passwordField.getPassword()));
+                Preferences.getInstance().setFTPPath(ftpPathField.getText());
+                Preferences.getInstance().setFTPUploadAlways(chckbxAlwaysSaveToFTP.isSelected());
                 Preferences.getInstance().setDefaultTool(0);
                 frmPreferences.dispose();
             }

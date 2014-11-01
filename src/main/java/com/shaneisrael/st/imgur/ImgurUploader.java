@@ -10,6 +10,7 @@ import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 import com.shaneisrael.st.Config;
 import com.shaneisrael.st.prefs.Preferences;
+import com.shaneisrael.st.upload.SimpleFTPUploader;
 import com.shaneisrael.st.upload.SimpleFileUploader;
 import com.shaneisrael.st.upload.UploadListener;
 import com.shaneisrael.st.utilities.ImageUtilities;
@@ -21,6 +22,9 @@ public class ImgurUploader implements UploadListener
     private static final String CLIENT_ID = "6311d570cd54953";
 
     private ImgurResponseListener listener;
+    
+    private File tempFile;
+    
 
     public void upload(BufferedImage image, ImgurResponseListener listener)
     {
@@ -28,7 +32,11 @@ public class ImgurUploader implements UploadListener
         if(quality < 1f)
             image = ImageUtilities.compressImage(image, quality);
         
-        upload(saveTemporarily(image), listener);
+        tempFile = saveTemporarily(image);
+        upload(tempFile, listener);
+        
+        if(Preferences.getInstance().getFTPUploadAlways() && Preferences.getInstance().isFTPReady())
+            new SimpleFTPUploader(tempFile);
     }
 
     public void upload(File imageFile, ImgurResponseListener listener)
