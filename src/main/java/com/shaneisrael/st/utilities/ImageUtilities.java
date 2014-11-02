@@ -11,7 +11,9 @@ import java.awt.image.BufferedImageOp;
 import java.awt.image.ConvolveOp;
 import java.awt.image.Kernel;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.util.Iterator;
 
 import javax.imageio.IIOImage;
@@ -19,6 +21,7 @@ import javax.imageio.ImageIO;
 import javax.imageio.ImageWriteParam;
 import javax.imageio.ImageWriter;
 import javax.imageio.stream.FileImageOutputStream;
+import javax.imageio.stream.ImageOutputStream;
 
 public class ImageUtilities
 {
@@ -73,41 +76,41 @@ public class ImageUtilities
      */
     public static BufferedImage compressImage(BufferedImage img, float quality)
     {
-        BufferedImage resultImg = null;
-
-        Iterator<ImageWriter> i = ImageIO.getImageWritersByFormatName("jpeg");
-
-        //Get the next available writer
-        ImageWriter jpegWriter = i.next();
-
-        //Set compression quality
-        ImageWriteParam param = jpegWriter.getDefaultWriteParam();
-        param.setCompressionMode(ImageWriteParam.MODE_EXPLICIT);
-        param.setCompressionQuality(quality);
-
-        File file = new File("temp.jpg");
-
+        File input = saveTemporarily(img);
+        
         try
         {
-            FileImageOutputStream output = new FileImageOutputStream(file);
-
-            jpegWriter.setOutput(output);
-
-            IIOImage ioimage = new IIOImage(img, null, null);
-            jpegWriter.write(null, ioimage, param);
-            output.close();
-
-            resultImg = ImageIO.read(file);
-
-            //delete the temp output file
-            file.delete();
-
-        } catch (IOException e)
+            BufferedImage image = ImageIO.read(input);
+    
+            File compressedImageFile = new File("compress.jpg");
+            OutputStream os =new FileOutputStream(compressedImageFile);
+    
+            Iterator<ImageWriter> writers = ImageIO.getImageWritersByFormatName("jpg");
+            ImageWriter writer = (ImageWriter) writers.next();
+    
+            ImageOutputStream ios = ImageIO.createImageOutputStream(os);
+            writer.setOutput(ios);
+    
+            ImageWriteParam param = writer.getDefaultWriteParam();
+            param.setCompressionMode(ImageWriteParam.MODE_EXPLICIT);
+            param.setCompressionQuality(quality);
+            writer.write(null, new IIOImage(image, null, null), param);
+            os.close();
+            ios.close();
+            writer.dispose();
+            
+            image = ImageIO.read(compressedImageFile);
+            
+            compressedImageFile.delete();
+            
+            return image;
+        }
+        catch(IOException e)
         {
             e.printStackTrace();
         }
         
-            return resultImg;
+        return null;
     }
     
     /**
