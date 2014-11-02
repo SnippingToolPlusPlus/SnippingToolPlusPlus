@@ -96,9 +96,9 @@ public class PreferencesUI
         frmPreferences.setIconImage(Toolkit.getDefaultToolkit().getImage(
             PreferencesUI.class.getResource("/images/icons/pref.png")));
         frmPreferences.setTitle("Preferences");
-        frmPreferences.setBounds(100, 100, 314, 327);
+        frmPreferences.setBounds(100, 100, 314, 332);
         frmPreferences.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
-        frmPreferences.getContentPane().setLayout(new MigLayout("", "[263px]", "[240.00px][20.00]"));
+        frmPreferences.getContentPane().setLayout(new MigLayout("", "[263px]", "[244.00px][20.00]"));
 
         JTabbedPane tabbedPane = new JTabbedPane(SwingConstants.TOP);
         frmPreferences.getContentPane().add(tabbedPane, "cell 0 0,grow");
@@ -311,7 +311,7 @@ public class PreferencesUI
 
         JPanel panel_1 = new JPanel();
         // tab3.add(panel_1, BorderLayout.CENTER);
-        panel_1.setLayout(new MigLayout("", "[120.00][39.00]", "[][][][][][][][][][][][][][][][][]"));
+        panel_1.setLayout(new MigLayout("", "[120.00][39.00]", "[][][][][][][][][][][][][17.00][19.00][][][][][]"));
 
         JLabel lblEditor = new JLabel("Editor");
         lblEditor.setFont(new Font("Tahoma", Font.BOLD, 18));
@@ -393,36 +393,50 @@ public class PreferencesUI
 
         JScrollPane scrollPane = new JScrollPane(panel_1);
         
+        JLabel lblFtpUploadSnippet = new JLabel("FTP Upload Snippet");
+        panel_1.add(lblFtpUploadSnippet, "cell 0 12");
+        
+        JLabel lblAltshift = new JLabel("ALT +SHIFT + 1");
+        lblAltshift.setFont(new Font("Tahoma", Font.BOLD, 11));
+        panel_1.add(lblAltshift, "cell 1 12");
+        
+        JLabel lblFtpUploadScreenshot = new JLabel("FTP Upload Screenshot");
+        panel_1.add(lblFtpUploadScreenshot, "cell 0 13");
+        
+        JLabel lblAltshift_1 = new JLabel("ALT +SHIFT + 2");
+        lblAltshift_1.setFont(new Font("Tahoma", Font.BOLD, 11));
+        panel_1.add(lblAltshift_1, "cell 1 13");
+        
         JLabel lblOverlayControls = new JLabel("Overlay");
         lblOverlayControls.setFont(new Font("Tahoma", Font.BOLD, 18));
-        panel_1.add(lblOverlayControls, "cell 0 12");
+        panel_1.add(lblOverlayControls, "cell 0 14");
         
         JSeparator separator_2 = new JSeparator();
-        panel_1.add(separator_2, "cell 0 13 2 1,growx");
+        panel_1.add(separator_2, "cell 0 15 2 1,growx");
         
         JLabel lblIncreaseTransparency = new JLabel("Inc. Transparency");
         lblIncreaseTransparency.setFont(new Font("Tahoma", Font.PLAIN, 13));
-        panel_1.add(lblIncreaseTransparency, "cell 0 14");
+        panel_1.add(lblIncreaseTransparency, "cell 0 16");
         
         JLabel lblMousewheelUp = new JLabel("WHEEL DOWN");
         lblMousewheelUp.setFont(new Font("Tahoma", Font.BOLD, 13));
-        panel_1.add(lblMousewheelUp, "cell 1 14");
+        panel_1.add(lblMousewheelUp, "cell 1 16");
         
         JLabel lblDecreaseTransparency = new JLabel("Dec. Transparency");
         lblDecreaseTransparency.setFont(new Font("Tahoma", Font.PLAIN, 13));
-        panel_1.add(lblDecreaseTransparency, "cell 0 15");
+        panel_1.add(lblDecreaseTransparency, "cell 0 17");
         
         JLabel lblWheelUp = new JLabel("WHEEL UP");
         lblWheelUp.setFont(new Font("Tahoma", Font.BOLD, 13));
-        panel_1.add(lblWheelUp, "cell 1 15");
+        panel_1.add(lblWheelUp, "cell 1 17");
         
         JLabel lblUpdateOverlay = new JLabel("Update Overlay");
         lblUpdateOverlay.setFont(new Font("Tahoma", Font.PLAIN, 13));
-        panel_1.add(lblUpdateOverlay, "cell 0 16");
+        panel_1.add(lblUpdateOverlay, "cell 0 18");
         
         JLabel lblMiddleClick = new JLabel("MIDDLE CLICK");
         lblMiddleClick.setFont(new Font("Tahoma", Font.BOLD, 13));
-        panel_1.add(lblMiddleClick, "cell 1 16");
+        panel_1.add(lblMiddleClick, "cell 1 18");
         scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
         scrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
         scrollPane.getVerticalScrollBar().setUnitIncrement(8);
