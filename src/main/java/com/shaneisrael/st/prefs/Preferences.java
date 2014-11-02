@@ -267,6 +267,17 @@ public class Preferences
         preferences.ftpUploadAlways = always;
         save();
     }
+    
+    /**
+     * 
+     * @param generateStamp
+     *          should a time stamp be generated as the file name
+     */
+    public void setFTPGenerateTimestamp(boolean generateStamp)
+    {
+        preferences.ftpGenerateTimestamp = generateStamp;
+        save();
+    }
     /**
      * @return the ftp host url
      */
@@ -315,6 +326,14 @@ public class Preferences
         return preferences.getFTPUploadAlways();
     }
 
+    /**
+     * @return is a time stamp generated as the file name
+     */
+    public boolean getFTPGenerateTimestamp()
+    {
+        return preferences.getFTPGenerateTimestamp();
+    }
+    
     public static Preferences getInstance()
     {
         if (instance == null)

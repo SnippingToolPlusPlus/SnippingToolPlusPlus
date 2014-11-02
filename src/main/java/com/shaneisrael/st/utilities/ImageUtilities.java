@@ -109,5 +109,27 @@ public class ImageUtilities
         
             return resultImg;
     }
+    
+    /**
+     * 
+     * @param image
+     *          the BufferedImage create a temp file from
+     * @return
+     *          returns a file path to a temporary file
+     */
+    public static File saveTemporarily(BufferedImage image)
+    {
+        try
+        {
+            File file = File.createTempFile("stpp-", "-snip.png");
+            ImageIO.write(image, "png", file);
+
+            return file;
+        } catch (IOException e)
+        {
+            e.printStackTrace();
+        }
+        return null;
+    }
 
 }

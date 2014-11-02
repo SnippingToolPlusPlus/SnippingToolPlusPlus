@@ -11,6 +11,8 @@ import java.util.Date;
 
 import javax.swing.JOptionPane;
 
+import com.shaneisrael.st.Main;
+import com.shaneisrael.st.notification.STNotificationType;
 import com.shaneisrael.st.prefs.Preferences;
 import com.sun.jmx.snmp.Timestamp;
 
@@ -52,14 +54,16 @@ public class SimpleFTPUploader implements Runnable
     @Override
     public void run()
     {
-        //if not auto generate, then ask for file name
-        String filename = askForFileName();
-        //else auto generate file name
-        filename = getTimeStamp();
+        String filename = "";
+        if(!Preferences.getInstance().getFTPGenerateTimestamp())
+            filename = askForFileName();
+        else
+            filename = getTimeStamp();
         
         String ftpUrl = "ftp://%s:%s@%s/%s;type=i";
         ftpUrl = String.format(ftpUrl, user, pass, host, uploadPath + filename + ".png");
 
+        Main.showNotification("uploading-ftp", STNotificationType.INFO);
         try
         {
             URL url = new URL(ftpUrl);
@@ -79,8 +83,10 @@ public class SimpleFTPUploader implements Runnable
 
         } catch (IOException ex)
         {
+            Main.showNotification("uploading-ftp-failed", STNotificationType.ERROR);
             ex.printStackTrace();
         }
+        Main.showNotification("upload-ftp-done", STNotificationType.SUCCESS);
     }
     private String askForFileName()
     {
@@ -95,7 +101,6 @@ public class SimpleFTPUploader implements Runnable
     private String getTimeStamp()
     {
         String timeStamp = new SimpleDateFormat("MM-dd-yy HH:mm:ss").format(new Date());
-        System.out.println(timeStamp);
         return timeStamp;
     }
 }

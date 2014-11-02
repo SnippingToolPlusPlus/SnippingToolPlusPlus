@@ -32,7 +32,9 @@ import javax.swing.KeyStroke;
 import com.shaneisrael.st.Main;
 import com.shaneisrael.st.editor.Editor;
 import com.shaneisrael.st.prefs.Preferences;
+import com.shaneisrael.st.upload.SimpleFTPUploader;
 import com.shaneisrael.st.utilities.CaptureScreen;
+import com.shaneisrael.st.utilities.ImageUtilities;
 import com.shaneisrael.st.utilities.Save;
 import com.shaneisrael.st.utilities.SoundNotifications;
 import com.shaneisrael.st.utilities.Upload;
@@ -45,6 +47,7 @@ public class Overlay extends JPanel implements MouseListener, MouseMotionListene
 
     public static final int SAVE = 0;
     public static final int UPLOAD = 1;
+    public static final int UPLOAD_FTP = 2;
 
     private int mode = 0;
 
@@ -98,11 +101,17 @@ public class Overlay extends JPanel implements MouseListener, MouseMotionListene
                     if (mode == Overlay.UPLOAD)
                     {
                         new Upload(selectionImage, false);
-                    } else if (mode == Overlay.SAVE)
+                    } 
+                    else if (mode == Overlay.SAVE)
                     {
                         save = new Save();
                         save.save(selectionImage);
                     }
+                    else if (mode == Overlay.UPLOAD_FTP)
+                    {
+                        new SimpleFTPUploader(ImageUtilities.saveTemporarily(selectionImage));
+                    }
+
                 }
                 parent.dispose(); // remove the overlay
             }

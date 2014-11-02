@@ -50,11 +50,12 @@ public class PreferencesUI
      */
 
     private JFrame frmPreferences;
-    public JTextField directoryField;
-    public JCheckBox chckbxEnableEditor;
-    public JCheckBox chckbxAutosaveUploads;
-    public JCheckBox chckbxAlwaysSaveToFTP;
-    public JSlider qualitySlider;
+    private JTextField directoryField;
+    private JCheckBox chckbxEnableEditor;
+    private JCheckBox chckbxAutosaveUploads;
+    private JCheckBox chckbxAlwaysSaveToFTP;
+    private JCheckBox chckbxGenerateTimestamp;
+    private JSlider qualitySlider;
     private JTextField hostField;
     private JTextField userField;
     private JTextField portField;
@@ -83,6 +84,7 @@ public class PreferencesUI
         passwordField.setText(Preferences.getInstance().getFTPPassword());
         ftpPathField.setText(Preferences.getInstance().getFTPPath());
         chckbxAlwaysSaveToFTP.setSelected(Preferences.getInstance().getFTPUploadAlways());
+        chckbxGenerateTimestamp.setSelected(Preferences.getInstance().getFTPGenerateTimestamp());
     }
 
     /**
@@ -245,7 +247,7 @@ public class PreferencesUI
         tab4.add(passwordField, "cell 1 2,growx");
         
         JLabel lblSavePath = new JLabel("Save Path:");
-        lblSavePath.setToolTipText("The path from the /home directory");
+        lblSavePath.setToolTipText("desired upload location");
         tab4.add(lblSavePath, "cell 0 3,alignx trailing");
         
         ftpPathField = new JTextField();
@@ -299,9 +301,9 @@ public class PreferencesUI
         chckbxAlwaysSaveToFTP.setToolTipText("Will save a copy of the image to the desired server via FTP");
         tab4.add(chckbxAlwaysSaveToFTP, "cell 1 6");
         
-        JCheckBox chckbxAskForFileName = new JCheckBox("Timestamp as file name");
-        chckbxAskForFileName.setSelected(true);
-        tab4.add(chckbxAskForFileName, "cell 1 7");
+        chckbxGenerateTimestamp = new JCheckBox("Timestamp as file name");
+        chckbxGenerateTimestamp.setSelected(true);
+        tab4.add(chckbxGenerateTimestamp, "cell 1 7");
 
         JPanel tab3 = new JPanel();
         tabbedPane.addTab("Controls/Hotkeys", null, tab3, null);
@@ -444,6 +446,7 @@ public class PreferencesUI
                 Preferences.getInstance().setFTPPassword(new String(passwordField.getPassword()));
                 Preferences.getInstance().setFTPPath(ftpPathField.getText());
                 Preferences.getInstance().setFTPUploadAlways(chckbxAlwaysSaveToFTP.isSelected());
+                Preferences.getInstance().setFTPGenerateTimestamp(chckbxGenerateTimestamp.isSelected());
                 Preferences.getInstance().setDefaultTool(0);
                 frmPreferences.dispose();
             }

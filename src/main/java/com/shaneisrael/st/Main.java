@@ -38,8 +38,10 @@ import com.shaneisrael.st.prefs.Preferences;
 import com.shaneisrael.st.ui.AboutFrame;
 import com.shaneisrael.st.ui.MultiUploader;
 import com.shaneisrael.st.ui.imageviewer.ImageViewer;
+import com.shaneisrael.st.upload.SimpleFTPUploader;
 import com.shaneisrael.st.utilities.CaptureScreen;
 import com.shaneisrael.st.utilities.ClipboardUtilities;
+import com.shaneisrael.st.utilities.ImageUtilities;
 import com.shaneisrael.st.utilities.Save;
 import com.shaneisrael.st.utilities.Upload;
 import com.shaneisrael.st.utilities.version.UpdateChecker;
@@ -138,7 +140,7 @@ public class Main extends JFrame implements ActionListener
         {
             System.out.println(OperatingSystem.getCurrentOS() + " does not support global hotkeys.");
         }
-        
+
         updater = new UpdateChecker();
         updater.checkForUpdates();
     }
@@ -170,7 +172,9 @@ public class Main extends JFrame implements ActionListener
             keyhook.registerHotKey(3, JIntellitypeConstants.MOD_CONTROL + JIntellitypeConstants.MOD_SHIFT, '3');
             keyhook.registerHotKey(4, JIntellitypeConstants.MOD_CONTROL + JIntellitypeConstants.MOD_SHIFT, '4');
             keyhook.registerHotKey(5, JIntellitypeConstants.MOD_CONTROL + JIntellitypeConstants.MOD_SHIFT, 'X');
-            
+            keyhook.registerHotKey(6, JIntellitypeConstants.MOD_ALT + JIntellitypeConstants.MOD_SHIFT, '1');
+            keyhook.registerHotKey(7, JIntellitypeConstants.MOD_ALT + JIntellitypeConstants.MOD_SHIFT, '2');
+
         }
         /*
          * events
@@ -197,6 +201,13 @@ public class Main extends JFrame implements ActionListener
                 } else if (identifier == 5) // CTRL + SHIFT + X
                 {
                     uClipboardImg.doClick();
+                } else if (identifier == 6)
+                {
+                    displayOverlay();
+                    overlay.setMode(Overlay.UPLOAD_FTP);
+                } else if (identifier == 7)
+                {
+                    new SimpleFTPUploader(ImageUtilities.saveTemporarily(capture.getScreenCapture()));
                 }
 
             }
@@ -218,16 +229,19 @@ public class Main extends JFrame implements ActionListener
         notification.setPauseTime(1500);
         notificationQueue.add(notification);
     }
+
     public static void showNotification(String title, STNotificationType type, int pauseTime)
     {
         notification = new STNotification(title, type);
         notification.setPauseTime(pauseTime);
         notificationQueue.add(notification);
     }
+
     public static void showNotification(STNotification notification)
     {
         notificationQueue.add(notification);
     }
+
     private void initializeTray()
     {
         final String icon = "trayIcon.png";

@@ -48,9 +48,9 @@ import javax.swing.event.ChangeListener;
 
 import net.miginfocom.swing.MigLayout;
 
-import com.shaneisrael.st.Main;
-import com.shaneisrael.st.notification.STNotificationType;
 import com.shaneisrael.st.overlay.Overlay;
+import com.shaneisrael.st.upload.SimpleFTPUploader;
+import com.shaneisrael.st.utilities.ImageUtilities;
 import com.shaneisrael.st.utilities.Save;
 import com.shaneisrael.st.utilities.Upload;
 
@@ -72,6 +72,7 @@ public class Editor extends JFrame implements MouseMotionListener
     private Dimension imageDimension;
     private JRadioButton rdbtnUpload;
     private JRadioButton rdbtnSave;
+    private JRadioButton rdbtnUploadFTP;
     private JSlider opacitySlider;
     private JSlider strokeSlider;
 
@@ -84,7 +85,7 @@ public class Editor extends JFrame implements MouseMotionListener
 
     private KeyboardFocusManager manager;
     private KeyEventDispatcher keyDispatcher;
-    
+
     private static Editor instance = null;
 
     /**
@@ -166,21 +167,53 @@ public class Editor extends JFrame implements MouseMotionListener
                         if (key == KeyEvent.VK_ENTER)
                         {
                             btnSubmit.doClick();
+                            
+                            try
+                            {
+                                Thread.sleep(1000);
+                            } catch (InterruptedException ie)
+                            {
+                                ie.printStackTrace();
+                            }
                         }
                     if (e.isControlDown())
                     {
                         if (key == KeyEvent.VK_C)
                         {
                             editingPanel.copyImageToClipboard();
+                            
+                            try
+                            {
+                                Thread.sleep(1000);
+                            } catch (InterruptedException ie)
+                            {
+                                ie.printStackTrace();
+                            }
                         }
                     }
 
                     if (key == KeyEvent.VK_ESCAPE)
                     {
                         exit();
+                        
+                        try
+                        {
+                            Thread.sleep(1000);
+                        } catch (InterruptedException ie)
+                        {
+                            ie.printStackTrace();
+                        }
                     } else if (key == KeyEvent.VK_F10)
                     {
                         submitToReddit();
+                        
+                        try
+                        {
+                            Thread.sleep(1000);
+                        } catch (InterruptedException ie)
+                        {
+                            ie.printStackTrace();
+                        }
                     } else
                     {
                         if (!(key == KeyEvent.VK_CAPS_LOCK
@@ -677,11 +710,28 @@ public class Editor extends JFrame implements MouseMotionListener
         });
         uploadGroup.add(rdbtnUpload);
 
+        rdbtnUploadFTP = new JRadioButton("FTP Upload");
+        GridBagConstraints gbc_rdbtnUploadFTP = new GridBagConstraints();
+        gbc_rdbtnUploadFTP.fill = GridBagConstraints.HORIZONTAL;
+        gbc_rdbtnUploadFTP.gridx = 0;
+        gbc_rdbtnUploadFTP.gridy = 1;
+        panel.add(rdbtnUploadFTP, gbc_rdbtnUploadFTP);
+        rdbtnUploadFTP.addChangeListener(new ChangeListener()
+        {
+            @Override
+            public void stateChanged(ChangeEvent e)
+            {
+                if (rdbtnUploadFTP.isSelected())
+                    mode = Overlay.UPLOAD_FTP;
+            }
+        });
+        uploadGroup.add(rdbtnUploadFTP);
+        
         rdbtnSave = new JRadioButton("Save");
         GridBagConstraints gbc_rdbtnSave = new GridBagConstraints();
         gbc_rdbtnSave.fill = GridBagConstraints.HORIZONTAL;
         gbc_rdbtnSave.gridx = 0;
-        gbc_rdbtnSave.gridy = 1;
+        gbc_rdbtnSave.gridy = 2;
         panel.add(rdbtnSave, gbc_rdbtnSave);
         rdbtnSave.addChangeListener(new ChangeListener()
         {
@@ -739,6 +789,9 @@ public class Editor extends JFrame implements MouseMotionListener
         } else if (mode == Overlay.UPLOAD)
         {
             rdbtnUpload.setSelected(true);
+        } else if (mode == Overlay.UPLOAD_FTP)
+        {
+            rdbtnUploadFTP.setSelected(true);
         }
 
     }
@@ -785,6 +838,9 @@ public class Editor extends JFrame implements MouseMotionListener
         } else if (mode == Overlay.UPLOAD)
         {
             upload = new Upload(getEditedImage(), false);
+        } else if (mode == Overlay.UPLOAD_FTP)
+        {
+            new SimpleFTPUploader(ImageUtilities.saveTemporarily(getEditedImage()));
         }
 
         exit();
@@ -807,10 +863,10 @@ public class Editor extends JFrame implements MouseMotionListener
         keyDispatcher = null;
         instance.dispose();
     }
-    
+
     public static Editor getInstance()
     {
-        if(instance == null)
+        if (instance == null)
         {
             instance = new Editor();
         }
@@ -820,7 +876,7 @@ public class Editor extends JFrame implements MouseMotionListener
             instance = new Editor();
         }
         return instance;
-        
+
     }
 
 }

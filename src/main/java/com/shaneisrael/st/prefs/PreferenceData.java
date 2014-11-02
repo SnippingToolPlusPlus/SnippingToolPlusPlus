@@ -37,6 +37,9 @@ public final class PreferenceData
     @SerializedName("ftp_upload_always")
     boolean ftpUploadAlways;
     
+    @SerializedName("ftp_gen_timestamp")
+    boolean ftpGenerateTimestamp;
+    
     PreferenceData()
     {
         editor = new EditorPreferences();
@@ -165,6 +168,15 @@ public final class PreferenceData
     {
         this.ftpUploadAlways = always;
     }
+    
+    /**
+     * @param timestamp
+     *          generates a time stamp as the file name
+     */
+    void setFTPGenerateTimestamp(boolean timestamp)
+    {
+        this.ftpGenerateTimestamp = timestamp;
+    }
     /**
      * @return the enabled
      */
@@ -234,6 +246,14 @@ public final class PreferenceData
     boolean getFTPUploadAlways()
     {
         return ftpUploadAlways;
+    }
+    
+    /**
+     * @return is a time stamp generated as the file name
+     */
+    boolean getFTPGenerateTimestamp()
+    {
+        return ftpGenerateTimestamp;
     }
     class EditorPreferences
     {
