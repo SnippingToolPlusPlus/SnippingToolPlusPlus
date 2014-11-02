@@ -11,17 +11,17 @@ import java.awt.event.MouseListener;
 import java.io.File;
 import java.io.IOException;
 
-import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
-import javax.swing.JComboBox;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JPasswordField;
 import javax.swing.JScrollPane;
 import javax.swing.JSeparator;
+import javax.swing.JSlider;
 import javax.swing.JTabbedPane;
 import javax.swing.JTextField;
 import javax.swing.ScrollPaneConstants;
@@ -31,9 +31,6 @@ import javax.swing.WindowConstants;
 import net.miginfocom.swing.MigLayout;
 
 import com.shaneisrael.st.prefs.Preferences;
-
-import javax.swing.JSlider;
-import javax.swing.JPasswordField;
 
 /**
  * 
@@ -98,7 +95,7 @@ public class PreferencesUI
         frmPreferences.setTitle("Preferences");
         frmPreferences.setBounds(100, 100, 314, 332);
         frmPreferences.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
-        frmPreferences.getContentPane().setLayout(new MigLayout("", "[263px]", "[244.00px][20.00]"));
+        frmPreferences.getContentPane().setLayout(new MigLayout("", "[263px]", "[244.00px,grow,baseline][20.00,grow]"));
 
         JTabbedPane tabbedPane = new JTabbedPane(SwingConstants.TOP);
         frmPreferences.getContentPane().add(tabbedPane, "cell 0 0,grow");
@@ -289,7 +286,6 @@ public class PreferencesUI
                 ftpPathField.selectAll();
             }
         });
-        ftpPathField.setText("example ../../var/www/etc");
         ftpPathField.selectAll();
         tab4.add(ftpPathField, "cell 1 3,growx");
         ftpPathField.setColumns(10);

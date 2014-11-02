@@ -4,6 +4,7 @@
     "minor": "0",
     "patch": "2",
     "download": "http://snippingtoolpluspl.us/downloads/SnippingToolPlusPlus-6.0.2.zip",
+    "reset_prefs": "true",
     "changes": {
         "added": [
             "Image dimensions are now displayed when dragging a selection"

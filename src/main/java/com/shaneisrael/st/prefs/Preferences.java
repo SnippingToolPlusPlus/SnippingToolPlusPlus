@@ -42,6 +42,7 @@ public class Preferences
     {
         Gson gson = new Gson();
         preferences = gson.fromJson(jsonData, PreferenceData.class);
+        System.out.println(preferences.getUploadQuality());
     }
 
     public void save()

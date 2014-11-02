@@ -15,7 +15,7 @@ public final class PreferenceData
     EditorPreferences editor;
 
     @SerializedName("upload_quality")
-    public float uploadQuality;
+    public float uploadQuality = 1f;
     
     /** Begin FTP Data **/
     
@@ -29,7 +29,7 @@ public final class PreferenceData
     public String ftpPassword;
     
     @SerializedName("ftp_port")
-    public String ftpPort;
+    public String ftpPort = "21";
     
     @SerializedName("ftp_path")
     public String ftpPath;

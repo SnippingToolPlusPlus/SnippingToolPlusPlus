@@ -80,13 +80,14 @@ public class SimpleFTPUploader implements Runnable
 
             inputStream.close();
             outputStream.close();
-
+            
+            Main.showNotification("upload-ftp-done", STNotificationType.SUCCESS);
         } catch (IOException ex)
         {
             Main.showNotification("uploading-ftp-failed", STNotificationType.ERROR);
+            JOptionPane.showMessageDialog(null, ex.getMessage(), "FTP Error!", JOptionPane.ERROR_MESSAGE);
             ex.printStackTrace();
         }
-        Main.showNotification("upload-ftp-done", STNotificationType.SUCCESS);
     }
     private String askForFileName()
     {
