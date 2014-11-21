@@ -170,7 +170,7 @@ public class Editor extends JFrame implements MouseMotionListener
                             
                             try
                             {
-                                Thread.sleep(1000);
+                                Thread.sleep(500);
                             } catch (InterruptedException ie)
                             {
                                 ie.printStackTrace();
@@ -184,7 +184,7 @@ public class Editor extends JFrame implements MouseMotionListener
                             
                             try
                             {
-                                Thread.sleep(1000);
+                                Thread.sleep(500);
                             } catch (InterruptedException ie)
                             {
                                 ie.printStackTrace();
@@ -196,24 +196,10 @@ public class Editor extends JFrame implements MouseMotionListener
                     {
                         exit();
                         
-                        try
-                        {
-                            Thread.sleep(1000);
-                        } catch (InterruptedException ie)
-                        {
-                            ie.printStackTrace();
-                        }
                     } else if (key == KeyEvent.VK_F10)
                     {
                         submitToReddit();
                         
-                        try
-                        {
-                            Thread.sleep(1000);
-                        } catch (InterruptedException ie)
-                        {
-                            ie.printStackTrace();
-                        }
                     } else
                     {
                         if (!(key == KeyEvent.VK_CAPS_LOCK

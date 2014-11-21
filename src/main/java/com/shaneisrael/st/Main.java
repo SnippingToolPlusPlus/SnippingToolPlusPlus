@@ -27,7 +27,7 @@ import com.melloware.jintellitype.JIntellitypeConstants;
 import com.melloware.jintellitype.JIntellitypeException;
 import com.shaneisrael.st.data.Locations;
 import com.shaneisrael.st.data.OperatingSystem;
-import com.shaneisrael.st.data.PreferencesUI;
+import com.shaneisrael.st.editor.Editor;
 import com.shaneisrael.st.notification.STNotification;
 import com.shaneisrael.st.notification.STNotificationQueue;
 import com.shaneisrael.st.notification.STNotificationType;
@@ -37,6 +37,7 @@ import com.shaneisrael.st.overlay.OverlayFrame;
 import com.shaneisrael.st.prefs.Preferences;
 import com.shaneisrael.st.ui.AboutFrame;
 import com.shaneisrael.st.ui.MultiUploader;
+import com.shaneisrael.st.ui.PreferencesUI;
 import com.shaneisrael.st.ui.imageviewer.ImageViewer;
 import com.shaneisrael.st.upload.SimpleFTPUploader;
 import com.shaneisrael.st.utilities.CaptureScreen;
@@ -219,6 +220,9 @@ public class Main extends JFrame implements ActionListener
     {
         if (overlay == null || OverlayFrame.IsActive == false)
         {
+            if(Editor.getInstance().isActive())
+                Editor.getInstance().dispose();
+            
             overlay = new OverlayFrame();
         }
     }

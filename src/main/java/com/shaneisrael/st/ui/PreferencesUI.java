@@ -1,4 +1,4 @@
-package com.shaneisrael.st.data;
+package com.shaneisrael.st.ui;
 
 import java.awt.BorderLayout;
 import java.awt.Desktop;
@@ -30,6 +30,7 @@ import javax.swing.WindowConstants;
 
 import net.miginfocom.swing.MigLayout;
 
+import com.shaneisrael.st.data.Locations;
 import com.shaneisrael.st.prefs.Preferences;
 
 /**
@@ -58,6 +59,8 @@ public class PreferencesUI
     private JTextField portField;
     private JPasswordField passwordField;
     private JTextField ftpPathField;
+    private JPasswordField keyField1;
+    private JPasswordField keyField2;
 
     /**
      * Create the application.
@@ -97,7 +100,7 @@ public class PreferencesUI
         frmPreferences.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
         frmPreferences.getContentPane().setLayout(new MigLayout("", "[263px]", "[244.00px,grow,baseline][20.00,grow]"));
 
-        JTabbedPane tabbedPane = new JTabbedPane(SwingConstants.TOP);
+        JTabbedPane tabbedPane = new JTabbedPane(JTabbedPane.TOP);
         frmPreferences.getContentPane().add(tabbedPane, "cell 0 0,grow");
 
         JPanel tab1 = new JPanel();
@@ -300,6 +303,53 @@ public class PreferencesUI
         chckbxGenerateTimestamp = new JCheckBox("Timestamp as file name");
         chckbxGenerateTimestamp.setSelected(true);
         tab4.add(chckbxGenerateTimestamp, "cell 1 7");
+        
+        JPanel tab5 = new JPanel();
+        tabbedPane.addTab("Stats", null, tab5, null);
+        tab5.setLayout(new MigLayout("", "[108.00,grow][64.00,grow]", "[32.00][26.00][][][][]"));
+        
+        JLabel lblNewLabel = new JLabel("Key 1");
+        lblNewLabel.setFont(new Font("Tahoma", Font.BOLD, 14));
+        tab5.add(lblNewLabel, "cell 0 0,alignx center");
+        
+        JLabel lblKey = new JLabel("Key 2");
+        lblKey.setFont(new Font("Tahoma", Font.BOLD, 14));
+        tab5.add(lblKey, "cell 1 0,alignx center");
+        
+        keyField1 = new JPasswordField();
+        keyField1.setHorizontalAlignment(SwingConstants.CENTER);
+        keyField1.setToolTipText("Your registered key #1");
+        tab5.add(keyField1, "cell 0 1,growx");
+        
+        keyField2 = new JPasswordField();
+        keyField2.setHorizontalAlignment(SwingConstants.CENTER);
+        keyField2.setToolTipText("Your registered key #2");
+        tab5.add(keyField2, "cell 1 1,growx");
+        
+        JButton btnRegisterKeyset = new JButton("Register Keyset");
+        btnRegisterKeyset.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent arg0) {
+                new RegisterKeysetUI();
+            }
+        });
+        tab5.add(btnRegisterKeyset, "cell 1 4,alignx right");
+        
+        JButton btnHelp = new JButton("Help");
+        btnHelp.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent arg0) {
+                JOptionPane.showMessageDialog(null, "Keys are a way to uniquely identify your data and useage statistics \n"
+                    + "on our end to you. By registering a key set your public upload \n"
+                    + "history will be saved to the cloud. If you want access to your \n"
+                    + "history and other statistics you must register a key set.\n\n"
+                    + "You can use your same keyset across multiple computers as well. \n"
+                    + "A key set only needs to be registered once, after that all you \n"
+                    + "must do is enter your key set into the key fields provided. \n\n"
+                    + "Remember! You can use your key set across multiple Snipping Tool++ \n"
+                    + "clients to consolidate your statistics and history! \n\n"
+                    + "NOTE: NEVER USE YOUR PASSWORDS AS KEY SETS! OR YOUR KEY SETS AS PASSWORDS!", "HELP!", JOptionPane.INFORMATION_MESSAGE);
+            }
+        });
+        tab5.add(btnHelp, "cell 1 5,alignx right");
 
         JPanel tab3 = new JPanel();
         tabbedPane.addTab("Controls/Hotkeys", null, tab3, null);
