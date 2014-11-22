@@ -75,34 +75,44 @@ public class RegisterKeysetUI extends JFrame
             public void actionPerformed(ActionEvent arg0)
             {
                 btnRegister.setEnabled(false);
-                boolean keysetExists = DBRegisterKey.register(textField.getText(), textField_1.getText());
                 /*If the keyset does not exist*/
-                if (!keysetExists)
+                if(textField.getText().length() < 32 && textField_1.getText().length() < 32)
                 {
-                    /*
-                     * Set the keys and add to prefs
-                     */
-                    PreferencesUI.keyField1.setText(textField.getText());
-                    PreferencesUI.keyField2.setText(textField_1.getText());
-                    Preferences.getInstance().setUniqueKey1(textField.getText());
-                    Preferences.getInstance().setUniqueKey2(textField_1.getText());
-                    
-                    dispose();
+                    boolean keysetExists = DBRegisterKey.register(textField.getText(), textField_1.getText());
+                    if (!keysetExists)
+                    {
+                        /*
+                         * Set the keys and add to prefs
+                         */
+                        PreferencesUI.keyField1.setText(textField.getText());
+                        PreferencesUI.keyField2.setText(textField_1.getText());
+                        Preferences.getInstance().setUniqueKey1(textField.getText());
+                        Preferences.getInstance().setUniqueKey2(textField_1.getText());
+    
+                        JOptionPane.showMessageDialog(null, "Keyset registered successfully!", "Success!",
+                            JOptionPane.PLAIN_MESSAGE);
+                        dispose();
+                    }
+                    else
+                    {
+                        JOptionPane.showMessageDialog(null,
+                            "This key set has already been registered, please \nchoose a different key set combo.",
+                            "Register Failed", JOptionPane.ERROR_MESSAGE);
+                    }
                 }
                 else
-                {
                     JOptionPane.showMessageDialog(null,
-                        "This key set has already been registered, please \nchoose a different key set combo.",
+                        "Keys must be less than 32 characters!",
                         "Register Failed", JOptionPane.ERROR_MESSAGE);
-                }
                 btnRegister.setEnabled(true);
             }
         });
         panel.add(btnRegister, "cell 1 2,alignx center");
 
-        this.setVisible(true);
+        this.setLocationRelativeTo(null);
         this.setResizable(false);
         this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        this.setVisible(true);
     }
 
 }

@@ -7,7 +7,7 @@ public class DBConnection
 {
     private static String user;
     private static String password;
-    private static String address = "71.15.195.219:3306"; //192.168.11.10:3306
+    private static String address = "192.168.11.10:3306"; //192.168.11.10:3306
     
     public static Connection getConnection()
     {

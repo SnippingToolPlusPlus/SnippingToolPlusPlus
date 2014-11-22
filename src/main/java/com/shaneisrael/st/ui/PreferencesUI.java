@@ -309,7 +309,7 @@ public class PreferencesUI
         tab4.add(chckbxGenerateTimestamp, "cell 1 7");
 
         JPanel tab5 = new JPanel();
-        tabbedPane.addTab("Stats", null, tab5, null);
+        tabbedPane.addTab("Stats/Keysets", null, tab5, null);
         tab5.setLayout(new MigLayout("", "[161.00,grow][165.00,grow]", "[32.00][26.00][][][][][]"));
 
         JLabel lblNewLabel = new JLabel("Key 1");
@@ -335,17 +335,35 @@ public class PreferencesUI
         {
             public void actionPerformed(ActionEvent arg0)
             {
-                JOptionPane.showMessageDialog(null,
-                    "Keys are a way to uniquely identify your data and useage statistics \n"
-                        + "on our end to you. By registering a key set your public upload \n"
-                        + "history will be saved to the cloud. If you want access to your \n"
-                        + "history and other statistics you must register a key set.\n\n"
-                        + "You can use your same keyset across multiple computers as well. \n"
-                        + "A key set only needs to be registered once, after that all you \n"
-                        + "must do is enter your key set into the key fields provided. \n\n"
-                        + "Remember! You can use your key set across multiple Snipping Tool++ \n"
-                        + "clients to consolidate your statistics and history! \n\n"
-                        + "NOTE: NEVER USE YOUR PASSWORDS AS KEY SETS! OR YOUR KEY SETS AS PASSWORDS!", "HELP!",
+                JOptionPane.showMessageDialog(null,"<html>"+
+                    "+ Keysets are a way to <i><b>anonymously</b></i> identify yourself with\n"
+                    + "your Imgur uploads.\n"
+                    + "+ Keysets are not passwords.\n"
+                    + "+ Keysets should only be known by you. Don't share them.\n"
+                    + "+ Each Key in the Keyset can be any word, phrase, or number.\n"
+                    + "just make sure that you can remember both. They don't need to\n"
+                    + "be complicated. Just easily rememberable."
+                    + "\n\n"
+                    + "<html><b>[What is a Keyset??]</b></html>\n"
+                    + "A Keyset is a way for you to attach an anonymous \"signature\"\n"
+                    + "to your Imgur uploads. For example, knowing your unique Keyset\n"
+                    + "will allow you in the future, to download an album of all your\n"
+                    + "Imgur uploads to any computer you have a Snipping Tool++\n"
+                    + "client with your unique Keyset activated in the preferences."
+                    + "\n\n"
+                    + "<html><b>[Use default]</b></html>\n"
+                    + "You can click this button to remove your Keyset and use the\n"
+                    + "default Keyset. Using the default Keyset means your uploads\n"
+                    + "will not be tied to you in any way.\n\n"
+                    + "<html><b>[Validate]</b></html>\n"
+                    + "Checks whether your currently entered Keyset is registered. This\n"
+                    + "is a great way to check that you entered your Keyset correctly.\n\n"
+                    + "<html><b>[Register a Keyset]</b></html>\n"
+                    + "If you don't already have a Keyset, you will need to register a\n"
+                    + "new Keyset if you want access to your person upload stats and\n"
+                    + "or other features that may require it."
+                    + "</html>", "What are Keysets??"
+                    ,
                     JOptionPane.INFORMATION_MESSAGE);
             }
         });
