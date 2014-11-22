@@ -17,14 +17,14 @@ public class DBUniqueKey
     public static boolean validate(String key1, String key2)
     {
         if(key1.equals("") || key2.equals(""))
-            return false;
+            return true;
         
         connect = DBConnection.getConnection();
         boolean valid = true;
         try
         {
             
-            statement = connect.prepareStatement("SELECT key_1, key_2 FROM register_key WHERE key_1=? AND key_2=?");
+            statement = connect.prepareStatement("SELECT key_1, key_2 FROM registered_keys WHERE key_1=? AND key_2=?");
             
             statement.setString(1, key1);
             statement.setString(2, key2);
@@ -53,7 +53,9 @@ public class DBUniqueKey
     }
     public static boolean isKeysetValid()
     {
-        if(validate(Preferences.getInstance().getUniqueKey1(), Preferences.getInstance().getUniqueKey2()))
+        String key1 = Preferences.getInstance().getUniqueKey1();
+        String key2 =  Preferences.getInstance().getUniqueKey2();
+        if(validate(key1,key2))
             return true;
         else
         {

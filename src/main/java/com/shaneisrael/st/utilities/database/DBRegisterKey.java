@@ -33,7 +33,7 @@ public class DBRegisterKey
         boolean keyExists = false;
         try
         {
-            statement = connect.prepareStatement("SELECT key_1, key_2 FROM register_key WHERE key_1=? AND key_2=?");
+            statement = connect.prepareStatement("SELECT key_1, key_2 FROM registered_keys WHERE key_1=? AND key_2=?");
             
             statement.setString(1, key1);
             statement.setString(2, key2);
@@ -46,7 +46,7 @@ public class DBRegisterKey
             else
             {
                 keyExists = false;
-                statement = connect.prepareStatement("INSERT INTO register_key VALUES ( ?, ?)");
+                statement = connect.prepareStatement("INSERT INTO registered_keys (key_1, key_2) VALUES ( ?, ?)");
                 statement.setString(1, key1);
                 statement.setString(2, key2);
                 statement.executeUpdate();

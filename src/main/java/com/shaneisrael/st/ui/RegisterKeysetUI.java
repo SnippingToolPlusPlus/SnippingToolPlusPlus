@@ -19,6 +19,8 @@ import javax.swing.JButton;
 
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import java.math.BigInteger;
+import java.security.SecureRandom;
 
 import javax.swing.SwingConstants;
 
@@ -47,7 +49,7 @@ public class RegisterKeysetUI extends JFrame
 
         JPanel panel = new JPanel();
         contentPane.add(panel, BorderLayout.CENTER);
-        panel.setLayout(new MigLayout("", "[71.00,grow][79.00,grow]", "[36.00][28.00][]"));
+        panel.setLayout(new MigLayout("", "[161.00][79.00,grow]", "[36.00][28.00][][]"));
 
         JLabel lblKey = new JLabel("Key 1");
         lblKey.setFont(new Font("Tahoma", Font.BOLD, 14));
@@ -68,51 +70,72 @@ public class RegisterKeysetUI extends JFrame
         textField_1.setHorizontalAlignment(SwingConstants.CENTER);
         panel.add(textField_1, "cell 1 1,growx");
         textField_1.setColumns(10);
-
-        final JButton btnRegister = new JButton("Register");
-        btnRegister.addActionListener(new ActionListener()
-        {
-            public void actionPerformed(ActionEvent arg0)
-            {
-                btnRegister.setEnabled(false);
-                /*If the keyset does not exist*/
-                if(textField.getText().length() < 32 && textField_1.getText().length() < 32)
+        
+                final JButton btnRegister = new JButton("Register");
+                btnRegister.addActionListener(new ActionListener()
                 {
-                    boolean keysetExists = DBRegisterKey.register(textField.getText(), textField_1.getText());
-                    if (!keysetExists)
+                    public void actionPerformed(ActionEvent arg0)
                     {
-                        /*
-                         * Set the keys and add to prefs
-                         */
-                        PreferencesUI.keyField1.setText(textField.getText());
-                        PreferencesUI.keyField2.setText(textField_1.getText());
-                        Preferences.getInstance().setUniqueKey1(textField.getText());
-                        Preferences.getInstance().setUniqueKey2(textField_1.getText());
+                        btnRegister.setEnabled(false);
+                        /*If the keyset does not exist*/
+                        if(textField.getText().length() < 32 && textField_1.getText().length() < 32)
+                        {
+                            boolean keysetExists = DBRegisterKey.register(textField.getText(), textField_1.getText());
+                            if (!keysetExists)
+                            {
+                                /*
+                                 * Set the keys and add to prefs
+                                 */
+                                PreferencesUI.keyField1.setText(textField.getText());
+                                PreferencesUI.keyField2.setText(textField_1.getText());
+                                Preferences.getInstance().setUniqueKey1(textField.getText());
+                                Preferences.getInstance().setUniqueKey2(textField_1.getText());
     
-                        JOptionPane.showMessageDialog(null, "Keyset registered successfully!", "Success!",
-                            JOptionPane.PLAIN_MESSAGE);
-                        dispose();
+                                JOptionPane.showMessageDialog(null, "Keyset registered successfully!", "Success!",
+                                    JOptionPane.PLAIN_MESSAGE);
+                                
+                                if(Preferences.getInstance().isTrackingDisabled())
+                                    JOptionPane.showMessageDialog(null, "You must allow stat tracking before this\nkeyset can be used.", "Stat tracking disabled!",
+                                        JOptionPane.WARNING_MESSAGE);
+                                dispose();
+                            }
+                            else
+                            {
+                                JOptionPane.showMessageDialog(null,
+                                    "This key set has already been registered, please \nchoose a different key set combo.",
+                                    "Register Failed", JOptionPane.ERROR_MESSAGE);
+                            }
+                        }
+                        else
+                            JOptionPane.showMessageDialog(null,
+                                "Keys must be less than 32 characters!",
+                                "Register Failed", JOptionPane.ERROR_MESSAGE);
+                        btnRegister.setEnabled(true);
                     }
-                    else
-                    {
-                        JOptionPane.showMessageDialog(null,
-                            "This key set has already been registered, please \nchoose a different key set combo.",
-                            "Register Failed", JOptionPane.ERROR_MESSAGE);
+                });
+                
+                JButton btnGenerateKey = new JButton("Generate Keyset");
+                btnGenerateKey.addActionListener(new ActionListener() {
+                    public void actionPerformed(ActionEvent arg0) {
+                        textField.setText(SecureKeyGenerator.nextKey());
+                        textField_1.setText(SecureKeyGenerator.nextKey());
                     }
-                }
-                else
-                    JOptionPane.showMessageDialog(null,
-                        "Keys must be less than 32 characters!",
-                        "Register Failed", JOptionPane.ERROR_MESSAGE);
-                btnRegister.setEnabled(true);
-            }
-        });
-        panel.add(btnRegister, "cell 1 2,alignx center");
+                });
+                panel.add(btnGenerateKey, "cell 1 2,alignx center");
+                panel.add(btnRegister, "cell 1 3,alignx center");
 
         this.setLocationRelativeTo(null);
         this.setResizable(false);
         this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         this.setVisible(true);
+    }
+    public final static class SecureKeyGenerator 
+    {
+        public static String nextKey() 
+        {
+           SecureRandom random = new SecureRandom();
+           return new BigInteger(130, random).toString(32);
+        }
     }
 
 }

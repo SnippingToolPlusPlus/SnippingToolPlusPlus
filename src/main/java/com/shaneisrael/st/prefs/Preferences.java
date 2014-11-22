@@ -101,8 +101,9 @@ public class Preferences
         preferences.setEditorEnabled(true);
         preferences.setDefaultTool(0);
         preferences.setUploadQuality(1f);
-        preferences.setUniqueKey1("0");
-        preferences.setUniqueKey2("0");
+        preferences.setUniqueKey1("");
+        preferences.setUniqueKey2("");
+        preferences.setTrackingDisabled(false);
         preferences.setCaptureDirectoryRoot(locations.getPictureDirectory().getAbsolutePath());
         save();
     }
@@ -301,6 +302,16 @@ public class Preferences
         preferences.setUniqueKey2(key);
         save();
     }
+    
+    /**
+     * @param track
+     *          disable statistics data tracking
+     */
+    public void setTrackingDisabled(boolean track)
+    {
+        preferences.setTrackingDisabled(track);
+        save();
+    }
     /**
      * @return the ftp host url
      */
@@ -373,6 +384,15 @@ public class Preferences
     public String getUniqueKey2()
     {
         return preferences.getUniqueKey2();
+    }
+    
+    /**
+     * @return
+     *          is tracking statistics data disabled
+     */
+    public boolean isTrackingDisabled()
+    {
+        return preferences.isTrackingDisabled();
     }
     
     public static Preferences getInstance()

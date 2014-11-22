@@ -42,10 +42,13 @@ public final class PreferenceData
     
     /** Begin Stats **/
     @SerializedName("key_1")
-    public String key1 = "0";
+    public String key1 = "";
     
     @SerializedName("key_2")
-    public String key2 = "0";
+    public String key2 = "";
+    
+    @SerializedName("disable_tracking")
+    public boolean disableTracking = false;
     
     
     PreferenceData()
@@ -203,6 +206,16 @@ public final class PreferenceData
     {
         this.key2 = key;
     }
+    
+    /**
+     * 
+     * @param track
+     *          Is useage statistics tracking enabled
+     */
+    void setTrackingDisabled(boolean track)
+    {
+        this.disableTracking = track;
+    }
     /**
      * @return the enabled
      */
@@ -298,6 +311,15 @@ public final class PreferenceData
     String getUniqueKey2()
     {
         return key2;
+    }
+    /**
+     * 
+     * @return
+     *          is useage statistics disabled
+     */
+    boolean isTrackingDisabled()
+    {
+        return disableTracking;
     }
     class EditorPreferences
     {

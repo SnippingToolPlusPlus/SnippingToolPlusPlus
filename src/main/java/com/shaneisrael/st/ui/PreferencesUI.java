@@ -8,8 +8,13 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
+import java.io.PrintWriter;
 
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
@@ -54,6 +59,7 @@ public class PreferencesUI
     private JCheckBox chckbxAutosaveUploads;
     private JCheckBox chckbxAlwaysSaveToFTP;
     private JCheckBox chckbxGenerateTimestamp;
+    private JCheckBox chckbxDontTrackUseage;
     private JSlider qualitySlider;
     private JTextField hostField;
     private JTextField userField;
@@ -88,6 +94,7 @@ public class PreferencesUI
         chckbxGenerateTimestamp.setSelected(Preferences.getInstance().getFTPGenerateTimestamp());
         keyField1.setText(Preferences.getInstance().getUniqueKey1());
         keyField2.setText(Preferences.getInstance().getUniqueKey2());
+        chckbxDontTrackUseage.setSelected(Preferences.getInstance().isTrackingDisabled());
     }
 
     /**
@@ -335,7 +342,7 @@ public class PreferencesUI
         {
             public void actionPerformed(ActionEvent arg0)
             {
-                JOptionPane.showMessageDialog(null,"<html>"+
+                JOptionPane.showMessageDialog(null, "<html>" +
                     "+ Keysets are a way to <i><b>anonymously</b></i> identify yourself with\n"
                     + "your Imgur uploads.\n"
                     + "+ Keysets are not passwords.\n"
@@ -351,10 +358,10 @@ public class PreferencesUI
                     + "Imgur uploads to any computer you have a Snipping Tool++\n"
                     + "client with your unique Keyset activated in the preferences."
                     + "\n\n"
-                    + "<html><b>[Use default]</b></html>\n"
+                    + "<html><b>[Use default keys]</b></html>\n"
                     + "You can click this button to remove your Keyset and use the\n"
-                    + "default Keyset. Using the default Keyset means your uploads\n"
-                    + "will not be tied to you in any way.\n\n"
+                    + "default Keyset. Using the default Keyset means your stats\n"
+                    + "data will not be signed by your keyset.\n\n"
                     + "<html><b>[Validate]</b></html>\n"
                     + "Checks whether your currently entered Keyset is registered. This\n"
                     + "is a great way to check that you entered your Keyset correctly.\n\n"
@@ -390,42 +397,122 @@ public class PreferencesUI
             }
         });
         tab5.add(btnViewKeys, "cell 0 2,alignx right");
-        
-                JButton btnRegisterKeyset = new JButton("Register a Keyset");
-                btnRegisterKeyset.addActionListener(new ActionListener()
-                {
-                    public void actionPerformed(ActionEvent arg0)
-                    {
-                        new RegisterKeysetUI();
-                    }
-                });
-                
-                        JButton btnValidate = new JButton("Validate");
-                        btnValidate.addActionListener(new ActionListener()
-                        {
-                            public void actionPerformed(ActionEvent arg0)
-                            {
-                                String key1 = new String(keyField1.getPassword());
-                                String key2 = new String(keyField2.getPassword());
 
-                                if (DBUniqueKey.validate(key1, key2))
-                                    JOptionPane.showMessageDialog(null, "Your Keys are valid!");
-                                else
-                                    JOptionPane.showMessageDialog(null, "These keys are invalid!", "Invalid Keys!",
-                                        JOptionPane.WARNING_MESSAGE);
-                            }
-                        });
-                        tab5.add(btnValidate, "cell 0 5,alignx left");
-                tab5.add(btnRegisterKeyset, "cell 0 6,alignx left");
-                
-                JButton btnUseDefault = new JButton("Use default");
-                btnUseDefault.addActionListener(new ActionListener() {
-                    public void actionPerformed(ActionEvent arg0) {
-                        keyField1.setText("0");
-                        keyField2.setText("0");
+        JButton btnRegisterKeyset = new JButton("Register a Keyset");
+        btnRegisterKeyset.addActionListener(new ActionListener()
+        {
+            public void actionPerformed(ActionEvent arg0)
+            {
+                new RegisterKeysetUI();
+            }
+        });
+
+        JButton btnValidate = new JButton("Validate");
+        btnValidate.addActionListener(new ActionListener()
+        {
+            public void actionPerformed(ActionEvent arg0)
+            {
+                String key1 = new String(keyField1.getPassword());
+                String key2 = new String(keyField2.getPassword());
+
+                if (key1.equals("") || key2.equals(""))
+                    JOptionPane.showMessageDialog(null, "Your Key fields are empty!", "Empty Fields",
+                        JOptionPane.ERROR_MESSAGE);
+                else if (DBUniqueKey.validate(key1, key2))
+                    JOptionPane.showMessageDialog(null, "Your Keys are valid!");
+                else
+                    JOptionPane.showMessageDialog(null, "These keys are invalid!", "Invalid Keys!",
+                        JOptionPane.WARNING_MESSAGE);
+            }
+        });
+
+        JButton btnSaveKeys = new JButton("Save");
+        btnSaveKeys.addActionListener(new ActionListener()
+        {
+            public void actionPerformed(ActionEvent arg0)
+            {
+                final JFileChooser fc = new JFileChooser();
+                fc.setSelectedFile(new File("Keyset"));
+                int value = fc.showSaveDialog(null);
+                if (value == JFileChooser.APPROVE_OPTION)
+                {
+                    File file = fc.getSelectedFile();
+                    try
+                    {
+                        PrintWriter writer = new PrintWriter(new FileWriter(file));
+                        writer.println(new String(keyField1.getPassword()));
+                        writer.println(new String(keyField2.getPassword()));
+                        writer.close();
+                    } catch (FileNotFoundException e)
+                    {
+                        // TODO Auto-generated catch block
+                        e.printStackTrace();
+                    } catch (IOException e)
+                    {
+                        // TODO Auto-generated catch block
+                        e.printStackTrace();
                     }
-                });
-                tab5.add(btnUseDefault, "cell 1 6,alignx right");
+
+                }
+            }
+        });
+        tab5.add(btnSaveKeys, "flowx,cell 1 2");
+        tab5.add(btnValidate, "cell 0 5,alignx left");
+
+        JButton btnUseDefault = new JButton("Use default keys");
+        btnUseDefault.addActionListener(new ActionListener()
+        {
+            public void actionPerformed(ActionEvent arg0)
+            {
+                keyField1.setText("");
+                keyField2.setText("");
+            }
+        });
+        tab5.add(btnUseDefault, "cell 1 5,alignx right");
+        tab5.add(btnRegisterKeyset, "cell 0 6,alignx left");
+
+        JButton btnImport = new JButton("Import Keys");
+        btnImport.addActionListener(new ActionListener()
+        {
+            public void actionPerformed(ActionEvent arg0)
+            {
+                final JFileChooser fc = new JFileChooser();
+                int value = fc.showOpenDialog(null);
+                if (value == JFileChooser.APPROVE_OPTION)
+                {
+                    File file = fc.getSelectedFile();
+                    try
+                    {
+                        BufferedReader reader = new BufferedReader(new FileReader(file));
+                        String line = null;
+                        boolean firstPass = true;
+                        while ((line = reader.readLine()) != null)
+                        {
+                            if (firstPass)
+                                keyField1.setText(line);
+                            else
+                                keyField2.setText(line);
+
+                            firstPass = false;
+                        }
+                        reader.close();
+                    } catch (FileNotFoundException e)
+                    {
+                        // TODO Auto-generated catch block
+                        e.printStackTrace();
+                    } catch (IOException e)
+                    {
+                        // TODO Auto-generated catch block
+                        e.printStackTrace();
+                    }
+                }
+            }
+        });
+        btnImport.setToolTipText("Import a previously saved Keyset");
+        tab5.add(btnImport, "cell 1 2");
+
+        chckbxDontTrackUseage = new JCheckBox("Don't send statistics data");
+        tab5.add(chckbxDontTrackUseage, "cell 1 6,alignx right");
 
         JPanel tab3 = new JPanel();
         tabbedPane.addTab("Controls/Hotkeys", null, tab3, null);
@@ -586,6 +673,7 @@ public class PreferencesUI
                 Preferences.getInstance().setFTPGenerateTimestamp(chckbxGenerateTimestamp.isSelected());
                 Preferences.getInstance().setUniqueKey1(new String(keyField1.getPassword()));
                 Preferences.getInstance().setUniqueKey2(new String(keyField2.getPassword()));
+                Preferences.getInstance().setTrackingDisabled(chckbxDontTrackUseage.isSelected());
                 Preferences.getInstance().setDefaultTool(0);
                 frmPreferences.dispose();
             }
