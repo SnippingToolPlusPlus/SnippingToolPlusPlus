@@ -32,6 +32,7 @@ import net.miginfocom.swing.MigLayout;
 
 import com.shaneisrael.st.data.Locations;
 import com.shaneisrael.st.prefs.Preferences;
+import com.shaneisrael.st.utilities.database.DBUniqueKey;
 
 /**
  * 
@@ -59,8 +60,8 @@ public class PreferencesUI
     private JTextField portField;
     private JPasswordField passwordField;
     private JTextField ftpPathField;
-    private JPasswordField keyField1;
-    private JPasswordField keyField2;
+    public static JPasswordField keyField1;
+    public static JPasswordField keyField2;
 
     /**
      * Create the application.
@@ -77,7 +78,7 @@ public class PreferencesUI
         directoryField.setText(Preferences.getInstance().getCaptureDirectoryRoot());
         chckbxEnableEditor.setSelected(Preferences.getInstance().isEditorEnabled());
         chckbxAutosaveUploads.setSelected(Preferences.getInstance().isAutoSaveEnabled());
-        qualitySlider.setValue((int)(100*Preferences.getInstance().getUploadQuality()));
+        qualitySlider.setValue((int) (100 * Preferences.getInstance().getUploadQuality()));
         hostField.setText(Preferences.getInstance().getFTPHost());
         userField.setText(Preferences.getInstance().getFTPUser());
         portField.setText(Preferences.getInstance().getFTPPort());
@@ -85,6 +86,8 @@ public class PreferencesUI
         ftpPathField.setText(Preferences.getInstance().getFTPPath());
         chckbxAlwaysSaveToFTP.setSelected(Preferences.getInstance().getFTPUploadAlways());
         chckbxGenerateTimestamp.setSelected(Preferences.getInstance().getFTPGenerateTimestamp());
+        keyField1.setText(Preferences.getInstance().getUniqueKey1());
+        keyField2.setText(Preferences.getInstance().getUniqueKey2());
     }
 
     /**
@@ -96,9 +99,10 @@ public class PreferencesUI
         frmPreferences.setIconImage(Toolkit.getDefaultToolkit().getImage(
             PreferencesUI.class.getResource("/images/icons/pref.png")));
         frmPreferences.setTitle("Preferences");
-        frmPreferences.setBounds(100, 100, 314, 332);
+        frmPreferences.setBounds(100, 100, 372, 332);
         frmPreferences.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
-        frmPreferences.getContentPane().setLayout(new MigLayout("", "[263px]", "[244.00px,grow,baseline][20.00,grow]"));
+        frmPreferences.getContentPane().setLayout(
+            new MigLayout("", "[430.00px]", "[244.00px,grow,baseline][20.00,grow]"));
 
         JTabbedPane tabbedPane = new JTabbedPane(JTabbedPane.TOP);
         frmPreferences.getContentPane().add(tabbedPane, "cell 0 0,grow");
@@ -205,7 +209,7 @@ public class PreferencesUI
         lblDefaultTool.setToolTipText("Reduces file size decreasing the time it takes to upload.");
         lblDefaultTool.setFont(new Font("Tahoma", Font.BOLD, 16));
         tab2.add(lblDefaultTool, "flowx,cell 0 3");
-        
+
         qualitySlider = new JSlider();
         qualitySlider.setToolTipText("Higher quality = Larger file size");
         qualitySlider.setPaintLabels(true);
@@ -213,76 +217,76 @@ public class PreferencesUI
         qualitySlider.setPaintTicks(true);
         qualitySlider.setMajorTickSpacing(25);
         tab2.add(qualitySlider, "cell 0 4");
-        
+
         JPanel tab4 = new JPanel();
         tabbedPane.addTab("FTP", null, tab4, null);
         tab4.setLayout(new MigLayout("", "[84.00][205.00,grow]", "[][][27.00][][][-17.00][][]"));
-        
+
         JLabel lblHost = new JLabel("Host:");
         tab4.add(lblHost, "flowx,cell 0 0,alignx right");
-        
+
         hostField = new JTextField();
         tab4.add(hostField, "cell 1 0,growx");
         hostField.setColumns(10);
-        
+
         JLabel lblUser = new JLabel("User:");
         tab4.add(lblUser, "flowx,cell 0 1,alignx right");
-        
+
         userField = new JTextField();
         tab4.add(userField, "flowx,cell 1 1,alignx center");
         userField.setColumns(10);
-        
+
         JLabel lblPassword = new JLabel("Password:");
         tab4.add(lblPassword, "flowx,cell 0 2,alignx trailing");
-        
+
         JLabel lblPort = new JLabel("Port:");
         tab4.add(lblPort, "cell 1 1");
-        
+
         portField = new JTextField();
         portField.setText("21");
         tab4.add(portField, "cell 1 1");
         portField.setColumns(10);
-        
+
         passwordField = new JPasswordField();
         tab4.add(passwordField, "cell 1 2,growx");
-        
+
         JLabel lblSavePath = new JLabel("Save Path:");
         lblSavePath.setToolTipText("desired upload location");
         tab4.add(lblSavePath, "cell 0 3,alignx trailing");
-        
+
         ftpPathField = new JTextField();
         ftpPathField.setToolTipText("example ../../var/www/downloads/");
         ftpPathField.addMouseListener(new MouseListener()
         {
-            
+
             @Override
             public void mouseReleased(MouseEvent e)
             {
                 // TODO Auto-generated method stub
-                
+
             }
-            
+
             @Override
             public void mousePressed(MouseEvent e)
             {
                 // TODO Auto-generated method stub
-                
+
             }
-            
+
             @Override
             public void mouseExited(MouseEvent e)
             {
                 // TODO Auto-generated method stub
-                
+
             }
-            
+
             @Override
             public void mouseEntered(MouseEvent e)
             {
                 // TODO Auto-generated method stub
-                
+
             }
-            
+
             @Override
             public void mouseClicked(MouseEvent e)
             {
@@ -292,64 +296,118 @@ public class PreferencesUI
         ftpPathField.selectAll();
         tab4.add(ftpPathField, "cell 1 3,growx");
         ftpPathField.setColumns(10);
-        
+
         JSeparator separator_5 = new JSeparator();
         tab4.add(separator_5, "cell 0 4 2 1,growx");
-        
+
         chckbxAlwaysSaveToFTP = new JCheckBox("Backup to FTP");
         chckbxAlwaysSaveToFTP.setToolTipText("Will save a copy of the image to the desired server via FTP");
         tab4.add(chckbxAlwaysSaveToFTP, "cell 1 6");
-        
+
         chckbxGenerateTimestamp = new JCheckBox("Timestamp as file name");
         chckbxGenerateTimestamp.setSelected(true);
         tab4.add(chckbxGenerateTimestamp, "cell 1 7");
-        
+
         JPanel tab5 = new JPanel();
         tabbedPane.addTab("Stats", null, tab5, null);
-        tab5.setLayout(new MigLayout("", "[108.00,grow][64.00,grow]", "[32.00][26.00][][][][]"));
-        
+        tab5.setLayout(new MigLayout("", "[161.00,grow][165.00,grow]", "[32.00][26.00][][][][][]"));
+
         JLabel lblNewLabel = new JLabel("Key 1");
         lblNewLabel.setFont(new Font("Tahoma", Font.BOLD, 14));
         tab5.add(lblNewLabel, "cell 0 0,alignx center");
-        
+
         JLabel lblKey = new JLabel("Key 2");
         lblKey.setFont(new Font("Tahoma", Font.BOLD, 14));
         tab5.add(lblKey, "cell 1 0,alignx center");
-        
+
         keyField1 = new JPasswordField();
         keyField1.setHorizontalAlignment(SwingConstants.CENTER);
         keyField1.setToolTipText("Your registered key #1");
         tab5.add(keyField1, "cell 0 1,growx");
-        
+
         keyField2 = new JPasswordField();
         keyField2.setHorizontalAlignment(SwingConstants.CENTER);
         keyField2.setToolTipText("Your registered key #2");
         tab5.add(keyField2, "cell 1 1,growx");
-        
-        JButton btnRegisterKeyset = new JButton("Register Keyset");
-        btnRegisterKeyset.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent arg0) {
-                new RegisterKeysetUI();
-            }
-        });
-        tab5.add(btnRegisterKeyset, "cell 1 4,alignx right");
-        
+
         JButton btnHelp = new JButton("Help");
-        btnHelp.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent arg0) {
-                JOptionPane.showMessageDialog(null, "Keys are a way to uniquely identify your data and useage statistics \n"
-                    + "on our end to you. By registering a key set your public upload \n"
-                    + "history will be saved to the cloud. If you want access to your \n"
-                    + "history and other statistics you must register a key set.\n\n"
-                    + "You can use your same keyset across multiple computers as well. \n"
-                    + "A key set only needs to be registered once, after that all you \n"
-                    + "must do is enter your key set into the key fields provided. \n\n"
-                    + "Remember! You can use your key set across multiple Snipping Tool++ \n"
-                    + "clients to consolidate your statistics and history! \n\n"
-                    + "NOTE: NEVER USE YOUR PASSWORDS AS KEY SETS! OR YOUR KEY SETS AS PASSWORDS!", "HELP!", JOptionPane.INFORMATION_MESSAGE);
+        btnHelp.addActionListener(new ActionListener()
+        {
+            public void actionPerformed(ActionEvent arg0)
+            {
+                JOptionPane.showMessageDialog(null,
+                    "Keys are a way to uniquely identify your data and useage statistics \n"
+                        + "on our end to you. By registering a key set your public upload \n"
+                        + "history will be saved to the cloud. If you want access to your \n"
+                        + "history and other statistics you must register a key set.\n\n"
+                        + "You can use your same keyset across multiple computers as well. \n"
+                        + "A key set only needs to be registered once, after that all you \n"
+                        + "must do is enter your key set into the key fields provided. \n\n"
+                        + "Remember! You can use your key set across multiple Snipping Tool++ \n"
+                        + "clients to consolidate your statistics and history! \n\n"
+                        + "NOTE: NEVER USE YOUR PASSWORDS AS KEY SETS! OR YOUR KEY SETS AS PASSWORDS!", "HELP!",
+                    JOptionPane.INFORMATION_MESSAGE);
             }
         });
-        tab5.add(btnHelp, "cell 1 5,alignx right");
+        tab5.add(btnHelp, "flowx,cell 0 2,alignx left");
+
+        final JButton btnViewKeys = new JButton("show keys");
+        btnViewKeys.addActionListener(new ActionListener()
+        {
+            public void actionPerformed(ActionEvent arg0)
+            {
+
+                if (btnViewKeys.getText().equals("show keys"))
+                {
+                    keyField1.setEchoChar((char) 0);
+                    keyField2.setEchoChar((char) 0);
+                    btnViewKeys.setText("hide keys");
+                }
+                else
+                {
+                    keyField1.setEchoChar('\u25CF');
+                    keyField2.setEchoChar('\u25CF');
+                    btnViewKeys.setText("show keys");
+                }
+            }
+        });
+        tab5.add(btnViewKeys, "cell 0 2,alignx right");
+        
+                JButton btnRegisterKeyset = new JButton("Register a Keyset");
+                btnRegisterKeyset.addActionListener(new ActionListener()
+                {
+                    public void actionPerformed(ActionEvent arg0)
+                    {
+                        new RegisterKeysetUI();
+                    }
+                });
+                
+                        JButton btnValidate = new JButton("Validate");
+                        btnValidate.addActionListener(new ActionListener()
+                        {
+                            public void actionPerformed(ActionEvent arg0)
+                            {
+                                String key1 = new String(keyField1.getPassword());
+                                String key2 = new String(keyField2.getPassword());
+
+                                if (DBUniqueKey.validate(key1, key2))
+                                    JOptionPane.showMessageDialog(null, "Your Keys are valid!");
+                                else
+                                    JOptionPane.showMessageDialog(null, "These keys are invalid!", "Invalid Keys!",
+                                        JOptionPane.WARNING_MESSAGE);
+                            }
+                        });
+                        tab5.add(btnValidate, "cell 0 5,alignx left");
+                tab5.add(btnRegisterKeyset, "cell 0 6,alignx left");
+                
+                JButton btnUseDefault = new JButton("Use default");
+                btnUseDefault.addActionListener(new ActionListener() {
+                    public void actionPerformed(ActionEvent arg0) {
+                        keyField1.setText("0");
+                        keyField2.setText("0");
+                    }
+                });
+                tab5.add(btnUseDefault, "cell 1 6,alignx right");
 
         JPanel tab3 = new JPanel();
         tabbedPane.addTab("Controls/Hotkeys", null, tab3, null);
@@ -357,7 +415,8 @@ public class PreferencesUI
 
         JPanel panel_1 = new JPanel();
         // tab3.add(panel_1, BorderLayout.CENTER);
-        panel_1.setLayout(new MigLayout("", "[120.00][39.00]", "[][][][][][][][][][][][][17.00][19.00][][][][][]"));
+        panel_1.setLayout(new MigLayout("", "[189.00,grow,leading][39.00,grow]",
+            "[][][][][][][][][][][][][17.00][19.00][][][][][]"));
 
         JLabel lblEditor = new JLabel("Editor");
         lblEditor.setFont(new Font("Tahoma", Font.BOLD, 18));
@@ -438,48 +497,48 @@ public class PreferencesUI
         panel_1.add(lblCtrlshift, "cell 1 11");
 
         JScrollPane scrollPane = new JScrollPane(panel_1);
-        
+
         JLabel lblFtpUploadSnippet = new JLabel("FTP Upload Snippet");
         panel_1.add(lblFtpUploadSnippet, "cell 0 12");
-        
+
         JLabel lblAltshift = new JLabel("ALT +SHIFT + 1");
         lblAltshift.setFont(new Font("Tahoma", Font.BOLD, 11));
         panel_1.add(lblAltshift, "cell 1 12");
-        
+
         JLabel lblFtpUploadScreenshot = new JLabel("FTP Upload Screenshot");
         panel_1.add(lblFtpUploadScreenshot, "cell 0 13");
-        
+
         JLabel lblAltshift_1 = new JLabel("ALT +SHIFT + 2");
         lblAltshift_1.setFont(new Font("Tahoma", Font.BOLD, 11));
         panel_1.add(lblAltshift_1, "cell 1 13");
-        
+
         JLabel lblOverlayControls = new JLabel("Overlay");
         lblOverlayControls.setFont(new Font("Tahoma", Font.BOLD, 18));
         panel_1.add(lblOverlayControls, "cell 0 14");
-        
+
         JSeparator separator_2 = new JSeparator();
         panel_1.add(separator_2, "cell 0 15 2 1,growx");
-        
+
         JLabel lblIncreaseTransparency = new JLabel("Inc. Transparency");
         lblIncreaseTransparency.setFont(new Font("Tahoma", Font.PLAIN, 13));
         panel_1.add(lblIncreaseTransparency, "cell 0 16");
-        
+
         JLabel lblMousewheelUp = new JLabel("WHEEL DOWN");
         lblMousewheelUp.setFont(new Font("Tahoma", Font.BOLD, 13));
         panel_1.add(lblMousewheelUp, "cell 1 16");
-        
+
         JLabel lblDecreaseTransparency = new JLabel("Dec. Transparency");
         lblDecreaseTransparency.setFont(new Font("Tahoma", Font.PLAIN, 13));
         panel_1.add(lblDecreaseTransparency, "cell 0 17");
-        
+
         JLabel lblWheelUp = new JLabel("WHEEL UP");
         lblWheelUp.setFont(new Font("Tahoma", Font.BOLD, 13));
         panel_1.add(lblWheelUp, "cell 1 17");
-        
+
         JLabel lblUpdateOverlay = new JLabel("Update Overlay");
         lblUpdateOverlay.setFont(new Font("Tahoma", Font.PLAIN, 13));
         panel_1.add(lblUpdateOverlay, "cell 0 18");
-        
+
         JLabel lblMiddleClick = new JLabel("MIDDLE CLICK");
         lblMiddleClick.setFont(new Font("Tahoma", Font.BOLD, 13));
         panel_1.add(lblMiddleClick, "cell 1 18");
@@ -507,6 +566,8 @@ public class PreferencesUI
                 Preferences.getInstance().setFTPPath(ftpPathField.getText());
                 Preferences.getInstance().setFTPUploadAlways(chckbxAlwaysSaveToFTP.isSelected());
                 Preferences.getInstance().setFTPGenerateTimestamp(chckbxGenerateTimestamp.isSelected());
+                Preferences.getInstance().setUniqueKey1(new String(keyField1.getPassword()));
+                Preferences.getInstance().setUniqueKey2(new String(keyField2.getPassword()));
                 Preferences.getInstance().setDefaultTool(0);
                 frmPreferences.dispose();
             }

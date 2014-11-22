@@ -16,6 +16,7 @@ import com.shaneisrael.st.imgur.ImgurResponseListener;
 import com.shaneisrael.st.imgur.ImgurUploader;
 import com.shaneisrael.st.notification.STNotificationType;
 import com.shaneisrael.st.prefs.Preferences;
+import com.shaneisrael.st.utilities.database.DBStats;
 
 public class Upload implements ImgurResponseListener
 {
@@ -86,6 +87,7 @@ public class Upload implements ImgurResponseListener
         {
             ClipboardUtilities.setClipboard(uploadedImage.getLink());
             Main.showNotification("upload-done", STNotificationType.SUCCESS);
+            DBStats.addHistory(uploadedImage.getLink(), uploadedImage.getDeleteLink());
         } else
         {
             Browser.openToReddit(uploadedImage.getLink());

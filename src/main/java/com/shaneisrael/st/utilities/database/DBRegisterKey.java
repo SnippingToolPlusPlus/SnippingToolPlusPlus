@@ -1,5 +1,9 @@
 package com.shaneisrael.st.utilities.database;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+
 /**
  * This class will be used to register a clients two part key. If the
  * two part key combo is already in use in the database then the user
@@ -16,16 +20,47 @@ package com.shaneisrael.st.utilities.database;
  */
 public class DBRegisterKey
 {
-
-    public static boolean register()
+    private static PreparedStatement statement;
+    private static Connection connect;
+    private static ResultSet resultSet;
+    
+    public static boolean register(String key1, String key2)
     {
-        boolean success = false;
+        if(key1.equals("") || key2.equals(""))
+            return true;
         
-        //logic and things
-        
-        if(success)
-            return success;
-        else
-            return false;
+        connect = DBConnection.getConnection();
+        boolean keyExists = false;
+        try
+        {
+            statement = connect.prepareStatement("SELECT key_1, key_2 FROM register_key WHERE key_1=? AND key_2=?");
+            
+            statement.setString(1, key1);
+            statement.setString(2, key2);
+            
+            resultSet = statement.executeQuery();
+            
+            /*If we get a row back, then we know the key already exists.*/
+            if(resultSet.next())
+                keyExists = true;
+            else
+            {
+                keyExists = false;
+                statement = connect.prepareStatement("INSERT INTO register_key VALUES ( ?, ?)");
+                statement.setString(1, key1);
+                statement.setString(2, key2);
+                statement.executeUpdate();
+                
+                System.out.println("Key Set registered!");
+            }
+            
+            statement.close();
+            connect.close();
+        }
+        catch(Exception e)
+        {
+            e.printStackTrace();
+        }
+        return keyExists;
     }
 }

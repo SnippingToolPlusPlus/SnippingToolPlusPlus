@@ -101,6 +101,8 @@ public class Preferences
         preferences.setEditorEnabled(true);
         preferences.setDefaultTool(0);
         preferences.setUploadQuality(1f);
+        preferences.setUniqueKey1("0");
+        preferences.setUniqueKey2("0");
         preferences.setCaptureDirectoryRoot(locations.getPictureDirectory().getAbsolutePath());
         save();
     }
@@ -279,6 +281,26 @@ public class Preferences
         preferences.ftpGenerateTimestamp = generateStamp;
         save();
     }
+    
+    /**
+     * @param key
+     *          The desired key to be set as key 1
+     */
+    public void setUniqueKey1(String key)
+    {
+        preferences.setUniqueKey1(key);
+        save();
+    }
+    
+    /**
+     * @param key
+     *          The desired key to be set as key 2
+     */
+    public void setUniqueKey2(String key)
+    {
+        preferences.setUniqueKey2(key);
+        save();
+    }
     /**
      * @return the ftp host url
      */
@@ -333,6 +355,24 @@ public class Preferences
     public boolean getFTPGenerateTimestamp()
     {
         return preferences.getFTPGenerateTimestamp();
+    }
+    
+    /**
+     * 
+     * @return is the first unique key set by the user
+     */
+    public String getUniqueKey1()
+    {
+        return preferences.getUniqueKey1();
+    }
+    
+    /**
+     * 
+     * @return is the second unique key set by the user
+     */
+    public String getUniqueKey2()
+    {
+        return preferences.getUniqueKey2();
     }
     
     public static Preferences getInstance()

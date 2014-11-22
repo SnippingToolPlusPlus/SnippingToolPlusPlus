@@ -1,27 +1,70 @@
 package com.shaneisrael.st.utilities.database;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+
+import javax.swing.JOptionPane;
+
+import com.shaneisrael.st.prefs.Preferences;
+
 public class DBUniqueKey
 {
-
-    private static String key1 = "0";
-    private static String key2 = "0";
+    private static PreparedStatement statement;
+    private static Connection connect;
+    private static ResultSet resultSet;
     
-    //When the program runs, keys should be set and validated
-    //When the user saves preferences, keys should be set and validated
-    public static void setKey(String key1, String key2)
+    public static boolean validate(String key1, String key2)
     {
-        if(DBUniqueKey.validated(key1, key2))
+        if(key1.equals("") || key2.equals(""))
+            return false;
+        
+        connect = DBConnection.getConnection();
+        boolean valid = true;
+        try
         {
-            DBUniqueKey.key1 = key1;
-            DBUniqueKey.key2 = key2;
+            
+            statement = connect.prepareStatement("SELECT key_1, key_2 FROM register_key WHERE key_1=? AND key_2=?");
+            
+            statement.setString(1, key1);
+            statement.setString(2, key2);
+            
+            resultSet = statement.executeQuery();
+            
+            /*If we get a row back, then we know the key already exists.*/
+            if(resultSet.next())
+            {
+                System.out.println("Key Set is valid...");
+                valid = true;
+            }
+            else
+            {
+                valid = false;
+            }
+            statement.close();
+            connect.close();
         }
+        catch(Exception e)
+        {
+            e.printStackTrace();
+        }
+        
+        return valid;
     }
-
-    private static boolean validated(String key12, String key22)
+    public static boolean isKeysetValid()
     {
-        //create database connection, check if key set has been registered.
-        //if not, keys will use the value 0,0 which is reserved for all 
-        //unregistered clients
-        return false;
+        if(validate(Preferences.getInstance().getUniqueKey1(), Preferences.getInstance().getUniqueKey2()))
+            return true;
+        else
+        {
+            Thread t = new Thread(new Runnable(){
+                public void run(){
+                    JOptionPane.showMessageDialog(null, "Your Key Set is invalid, please 'validate' your Key Set\n"
+                        + "in the preferences!", "Invalid Key Set", JOptionPane.WARNING_MESSAGE);
+                }
+            });
+          t.start();
+            return false;
+        }
     }
 }

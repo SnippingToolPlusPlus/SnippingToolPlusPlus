@@ -40,6 +40,14 @@ public final class PreferenceData
     @SerializedName("ftp_gen_timestamp")
     boolean ftpGenerateTimestamp;
     
+    /** Begin Stats **/
+    @SerializedName("key_1")
+    public String key1 = "0";
+    
+    @SerializedName("key_2")
+    public String key2 = "0";
+    
+    
     PreferenceData()
     {
         editor = new EditorPreferences();
@@ -177,6 +185,24 @@ public final class PreferenceData
     {
         this.ftpGenerateTimestamp = timestamp;
     }
+
+    /**
+     * @param key
+     *          the key to be set
+     */
+    void setUniqueKey1(String key)
+    {
+        this.key1 = key;
+    }
+    
+    /**
+     * @param key
+     *          the key to be set
+     */
+    void setUniqueKey2(String key)
+    {
+        this.key2 = key;
+    }
     /**
      * @return the enabled
      */
@@ -254,6 +280,24 @@ public final class PreferenceData
     boolean getFTPGenerateTimestamp()
     {
         return ftpGenerateTimestamp;
+    }
+    
+    /**
+     * 
+     * @return is the users unique key 1
+     */
+    String getUniqueKey1()
+    {
+        return key1;
+    }
+    
+    /**
+     * 
+     * @return is the users unique key 2
+     */
+    String getUniqueKey2()
+    {
+        return key2;
     }
     class EditorPreferences
     {
