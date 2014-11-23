@@ -41,7 +41,8 @@ public class DBStats
                 statement.setString(2, key2);
                 
                 result = statement.executeQuery();
-                /* The user id that is linked to their Keyset */
+               
+                /* Get the key id that is linked to their Keyset */
                 while(result.next())
                     rkid = result.getString("id");
                 

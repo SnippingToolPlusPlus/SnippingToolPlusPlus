@@ -3,11 +3,13 @@ package com.shaneisrael.st.utilities.database;
 import java.sql.Connection;
 import java.sql.DriverManager;
 
+import com.shaneisrael.st.Config;
+
 public class DBConnection
 {
     private static String user;
     private static String password;
-    private static String address = "192.168.11.10:3306"; //192.168.11.10:3306
+    private static String address = "snippingtoolpluspl.us:3306"; //192.168.11.10:3306
     
     public static Connection getConnection()
     {
