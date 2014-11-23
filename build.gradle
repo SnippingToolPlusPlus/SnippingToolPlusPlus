@@ -6,7 +6,7 @@ apply plugin: 'launch4j'
 
 project.sourceCompatibility = 1.7
 project.targetCompatibility = 1.7
-project.version = '6.1.0'
+project.version = '6.1.1'
 
 project.ext {
     mainClass = 'com.shaneisrael.st.Main'

@@ -2,8 +2,8 @@
     "version_name": ":)",
     "major": "6",
     "minor": "1",
-    "patch": "0",
-    "download": "http://snippingtoolpluspl.us/downloads/SnippingToolPlusPlus-6.1.0.zip",
+    "patch": "1",
+    "download": "http://snippingtoolpluspl.us/downloads/SnippingToolPlusPlus-6.1.1.zip",
     "reset_prefs": "true",
     "changes": {
         "added": [
@@ -13,13 +13,11 @@
             ""
         ],
         "changed": [
-            "The location of prefs.json has been changed to ~/.snippingtool++/data/prefs.json",
-            "The names of some preference keys in the json file have been changed",
-            "for more info see https://github.com/SnippingToolPlusPlus/SnippingToolPlusPlus/pull/3"
+            ""
         ],
         "fixed": [
             ""
         ]
     },
-    "note": "You will have to reconfigure your settings as the location of the prefs.json file has change."
+    "note": ""
 }
