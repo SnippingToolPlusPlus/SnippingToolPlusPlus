@@ -1,28 +1,42 @@
 package com.shaneisrael.st.ui.imageviewer;
 
+import java.awt.image.BufferedImage;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FilenameFilter;
 import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 
+import javax.imageio.ImageIO;
+import javax.swing.JOptionPane;
+
 import com.shaneisrael.st.prefs.Preferences;
+import com.shaneisrael.st.utilities.database.DBConnection;
+import com.shaneisrael.st.utilities.database.DBUniqueKey;
 
 public class ImageViewerLinkBuilder
 {
     private final ArrayList<ImageLinkPair> availableImages;
+    private final ArrayList<File> cloudFiles;
     private final HashMap<File, ImgurLinks> imageData;
 
-    public ImageViewerLinkBuilder()
+    public ImageViewerLinkBuilder(boolean local)
     {
         availableImages = new ArrayList<>();
         imageData = new HashMap<>();
-        refresh();
+        cloudFiles = new ArrayList<File>();
+        refresh(local);
     }
 
     private File getLinkFile()
@@ -37,21 +51,45 @@ public class ImageViewerLinkBuilder
         return availableImages;
     }
 
-    private void refresh()
+    private void refresh(boolean local)
     {
-        loadImageData();
-        loadImagesFromDirectory(new File(Preferences.getInstance().getCaptureDirectoryRoot() + "/Uploads/"));
-        loadImagesFromDirectory(new File(Preferences.getInstance().getCaptureDirectoryRoot() + "/Captures/"));
-        Collections.sort(availableImages, new Comparator<ImageLinkPair>()
+        if (local)
         {
-            @Override
-            public int compare(ImageLinkPair a, ImageLinkPair b)
+            loadImageData();
+            loadImagesFromDirectory(new File(Preferences.getInstance().getCaptureDirectoryRoot() + "/Uploads/"));
+            loadImagesFromDirectory(new File(Preferences.getInstance().getCaptureDirectoryRoot() + "/Captures/"));
+            Collections.sort(availableImages, new Comparator<ImageLinkPair>()
             {
-                long timeA = a.getImageFile().lastModified();
-                long timeB = b.getImageFile().lastModified();
-                return Long.compare(timeA, timeB);
+                @Override
+                public int compare(ImageLinkPair a, ImageLinkPair b)
+                {
+                    long timeA = a.getImageFile().lastModified();
+                    long timeB = b.getImageFile().lastModified();
+                    return Long.compare(timeA, timeB);
+                }
+            });
+        }
+        else
+        {
+          loadCloudImageData();
+          loadImagesFromCloud();
+        }
+    }
+
+    protected void loadImagesFromCloud()
+    {
+        for(File imageFile : cloudFiles)
+        {
+            if(imageData.containsKey(imageFile))
+            {
+                ImgurLinks linkData = imageData.get(imageFile);
+                availableImages.add(new ImageLinkPair(imageFile, linkData.imageLink, linkData.deleteLink));
             }
-        });
+            else
+            {
+                availableImages.add(new ImageLinkPair(imageFile));
+            }
+        }
     }
 
     private void loadImagesFromDirectory(File rootDir)
@@ -75,6 +113,63 @@ public class ImageViewerLinkBuilder
             {
                 availableImages.add(new ImageLinkPair(imageFile));
             }
+        }
+    }
+
+    private void loadCloudImageData()
+    {
+        try
+        {
+            PreparedStatement statement;
+            Connection connect;
+            ResultSet result;
+            String key1 = Preferences.getInstance().getUniqueKey1();
+            String key2 = Preferences.getInstance().getUniqueKey2();
+            if (DBUniqueKey.validate(key1, key2))
+            {
+                String id = DBUniqueKey.getUniqueKeyID(key1, key2);
+                
+                connect = DBConnection.getConnection();
+                statement = connect.prepareStatement(
+                    "SELECT upload_link, delete_link, timestamp FROM upload_history WHERE rkid=?");
+                statement.setString(1, id);
+                
+                result = statement.executeQuery();
+                
+                URL url = null;
+                BufferedImage img = null;
+                while (result.next())
+                {
+                    String uplink = result.getString("upload_link");
+                    String dellink = result.getString("delete_link");
+                    
+                    String[] split = uplink.split("/");
+                    url = new URL(uplink);
+                    img = ImageIO.read(url);
+                    File imageFile = new File(split[3]);
+                    ImageIO.write(img, "png", imageFile);
+                    
+                    cloudFiles.add(imageFile);
+                    imageData.put(imageFile,
+                        new ImgurLinks( uplink, dellink));
+                }
+                
+                result.close();
+                statement.close();
+                connect.close();
+            }
+
+        } catch (SQLException e)
+        {
+            e.printStackTrace();
+        } catch (MalformedURLException e)
+        {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        } catch (IOException e)
+        {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
         }
     }
 

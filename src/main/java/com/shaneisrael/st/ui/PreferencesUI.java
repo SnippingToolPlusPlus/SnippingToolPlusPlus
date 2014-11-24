@@ -679,7 +679,7 @@ public class PreferencesUI
             }
         });
         frmPreferences.getContentPane().add(btnApply, "cell 0 1,alignx right");
-        // frmPreferences.pack();
+        frmPreferences.setLocationRelativeTo(null);
         frmPreferences.setVisible(true);
 
     }

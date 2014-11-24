@@ -35,16 +35,7 @@ public class DBStats
                 
                 getKeySet();
                 
-                statement = connect.prepareStatement("SELECT id FROM registered_keys WHERE"
-                    + " key_1=? AND key_2=?");
-                statement.setString(1, key1);
-                statement.setString(2, key2);
-                
-                result = statement.executeQuery();
-               
-                /* Get the key id that is linked to their Keyset */
-                while(result.next())
-                    rkid = result.getString("id");
+                rkid = DBUniqueKey.getUniqueKeyID(key1, key2);
                 
                 statement = connect
                     .prepareStatement("INSERT INTO upload_history "

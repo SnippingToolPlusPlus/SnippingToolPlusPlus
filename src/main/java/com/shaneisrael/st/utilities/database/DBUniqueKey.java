@@ -3,6 +3,7 @@ package com.shaneisrael.st.utilities.database;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 
 import javax.swing.JOptionPane;
 
@@ -50,6 +51,35 @@ public class DBUniqueKey
         }
         
         return valid;
+    }
+    public static String getUniqueKeyID(String key1, String key2)
+    {
+        try
+        {
+            connect = DBConnection.getConnection();
+            
+            statement = connect.prepareStatement("SELECT id FROM registered_keys WHERE"
+                + " key_1=? AND key_2=?");
+            
+            statement.setString(1, key1);
+            statement.setString(2, key2);
+            
+            resultSet = statement.executeQuery();
+            
+            String id = "0";
+           
+            /* Get the key id that is linked to their Keyset */
+            while(resultSet.next())
+                id = resultSet.getString("id");
+            
+            return id;
+        } catch (SQLException e)
+        {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+
+        return "0";
     }
     public static boolean isKeysetValid()
     {

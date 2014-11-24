@@ -9,11 +9,13 @@ import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.Date;
 
+import javax.swing.ButtonGroup;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
@@ -32,10 +34,13 @@ public class ImageViewer extends JFrame implements ListSelectionListener
     private static final long serialVersionUID = 4088295625777675677L;
     private JPanel mainContent;
     private ImageViewerImageList imageList;
+    private ImageViewerLinkBuilder linkBuilder;
+    private JScrollPane imageListScrollpane;
     private BufferedImage currentImage;
     private ImageLinkPair currentModel;
     private ScrollableImageViewPanel imagePanel;
     private JLabel dateLabel;
+    private ButtonGroup viewGroup;
 
     public ImageViewer()
     {
@@ -71,7 +76,69 @@ public class ImageViewer extends JFrame implements ListSelectionListener
         createOpenButton();
         createDeleteButton();
         createImageListViewer();
+        createViewButtons();
+
         add(mainContent, BorderLayout.CENTER);
+    }
+
+    private void createViewButtons()
+    {
+        viewGroup = new ButtonGroup();
+        JRadioButton rdbtnLocal = new JRadioButton("Local");
+        rdbtnLocal.addActionListener(new ActionListener()
+        {
+            public void actionPerformed(ActionEvent e)
+            {
+                buildLocalList();
+                if (imageList.getModel().getSize() > 0)
+                {
+                    imageList.setSelectedIndex(0);
+                }
+            }
+        });
+        mainContent.add(rdbtnLocal, "flowx,cell 0 1");
+        JRadioButton rdbtnCloud = new JRadioButton("Cloud");
+        rdbtnCloud.addActionListener(new ActionListener()
+        {
+            public void actionPerformed(ActionEvent arg0)
+            {
+                Thread t = new Thread(new Runnable()
+                {
+                    public void run()
+                    {
+                        buildCloudHistoryList();
+                        if (imageList.getModel().getSize() > 0)
+                        {
+                            imageList.setSelectedIndex(0);
+                        }
+                    }
+                });
+                t.start();
+                
+                JOptionPane.showMessageDialog(null, "Downloading images... This may take a couple seconds.",
+                    "Fetching Images..", JOptionPane.INFORMATION_MESSAGE);
+            }
+        });
+        mainContent.add(rdbtnCloud, "cell 0 1");
+
+        viewGroup.add(rdbtnLocal);
+        viewGroup.add(rdbtnCloud);
+
+        rdbtnLocal.setSelected(true);
+    }
+
+    protected void buildCloudHistoryList()
+    {
+        linkBuilder = new ImageViewerLinkBuilder(false);
+        imageList = new ImageViewerImageList(this, linkBuilder);
+        imageListScrollpane.setViewportView(imageList);
+    }
+
+    protected void buildLocalList()
+    {
+        linkBuilder = new ImageViewerLinkBuilder(true);
+        imageList = new ImageViewerImageList(this, linkBuilder);
+        imageListScrollpane.setViewportView(imageList);
     }
 
     private void createCopyButton()
@@ -174,10 +241,9 @@ public class ImageViewer extends JFrame implements ListSelectionListener
         imagePanel = new ScrollableImageViewPanel();
         mainContent.add(imagePanel, "cell 1 2,grow");
 
-        ImageViewerLinkBuilder linkBuilder = new ImageViewerLinkBuilder();
-        imageList = new ImageViewerImageList(this, linkBuilder);
-        JScrollPane imageListScrollpane = new JScrollPane();
-        imageListScrollpane.setViewportView(imageList);
+        imageListScrollpane = new JScrollPane();
+
+        buildLocalList();
         mainContent.add(imageListScrollpane, "cell 0 2,grow");
         if (imageList.getModel().getSize() > 0)
         {

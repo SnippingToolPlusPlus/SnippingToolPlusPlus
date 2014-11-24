@@ -470,6 +470,7 @@ public class Main extends JFrame implements ActionListener
             }
         } else if (command.equals("exit"))
         {
+            JIntellitype.getInstance().cleanUp();
             System.exit(0);
         }
     }
