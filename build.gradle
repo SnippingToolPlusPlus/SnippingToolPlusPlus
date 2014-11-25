@@ -6,7 +6,7 @@ apply plugin: 'launch4j'
 
 project.sourceCompatibility = 1.7
 project.targetCompatibility = 1.7
-project.version = '6.1.1'
+project.version = '6.1.2'
 
 project.ext {
     mainClass = 'com.shaneisrael.st.Main'
@@ -61,6 +61,7 @@ dependencies {
     testCompile 'junit:junit:4.11'
     compile 'com.miglayout:miglayout:3.7.4' //bsd
     compile 'com.google.code.gson:gson:2.2.4' //apache v2
+    compile 'mysql:mysql-connector-java:5.1.34'
 
 }
 
