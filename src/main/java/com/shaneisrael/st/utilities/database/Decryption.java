@@ -48,11 +48,6 @@ public class Decryption
           if (is != null) { is.close(); }
         }
         
-//        final URI uri = Decryption.class.getResource("//data").toURI();
-//        final Map<String, String> env = new HashMap<>();
-//        final String[] array = uri.toString().split("!");
-//        final FileSystem fs = FileSystems.newFileSystem(URI.create(array[0]), env);
-//        final Path path = fs.getPath(array[1]);
         
         InputStream input = Decryption.class.getResourceAsStream("/data");
         ByteArrayOutputStream output = new ByteArrayOutputStream();
