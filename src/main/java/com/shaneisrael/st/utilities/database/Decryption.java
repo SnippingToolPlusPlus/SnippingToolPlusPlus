@@ -48,14 +48,23 @@ public class Decryption
           if (is != null) { is.close(); }
         }
         
-        final URI uri = Decryption.class.getResource("/data").toURI();
-        final Map<String, String> env = new HashMap<>();
-        final String[] array = uri.toString().split("!");
-        final FileSystem fs = FileSystems.newFileSystem(URI.create(array[0]), env);
-        final Path path = fs.getPath(array[1]);
+//        final URI uri = Decryption.class.getResource("//data").toURI();
+//        final Map<String, String> env = new HashMap<>();
+//        final String[] array = uri.toString().split("!");
+//        final FileSystem fs = FileSystems.newFileSystem(URI.create(array[0]), env);
+//        final Path path = fs.getPath(array[1]);
         
-        byte[] encryptionBytes = Files.readAllBytes(path);
+        InputStream input = Decryption.class.getResourceAsStream("/data");
+        ByteArrayOutputStream output = new ByteArrayOutputStream();
+ 
+        for (int read = input.read(); read >= 0; read = input.read())
+                output.write(read);
+ 
+        byte[] encryptionBytes = output.toByteArray();
         byte[] encryptedKey = bais.toByteArray();
+        
+        input.close ();
+        output.close();
         bais.close();
         
         Key pkey = new SecretKeySpec(encryptedKey, 0, encryptedKey.length, "DESede");

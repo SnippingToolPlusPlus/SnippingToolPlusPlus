@@ -53,6 +53,7 @@ buildscript {
     }
     dependencies {
         classpath 'edu.sc.seis.gradle:launch4j:1.0.6'
+        classpath 'mysql:mysql-connector-java:5.1.34'
     }
 }
 
@@ -60,6 +61,7 @@ dependencies {
     testCompile 'junit:junit:4.11'
     compile 'com.miglayout:miglayout:3.7.4' //bsd
     compile 'com.google.code.gson:gson:2.2.4' //apache v2
+
 }
 
 eclipse {
