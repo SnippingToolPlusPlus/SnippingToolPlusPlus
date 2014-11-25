@@ -69,6 +69,7 @@ public class Overlay extends JPanel implements MouseListener, MouseMotionListene
     private Font infoFont = new Font("sansserif", Font.BOLD, 12);
     private BufferedImage selectionImage;
     private BufferedImage screenshot;
+    private BufferedImage background; //this is a slightly larger image than the screenshot used for the Zoom window
     private Image zoomImage; //Since scaling has to be an Image
 
     /* Zoom Rects Values */
@@ -79,6 +80,7 @@ public class Overlay extends JPanel implements MouseListener, MouseMotionListene
     private int zoomCrossMargin = 60;
     private int zoomX = 0;
     private int zoomY = 0;
+    private int screenOffset = zoomDimension;
 
 
     private CaptureScreen capture;
@@ -156,6 +158,15 @@ public class Overlay extends JPanel implements MouseListener, MouseMotionListene
         capture = new CaptureScreen();
         bounds = new ScreenBounds();
         screenshot = capture.getScreenCapture();
+        background = new BufferedImage(screenshot.getWidth() + (screenOffset*2), screenshot.getHeight() + (screenOffset*2), BufferedImage.TYPE_INT_RGB);
+        Graphics2D g2d = background.createGraphics();
+        g2d.setColor(Color.BLACK);
+        g2d.fill(new Rectangle(background.getWidth(), background.getHeight()));
+        g2d.drawImage(screenshot, screenOffset/2, screenOffset/2, null);
+        g2d.dispose();
+        
+        screenshot = background;
+        
         screenRectangle = bounds.getBounds();
         // setMouseCursor();
     }
@@ -259,7 +270,7 @@ public class Overlay extends JPanel implements MouseListener, MouseMotionListene
 
     private void drawOverlay(Graphics2D g2d)
     {
-        g2d.drawImage(screenshot, 0, 0, null);
+        g2d.drawImage(screenshot, -screenOffset/2, -screenOffset/2, null);
         g2d.setColor(overlayColor);
         g2d.fillRect(0, 0, screenRectangle.width, screenRectangle.height);
     }
@@ -274,7 +285,7 @@ public class Overlay extends JPanel implements MouseListener, MouseMotionListene
         if (getSubimage() != null)
         {
             selectionImage = getSubimage();
-            g2d.drawImage(selectionImage, select.x, select.y, null);
+            g2d.drawImage(selectionImage, select.x , select.y, null);
             g2d.drawRect(select.x, select.y, select.width, select.height);
         }
     }
@@ -334,21 +345,7 @@ public class Overlay extends JPanel implements MouseListener, MouseMotionListene
     }
     private Rectangle getZoomRectangle()
     {
-        /*
-         * This function needs work. Sides of screen are having issues
-         */
-        int x, y, w, h;
-        
-        if((mouseX - (zoomDimension/2)) <= 1)
-            x = mouseX;
-        else
-            x = mouseX - (zoomDimension / 2);
-        if((mouseY - (zoomDimension/2)) <= 1)
-            y = mouseY;
-        else
-            y = mouseY - (zoomDimension / 2);
-        
-        return  new Rectangle(x , y, zoomDimension, zoomDimension);
+        return  new Rectangle(mouseX - (zoomDimension / 2), mouseY - (zoomDimension / 2), zoomDimension, zoomDimension);
     }
 
     private BufferedImage getSubimage()
@@ -356,7 +353,7 @@ public class Overlay extends JPanel implements MouseListener, MouseMotionListene
         Rectangle select = selection.getBounds();
         if (select.width > 0 && select.height > 0)
         {
-            return screenshot.getSubimage(select.x, select.y, select.width, select.height);
+            return screenshot.getSubimage(select.x + (screenOffset/2), select.y + (screenOffset/2), select.width, select.height);
         } else
         {
             return null;
@@ -365,7 +362,7 @@ public class Overlay extends JPanel implements MouseListener, MouseMotionListene
 
     private BufferedImage getSubimage(Rectangle rect)
     {
-        return screenshot.getSubimage(rect.x, rect.y, rect.width, rect.height);
+        return screenshot.getSubimage(rect.x + (screenOffset/2), rect.y + (screenOffset/2), rect.width, rect.height);
     }
 
     public void setMode(int mode)

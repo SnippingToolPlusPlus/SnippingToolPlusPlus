@@ -98,6 +98,7 @@ public class Main extends JFrame implements ActionListener
             {
                 debugging = true;
             }
+
         }
     }
 
