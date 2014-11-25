@@ -73,14 +73,17 @@ public class Overlay extends JPanel implements MouseListener, MouseMotionListene
     private Image zoomImage; //Since scaling has to be an Image
 
     /* Zoom Rects Values */
-    private boolean zoomEnabled = false;
-    private int zoomDimension = 40;
-    private int zoomMargin = 35;
-    private int zoomWidth = 200;
-    private int zoomCrossMargin = 60;
+    private boolean zoomEnabled = true;
+    private int zoomDimension = 20;
+    private int zoomDimensionMax = 80;
+    private int zoomFactor = 4;
+    private int zoomMargin = 25;
+    private int zoomWindowWidth = 180;
+    private int zoomCrosshairRadius = 40;
+    private int zoomCrosshairMargin = zoomWindowWidth - zoomCrosshairRadius;
     private int zoomX = 0;
     private int zoomY = 0;
-    private int screenOffset = zoomDimension;
+    private int screenOffset = zoomDimensionMax;
 
 
     private CaptureScreen capture;
@@ -187,12 +190,10 @@ public class Overlay extends JPanel implements MouseListener, MouseMotionListene
         Graphics2D g2d = (Graphics2D) g;
 
         g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-
+        g2d.setStroke(new BasicStroke(1.35f));
+        
         drawOverlay(g2d);
         drawSelection(g2d);
-        
-        if(zoomEnabled)
-            drawZoomRect(g2d);
 
         if (selection.getWidth() > 0 && selection.getHeight() > 0)
         {
@@ -205,6 +206,10 @@ public class Overlay extends JPanel implements MouseListener, MouseMotionListene
         {
             e.printStackTrace();
         }
+        
+        if(zoomEnabled)
+            drawZoomRect(g2d);
+        
         this.repaint();
     }
 
@@ -277,7 +282,6 @@ public class Overlay extends JPanel implements MouseListener, MouseMotionListene
 
     private void drawSelection(Graphics2D g2d)
     {
-        g2d.setStroke(new BasicStroke(1.35f));
         g2d.setColor(selectionColor);
 
         selection.setFrameFromDiagonal(startPoint, endPoint);
@@ -297,7 +301,7 @@ public class Overlay extends JPanel implements MouseListener, MouseMotionListene
         if (getSubimage(zoom) != null)
         {
             zoomImage = getSubimage(zoom);
-            zoomImage = zoomImage.getScaledInstance(zoomWidth, zoomWidth, Image.SCALE_SMOOTH);
+            zoomImage = zoomImage.getScaledInstance(zoomWindowWidth, zoomWindowWidth, Image.SCALE_SMOOTH);
 
             getZoomX();
             getZoomY();
@@ -308,20 +312,22 @@ public class Overlay extends JPanel implements MouseListener, MouseMotionListene
             g2d.drawRect(zoomX, zoomY, zoomImage.getWidth(null), zoomImage.getHeight(null));
             g2d.setColor(Color.red);
             g2d.setStroke(new BasicStroke(3f));
-            g2d.drawLine(zoomX + (zoomWidth / 2), zoomY + zoomCrossMargin, zoomX + (zoomWidth / 2), zoomY + zoomWidth
-                - zoomCrossMargin);
-            g2d.drawLine(zoomX + zoomCrossMargin, zoomY + (zoomWidth / 2), zoomX + zoomWidth - zoomCrossMargin, zoomY
-                + (zoomWidth / 2));
+            g2d.drawLine(zoomX + (zoomWindowWidth / 2), zoomY + zoomCrosshairMargin, zoomX + (zoomWindowWidth / 2), zoomY + zoomWindowWidth
+                - zoomCrosshairMargin);
+            g2d.drawLine(zoomX + zoomCrosshairMargin, zoomY + (zoomWindowWidth / 2), zoomX + zoomWindowWidth - zoomCrosshairMargin, zoomY
+                + (zoomWindowWidth / 2));
+            
+            g2d.setStroke(new BasicStroke(1.35f));
         }
     }
 
     private void getZoomX()
     {
-        if ((mouseX + zoomMargin + zoomWidth) > screenRectangle.width)
+        if ((mouseX + zoomMargin + zoomWindowWidth) > screenRectangle.width)
         {
-            zoomX = (mouseX - zoomMargin - zoomWidth);
+            zoomX = (mouseX - zoomMargin - zoomWindowWidth);
         }
-        else if ((mouseX - zoomMargin - zoomWidth) < 0)
+        else if ((mouseX - zoomMargin - zoomWindowWidth) < 0)
         {
             zoomX = (mouseX + zoomMargin);
         }
@@ -331,11 +337,11 @@ public class Overlay extends JPanel implements MouseListener, MouseMotionListene
 
     private void getZoomY()
     {
-        if ((mouseY + zoomMargin + zoomWidth) > screenRectangle.height)
+        if ((mouseY + zoomMargin + zoomWindowWidth) > screenRectangle.height)
         {
-            zoomY = (mouseY - zoomMargin - zoomWidth);
+            zoomY = (mouseY - zoomMargin - zoomWindowWidth);
         }
-        else if ((mouseY - zoomMargin - zoomWidth) < 0)
+        else if ((mouseY - zoomMargin - zoomWindowWidth) < 0)
         {
 
             zoomY = (mouseY + zoomMargin);
@@ -448,15 +454,31 @@ public class Overlay extends JPanel implements MouseListener, MouseMotionListene
         int notches = e.getWheelRotation();
         if (notches < 0)
         {
-            if (parent.getOpacity() - .05f >= .005f)
-                parent.setOpacity(parent.getOpacity() - .05f);
+            if(!zoomEnabled)
+            {
+                if (parent.getOpacity() - .05f >= .005f)
+                    parent.setOpacity(parent.getOpacity() - .05f);
+            }
+            else
+            {
+                if((zoomDimension-zoomFactor) >= zoomFactor)
+                    zoomDimension -= zoomFactor;
+            }
         }
         else
         {
-            if (parent.getOpacity() + .05f <= 1f)
-                parent.setOpacity(parent.getOpacity() + .05f);
+            if(!zoomEnabled)
+            {
+                if (parent.getOpacity() + .05f <= 1f)
+                    parent.setOpacity(parent.getOpacity() + .05f);
+                else
+                    parent.setOpacity(1f);
+            }
             else
-                parent.setOpacity(1f);
+            {
+                if((zoomDimension+zoomFactor) <= zoomDimensionMax)
+                    zoomDimension += zoomFactor;
+            }
         }
 
     }
