@@ -74,11 +74,11 @@ public class Overlay extends JPanel implements MouseListener, MouseMotionListene
 
     /* Zoom Rects Values */
     private boolean zoomEnabled = true;
-    private int zoomDimension = 90;
-    private int zoomDimensionMax = 160;
+    private int zoomDimension = 80;
+    private int zoomDimensionMax = 120;
     private int zoomFactor = 8;
     private int zoomMargin = 25;
-    private int zoomWindowWidth = 180;
+    private int zoomWindowWidth = 120;
     private int zoomCrosshairRadius = 40;
     private int zoomCrosshairMargin = zoomWindowWidth - zoomCrosshairRadius;
     private int zoomX = 0;
