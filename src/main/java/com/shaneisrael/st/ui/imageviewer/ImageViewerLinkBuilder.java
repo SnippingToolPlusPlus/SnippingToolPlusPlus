@@ -120,7 +120,7 @@ public class ImageViewerLinkBuilder
     {
         try
         {
-            File tempDir = new File(Preferences.getInstance().getCaptureDirectoryRoot() + "/CloudHistory");
+            File tempDir = new File(Preferences.getInstance().getCaptureDirectoryRoot() + "/TempHistory");
             if(!tempDir.exists())
                 tempDir.mkdirs();
             
@@ -152,7 +152,7 @@ public class ImageViewerLinkBuilder
                     String[] split = uplink.split("/");
                     url = new URL(uplink);
                     img = ImageIO.read(url);
-                    File imageFile = new File(Preferences.getInstance().getCaptureDirectoryRoot() + "/CloudHistory/"+split[3]);
+                    File imageFile = new File(Preferences.getInstance().getCaptureDirectoryRoot() + "/TempHistory/"+split[3]);
                     imageFile.deleteOnExit();
                     
                     ImageIO.write(img, "png", imageFile);

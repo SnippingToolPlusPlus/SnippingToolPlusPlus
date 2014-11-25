@@ -4,8 +4,8 @@ apply plugin: 'jacoco'
 apply plugin: 'sonar-runner'
 apply plugin: 'launch4j'
 
-project.sourceCompatibility = 1.7
-project.targetCompatibility = 1.7
+project.sourceCompatibility = 1.8
+project.targetCompatibility = 1.8
 project.version = '6.1.1'
 
 project.ext {

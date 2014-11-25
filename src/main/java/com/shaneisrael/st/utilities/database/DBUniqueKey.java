@@ -15,6 +15,14 @@ public class DBUniqueKey
     private static Connection connect;
     private static ResultSet resultSet;
     
+    /**
+     * 
+     * @param key1
+     * @param key2
+     * @return valid
+     * 
+     * Checks whether or not the currently set keyset is a valid keyset.
+     */
     public static boolean validate(String key1, String key2)
     {
         if(key1.equals("") || key2.equals(""))
@@ -52,6 +60,14 @@ public class DBUniqueKey
         
         return valid;
     }
+    /**
+     * 
+     * @param key1
+     * @param key2
+     * @return A keyID unique to that keyset
+     * 
+     * 
+     */
     public static String getUniqueKeyID(String key1, String key2)
     {
         try
@@ -71,6 +87,10 @@ public class DBUniqueKey
             /* Get the key id that is linked to their Keyset */
             while(resultSet.next())
                 id = resultSet.getString("id");
+            
+            connect.close();
+            statement.close();
+            resultSet.close();
             
             return id;
         } catch (SQLException e)
@@ -98,5 +118,45 @@ public class DBUniqueKey
           t.start();
             return false;
         }
+    }
+    /**
+     * 
+     * @return reserved
+     * 
+     *  A reserved keyset can not be used to return data back to the
+     *  user. These keysets are reserved for other purposes.
+     */
+    public static boolean isKeysetReserved()
+    {
+        boolean reserved = false;
+        String key1 = Preferences.getInstance().getUniqueKey1();
+        String key2 = Preferences.getInstance().getUniqueKey2();
+        if(key1.equals("") || key2.equals(""))
+            return true;
+        
+        connect = DBConnection.getConnection();
+        
+        try
+        {
+            statement = connect.prepareStatement("SELECT reserved FROM registered_keys WHERE"
+                + " key_1=? AND key_2=?");
+            statement.setString(1, key1);
+            statement.setString(2, key2);
+            resultSet = statement.executeQuery();
+            
+            resultSet.next();
+            
+            reserved = resultSet.getBoolean("reserved");
+            
+            connect.close();
+            statement.close();
+            resultSet.close();
+            
+        } catch (SQLException e)
+        {
+            e.printStackTrace();
+        }
+        
+        return reserved;
     }
 }

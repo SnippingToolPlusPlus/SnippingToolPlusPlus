@@ -3,10 +3,16 @@ package com.shaneisrael.st.utilities.database;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URI;
 import java.net.URL;
+import java.nio.file.FileSystem;
+import java.nio.file.FileSystems;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.security.Key;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.crypto.Cipher;
 import javax.crypto.spec.SecretKeySpec;
@@ -42,7 +48,13 @@ public class Decryption
           if (is != null) { is.close(); }
         }
         
-        byte[] encryptionBytes = Files.readAllBytes(Paths.get(Decryption.class.getResource("/data").toURI()));
+        final URI uri = Decryption.class.getResource("/data").toURI();
+        final Map<String, String> env = new HashMap<>();
+        final String[] array = uri.toString().split("!");
+        final FileSystem fs = FileSystems.newFileSystem(URI.create(array[0]), env);
+        final Path path = fs.getPath(array[1]);
+        
+        byte[] encryptionBytes = Files.readAllBytes(path);
         byte[] encryptedKey = bais.toByteArray();
         bais.close();
         

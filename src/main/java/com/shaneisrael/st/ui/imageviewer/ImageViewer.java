@@ -28,6 +28,7 @@ import com.shaneisrael.st.notification.STNotificationType;
 import com.shaneisrael.st.overlay.Overlay;
 import com.shaneisrael.st.utilities.Browser;
 import com.shaneisrael.st.utilities.ClipboardUtilities;
+import com.shaneisrael.st.utilities.database.DBUniqueKey;
 
 public class ImageViewer extends JFrame implements ListSelectionListener
 {
@@ -84,7 +85,7 @@ public class ImageViewer extends JFrame implements ListSelectionListener
     private void createViewButtons()
     {
         viewGroup = new ButtonGroup();
-        JRadioButton rdbtnLocal = new JRadioButton("Local");
+        final JRadioButton rdbtnLocal = new JRadioButton("Local");
         rdbtnLocal.addActionListener(new ActionListener()
         {
             public void actionPerformed(ActionEvent e)
@@ -97,26 +98,37 @@ public class ImageViewer extends JFrame implements ListSelectionListener
             }
         });
         mainContent.add(rdbtnLocal, "flowx,cell 0 1");
-        JRadioButton rdbtnCloud = new JRadioButton("Cloud");
+        final JRadioButton rdbtnCloud = new JRadioButton("Cloud");
         rdbtnCloud.addActionListener(new ActionListener()
         {
             public void actionPerformed(ActionEvent arg0)
             {
-                Thread t = new Thread(new Runnable()
+                if(!DBUniqueKey.isKeysetReserved())
                 {
-                    public void run()
+                    Thread t = new Thread(new Runnable()
                     {
-                        buildCloudHistoryList();
-                        if (imageList.getModel().getSize() > 0)
+                        public void run()
                         {
-                            imageList.setSelectedIndex(0);
+                            buildCloudHistoryList();
+                            if (imageList.getModel().getSize() > 0)
+                            {
+                                imageList.setSelectedIndex(0);
+                            }
                         }
-                    }
-                });
-                t.start();
-                
-                JOptionPane.showMessageDialog(null, "Downloading images... This may take a couple seconds.",
-                    "Fetching Images..", JOptionPane.INFORMATION_MESSAGE);
+                    });
+                    t.start();
+                    
+                    JOptionPane.showMessageDialog(null, "Downloading images... This may take a couple seconds.",
+                        "Fetching Images..", JOptionPane.INFORMATION_MESSAGE);
+                }
+                else
+                {
+                    rdbtnLocal.setSelected(true);
+                    JOptionPane.showMessageDialog(null, "You need to use a registered keyset to access this feature!\n\n"
+                        + "If you already registered a keyset, please check that\n"
+                        + "it is correct and valid. Preferences > Stats/Keysets",
+                        "Error", JOptionPane.ERROR_MESSAGE);
+                }
             }
         });
         mainContent.add(rdbtnCloud, "cell 0 1");
