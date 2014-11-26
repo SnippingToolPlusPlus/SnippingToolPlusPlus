@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 
 import com.shaneisrael.st.prefs.Preferences;
@@ -24,6 +25,14 @@ public class DBStats
     private static String key2 = "0";
     private static String rkid;
 
+    /**
+     * 
+     * @param uplink
+     * @param dellink
+     * 
+     *          Adds the upload link and delete link to the database under the users
+     *          keyset, or default if none is set.
+     */
     public static void addHistory(String uplink, String dellink)
     {
         /** If tracking not disabled **/
@@ -56,6 +65,46 @@ public class DBStats
             }
         }
 
+    }
+    
+    public static void addHistory(ArrayList<String> uploadList, ArrayList<String> deleteList)
+    {
+        /** If tracking not disabled **/
+        if (!Preferences.getInstance().isTrackingDisabled())
+        {
+            connect = DBConnection.getConnection();
+            try
+            {
+                
+                getKeySet();
+                
+                rkid = DBUniqueKey.getUniqueKeyID(key1, key2);
+                
+                statement = connect
+                    .prepareStatement("INSERT INTO upload_history "
+                        + "(rkid, upload_link, delete_link, timestamp)"
+                        + " VALUES (?, ?, ?, ?)");
+                
+                for(int i = 0; i < uploadList.size(); i++)
+                {
+    
+                    statement.setString(1, rkid);
+                    statement.setString(2, uploadList.get(i));
+                    statement.setString(3, deleteList.get(i));
+                    statement.setString(4, new SimpleDateFormat("MM-dd-yy HH:mm:ss").format(new Date()));
+                    statement.executeUpdate();
+                    
+                }
+                uploadList.clear();
+                deleteList.clear();
+                statement.close();
+                connect.close();
+            } catch (Exception e)
+            {
+                e.printStackTrace();
+            }
+        }
+        
     }
 
     private static void getKeySet()

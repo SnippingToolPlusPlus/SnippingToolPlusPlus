@@ -17,11 +17,14 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 
 import javax.imageio.ImageIO;
-import javax.swing.JOptionPane;
 
 import com.shaneisrael.st.prefs.Preferences;
+import com.shaneisrael.st.utilities.ProgressBarDialog;
 import com.shaneisrael.st.utilities.database.DBConnection;
 import com.shaneisrael.st.utilities.database.DBUniqueKey;
 
@@ -30,6 +33,7 @@ public class ImageViewerLinkBuilder
     private final ArrayList<ImageLinkPair> availableImages;
     private final ArrayList<File> cloudFiles;
     private final HashMap<File, ImgurLinks> imageData;
+    private ProgressBarDialog dialog = null;
 
     public ImageViewerLinkBuilder(boolean local)
     {
@@ -71,16 +75,16 @@ public class ImageViewerLinkBuilder
         }
         else
         {
-          loadCloudImageData();
-          loadImagesFromCloud();
+            loadCloudImageData();
+            loadImagesFromCloud();
         }
     }
 
     protected void loadImagesFromCloud()
     {
-        for(File imageFile : cloudFiles)
+        for (File imageFile : cloudFiles)
         {
-            if(imageData.containsKey(imageFile))
+            if (imageData.containsKey(imageFile))
             {
                 ImgurLinks linkData = imageData.get(imageFile);
                 availableImages.add(new ImageLinkPair(imageFile, linkData.imageLink, linkData.deleteLink));
@@ -121,11 +125,11 @@ public class ImageViewerLinkBuilder
         try
         {
             File tempDir = new File(Preferences.getInstance().getCaptureDirectoryRoot() + "/TempHistory");
-            if(!tempDir.exists())
+            if (!tempDir.exists())
                 tempDir.mkdirs();
-            
+
             tempDir.deleteOnExit();
-            
+
             PreparedStatement statement;
             Connection connect;
             ResultSet result;
@@ -134,34 +138,31 @@ public class ImageViewerLinkBuilder
             if (DBUniqueKey.validate(key1, key2))
             {
                 String id = DBUniqueKey.getUniqueKeyID(key1, key2);
-                
+
                 connect = DBConnection.getConnection();
                 statement = connect.prepareStatement(
                     "SELECT upload_link, delete_link, timestamp FROM upload_history WHERE rkid=?");
                 statement.setString(1, id);
-                
+
                 result = statement.executeQuery();
                 
-                URL url = null;
-                BufferedImage img = null;
+                int poolSize = 15;
+                ExecutorService pool = Executors.newFixedThreadPool(poolSize);
+
+                int size = 0;
                 while (result.next())
                 {
+                    size++;
+                    
                     String uplink = result.getString("upload_link");
                     String dellink = result.getString("delete_link");
-                    
-                    String[] split = uplink.split("/");
-                    url = new URL(uplink);
-                    img = ImageIO.read(url);
-                    File imageFile = new File(Preferences.getInstance().getCaptureDirectoryRoot() + "/TempHistory/"+split[3]);
-                    imageFile.deleteOnExit();
-                    
-                    ImageIO.write(img, "png", imageFile);
-                    
-                    cloudFiles.add(imageFile);
-                    imageData.put(imageFile,
-                        new ImgurLinks( uplink, dellink));
+                    pool.submit(new DownloadTask(uplink, dellink));
                 }
+                System.out.println(size);
+                dialog = new ProgressBarDialog("Downloading history...", size);
                 
+                pool.shutdown();
+                pool.awaitTermination(Long.MAX_VALUE, TimeUnit.MILLISECONDS);
                 result.close();
                 statement.close();
                 connect.close();
@@ -170,11 +171,7 @@ public class ImageViewerLinkBuilder
         } catch (SQLException e)
         {
             e.printStackTrace();
-        } catch (MalformedURLException e)
-        {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        } catch (IOException e)
+        } catch (InterruptedException e)
         {
             // TODO Auto-generated catch block
             e.printStackTrace();
@@ -237,5 +234,61 @@ public class ImageViewerLinkBuilder
             this.imageLink = imageLink;
             this.deleteLink = deleteLink;
         }
+    }
+
+    private class DownloadTask implements Runnable
+    {
+
+        private String uplink;
+        private final String dellink;
+
+        public DownloadTask(String uplink, String dellink)
+        {
+            this.uplink = uplink;
+            this.dellink = dellink;
+        }
+
+        @Override
+        public void run()
+        {
+            // surround with try-catch if downloadFile() throws something
+            downloadFile(uplink, dellink);
+        }
+
+        private void downloadFile(String uplink2, String dellink2)
+        {
+            BufferedImage img = null;
+            URL url = null;
+            String[] split = uplink.split("/");
+            try
+            {
+                url = new URL(uplink);
+                img = ImageIO.read(url);
+            } catch (IOException e)
+            {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
+            File imageFile = new File(Preferences.getInstance().getCaptureDirectoryRoot() + "/TempHistory/" + split[3]);
+            imageFile.deleteOnExit();
+
+            try
+            {
+                ImageIO.write(img, "png", imageFile);
+            } catch (IOException e)
+            {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
+
+            cloudFiles.add(imageFile);
+            imageData.put(imageFile,
+                new ImgurLinks(uplink, dellink));
+            
+            if(dialog != null)
+                dialog.updateProgress();
+
+        }
+
     }
 }

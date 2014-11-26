@@ -118,7 +118,7 @@ public class ImageViewer extends JFrame implements ListSelectionListener
                     });
                     t.start();
                     
-                    JOptionPane.showMessageDialog(null, "Downloading images... This may take a couple seconds.",
+                    JOptionPane.showMessageDialog(null, "Downloading Images... This may take a couple seconds.",
                         "Fetching Images..", JOptionPane.INFORMATION_MESSAGE);
                 }
                 else

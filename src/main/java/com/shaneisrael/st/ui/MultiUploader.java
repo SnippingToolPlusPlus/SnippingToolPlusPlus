@@ -9,6 +9,7 @@ import java.awt.dnd.DropTargetDropEvent;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.BorderFactory;
@@ -29,6 +30,7 @@ import com.shaneisrael.st.imgur.ImgurResponse;
 import com.shaneisrael.st.imgur.ImgurResponseListener;
 import com.shaneisrael.st.imgur.ImgurUploader;
 import com.shaneisrael.st.utilities.ClipboardUtilities;
+import com.shaneisrael.st.utilities.database.DBStats;
 
 public class MultiUploader extends JFrame implements ImgurResponseListener
 {
@@ -40,12 +42,15 @@ public class MultiUploader extends JFrame implements ImgurResponseListener
 
     private final JTextArea deletionBox;
     private final ImgurUploader uploader;
+    private final ArrayList<String> upList, delList;
     private int totalUploads = 0;
     private int currentUpload = 0;
 
     public MultiUploader()
     {
         uploader = new ImgurUploader();
+        upList = new ArrayList<String>();
+        delList = new ArrayList<String>();
         setTitle("Multi Image Uploader");
         setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
         setBounds(100, 100, 450, 450);
@@ -204,6 +209,7 @@ public class MultiUploader extends JFrame implements ImgurResponseListener
         if (currentUpload == totalUploads)
         {
             enableUploadButton();
+            DBStats.addHistory(upList, delList);
         }
     }
 
@@ -213,10 +219,13 @@ public class MultiUploader extends JFrame implements ImgurResponseListener
     }
 
     @Override
-    public void onImgurResponseSuccess(ImgurImage uploadedImage)
+    public void onImgurResponseSuccess(final ImgurImage uploadedImage)
     {
         addLink(uploadedImage.getLink());
         addDeletionLink(uploadedImage.getDeleteLink());
+        
+        upList.add(uploadedImage.getLink());
+        delList.add(uploadedImage.getDeleteLink());
     }
 
     @Override
