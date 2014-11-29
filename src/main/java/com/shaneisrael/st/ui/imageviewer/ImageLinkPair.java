@@ -54,6 +54,8 @@ public class ImageLinkPair
     @Override
     public String toString()
     {
-        return String.format("%s", getImageFile().getName());
+        if(getImageFile().getName() != null)
+            return String.format("%s", getImageFile().getName());
+        return "Error";
     }
 }

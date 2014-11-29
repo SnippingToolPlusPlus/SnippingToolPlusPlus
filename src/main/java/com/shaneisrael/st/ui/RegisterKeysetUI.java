@@ -39,6 +39,8 @@ public class RegisterKeysetUI extends JFrame
      */
     public RegisterKeysetUI()
     {
+        final JFrame frame = this;
+        
         setTitle("Register New Keyset");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setBounds(100, 100, 370, 179);
@@ -91,7 +93,7 @@ public class RegisterKeysetUI extends JFrame
                                 Preferences.getInstance().setUniqueKey1(textField.getText());
                                 Preferences.getInstance().setUniqueKey2(textField_1.getText());
     
-                                JOptionPane.showMessageDialog(null, "Keyset registered successfully!", "Success!",
+                                JOptionPane.showMessageDialog(frame, "Keyset registered successfully!", "Success!",
                                     JOptionPane.PLAIN_MESSAGE);
                                 
                                 if(Preferences.getInstance().isTrackingDisabled())

@@ -158,7 +158,6 @@ public class ImageViewerLinkBuilder
                     String dellink = result.getString("delete_link");
                     pool.submit(new DownloadTask(uplink, dellink));
                 }
-                System.out.println(size);
                 dialog = new ProgressBarDialog("Downloading history...", size);
                 
                 pool.shutdown();

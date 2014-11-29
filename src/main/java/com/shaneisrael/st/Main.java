@@ -40,6 +40,7 @@ import com.shaneisrael.st.ui.MultiUploader;
 import com.shaneisrael.st.ui.PreferencesUI;
 import com.shaneisrael.st.ui.imageviewer.ImageViewer;
 import com.shaneisrael.st.upload.SimpleFTPUploader;
+import com.shaneisrael.st.utilities.Browser;
 import com.shaneisrael.st.utilities.CaptureScreen;
 import com.shaneisrael.st.utilities.ClipboardUtilities;
 import com.shaneisrael.st.utilities.ImageUtilities;
@@ -330,6 +331,10 @@ public class Main extends JFrame implements ActionListener
         aboutItem.setIcon(new ImageIcon(this.getClass().getResource("/images/icons/about_icon.png")));
         aboutItem.addActionListener(this);
         aboutItem.setActionCommand("about");
+        JMenuItem donateItem = new JMenuItem("Donate...");
+        donateItem.setIcon(new ImageIcon(this.getClass().getResource("/images/icons/heart-icon.png")));
+        donateItem.addActionListener(this);
+        donateItem.setActionCommand("donate");
         uploadMenu.add(uSnippet);
         uploadMenu.add(uScreenshot);
         uploadMenu.add(uClipboardImg);
@@ -341,6 +346,7 @@ public class Main extends JFrame implements ActionListener
         utilitiesMenu.add(imageViewer);
 
         popup.add(aboutItem);
+        popup.add(donateItem);
         popup.add(prefMenu);
         popup.addSeparator();
         popup.add(utilitiesMenu);
@@ -469,7 +475,12 @@ public class Main extends JFrame implements ActionListener
                     e1.printStackTrace();
                 }
             }
-        } else if (command.equals("exit"))
+        }
+        else if(command.equals("donate"))
+        {
+            Browser.open(Config.DONATE_URL);
+        }
+        else if (command.equals("exit"))
         {
             JIntellitype.getInstance().cleanUp();
             System.exit(0);

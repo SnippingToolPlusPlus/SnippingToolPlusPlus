@@ -6,6 +6,7 @@ import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
+import java.io.File;
 import java.io.IOException;
 import java.util.Date;
 
@@ -26,6 +27,7 @@ import com.shaneisrael.st.Main;
 import com.shaneisrael.st.editor.Editor;
 import com.shaneisrael.st.notification.STNotificationType;
 import com.shaneisrael.st.overlay.Overlay;
+import com.shaneisrael.st.prefs.Preferences;
 import com.shaneisrael.st.utilities.Browser;
 import com.shaneisrael.st.utilities.ClipboardUtilities;
 import com.shaneisrael.st.utilities.database.DBUniqueKey;
@@ -109,6 +111,7 @@ public class ImageViewer extends JFrame implements ListSelectionListener
                     {
                         public void run()
                         {
+                            deleteHistoryDirectory();
                             buildCloudHistoryList();
                             if (imageList.getModel().getSize() > 0)
                             {
@@ -294,5 +297,11 @@ public class ImageViewer extends JFrame implements ListSelectionListener
     {
         Date lastModified = new Date(imageInformation.getImageFile().lastModified());
         dateLabel.setText(lastModified.toString());
+    }
+    public static void deleteHistoryDirectory()
+    {
+        File tempDir = new File(Preferences.getInstance().getCaptureDirectoryRoot() + "/TempHistory");
+        if (tempDir.exists())
+            tempDir.delete();
     }
 }
