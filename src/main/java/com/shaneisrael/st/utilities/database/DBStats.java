@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.Date;
 
 import com.shaneisrael.st.prefs.Preferences;
+import com.shaneisrael.st.utilities.version.Version;
 
 /**
  * This class contains static methods for sending usage statistics
@@ -46,15 +47,18 @@ public class DBStats
                 
                 rkid = DBUniqueKey.getUniqueKeyID(key1, key2);
                 
+                String version = Version.getCurrentRunningVersion().toString();
+                
                 statement = connect
                     .prepareStatement("INSERT INTO upload_history "
-                        + "(rkid, upload_link, delete_link, timestamp)"
-                        + " VALUES (?, ?, ?, ?)");
+                        + "(rkid, upload_link, delete_link, timestamp, version)"
+                        + " VALUES (?, ?, ?, ?, ?)");
 
                 statement.setString(1, rkid);
                 statement.setString(2, uplink);
                 statement.setString(3, dellink);
                 statement.setString(4, new SimpleDateFormat("MM-dd-yy HH:mm:ss").format(new Date()));
+                statement.setString(5, version);
                 statement.executeUpdate();
 
                 statement.close();

@@ -310,6 +310,7 @@ public class Overlay extends JPanel implements MouseListener, MouseMotionListene
             g2d.setColor(Color.BLACK);
             g2d.setStroke(new BasicStroke(2f));
             g2d.drawRect(zoomX, zoomY, zoomImage.getWidth(null), zoomImage.getHeight(null));
+           
             g2d.setColor(Color.red);
             g2d.setStroke(new BasicStroke(3f));
             g2d.drawLine(zoomX + (zoomWindowWidth / 2), zoomY + zoomCrosshairMargin, zoomX + (zoomWindowWidth / 2), zoomY + zoomWindowWidth
