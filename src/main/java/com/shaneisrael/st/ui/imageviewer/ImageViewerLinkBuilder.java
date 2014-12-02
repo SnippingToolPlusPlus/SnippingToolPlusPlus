@@ -43,6 +43,14 @@ public class ImageViewerLinkBuilder
         refresh(local);
     }
 
+    public boolean hasCloudFiles()
+    {
+        return !cloudFiles.isEmpty();
+    }
+    public ArrayList<File> getCloudFiles()
+    {
+        return cloudFiles;
+    }
     private File getLinkFile()
     {
         File linkFile = new File(
@@ -158,7 +166,7 @@ public class ImageViewerLinkBuilder
                     String dellink = result.getString("delete_link");
                     pool.submit(new DownloadTask(uplink, dellink));
                 }
-                dialog = new ProgressBarDialog("Downloading history...", size);
+                dialog = ProgressBarDialog.createNewInstance("Downloading history...", size);
                 
                 pool.shutdown();
                 pool.awaitTermination(Long.MAX_VALUE, TimeUnit.MILLISECONDS);
@@ -279,7 +287,6 @@ public class ImageViewerLinkBuilder
                 // TODO Auto-generated catch block
                 e.printStackTrace();
             }
-
             cloudFiles.add(imageFile);
             imageData.put(imageFile,
                 new ImgurLinks(uplink, dellink));

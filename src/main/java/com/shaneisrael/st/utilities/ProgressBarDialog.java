@@ -1,6 +1,7 @@
 package com.shaneisrael.st.utilities;
 
 import java.awt.BorderLayout;
+import java.awt.Window;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -14,19 +15,39 @@ public class ProgressBarDialog extends JFrame
 
     private JPanel contentPane;
     private JProgressBar progressBar;
-    private int current;
+    private int current = 0;
     private int max;
     private String title;
+    
+    private static ProgressBarDialog dialog;
 
     public ProgressBarDialog(String title, int max)
     {
-        current = 0;
         this.max = max;
         this.title = title;
         
+        System.out.println("Max: "+max +" Title: "+title);
+        
         initialize();
     }
-
+    public ProgressBarDialog()
+    {
+    }
+    
+    public void setMax(int max)
+    {
+        this.max = max;
+    }
+    public void setTitleString(String title)
+    {
+        this.title = title;
+    }
+    
+    public void reconfigure()
+    {
+        initialize();
+    }
+    
     private void initialize()
     {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -64,6 +85,26 @@ public class ProgressBarDialog extends JFrame
         progressBar.setString(progressBar.getValue() + " / " + progressBar.getMaximum());
         if(progressBar.getValue() == progressBar.getMaximum())
             this.dispose();
+    }
+
+    public static ProgressBarDialog createNewInstance(String t, int max)
+    {
+        dialog = new ProgressBarDialog(t, max);
+        
+        return dialog;
+    }
+    public static ProgressBarDialog getInstance()
+    {
+        if(dialog == null)
+            dialog = new ProgressBarDialog();
+        
+        return dialog;
+    }
+    public static boolean hasInstance()
+    {
+        if(dialog == null)
+            return false;
+        return true;
     }
 
 }

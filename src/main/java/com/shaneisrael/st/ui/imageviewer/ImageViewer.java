@@ -5,9 +5,12 @@ import java.awt.Image;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Date;
 
 import javax.swing.ButtonGroup;
@@ -30,6 +33,7 @@ import com.shaneisrael.st.overlay.Overlay;
 import com.shaneisrael.st.prefs.Preferences;
 import com.shaneisrael.st.utilities.Browser;
 import com.shaneisrael.st.utilities.ClipboardUtilities;
+import com.shaneisrael.st.utilities.ProgressBarDialog;
 import com.shaneisrael.st.utilities.database.DBUniqueKey;
 
 public class ImageViewer extends JFrame implements ListSelectionListener
@@ -53,6 +57,13 @@ public class ImageViewer extends JFrame implements ListSelectionListener
 
     private void initialize()
     {
+        this.addWindowListener(new WindowAdapter() {
+
+            public void windowClosing(WindowEvent evt) {
+                disposeCloudData();
+
+            }
+        });
         setSize(740, 508);
         setLocationRelativeTo(null);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -113,6 +124,13 @@ public class ImageViewer extends JFrame implements ListSelectionListener
                         {
                             deleteHistoryDirectory();
                             buildCloudHistoryList();
+                            
+                            if(ProgressBarDialog.hasInstance())
+                            {
+                                System.out.println("Has instance");
+                                ProgressBarDialog.getInstance().dispose();
+                            }
+                            
                             if (imageList.getModel().getSize() > 0)
                             {
                                 imageList.setSelectedIndex(0);
@@ -142,6 +160,21 @@ public class ImageViewer extends JFrame implements ListSelectionListener
         rdbtnLocal.setSelected(true);
     }
 
+    protected void disposeCloudData()
+    {
+        if(linkBuilder != null)
+        {
+            if(linkBuilder.hasCloudFiles())
+            {
+                ArrayList<File> files = linkBuilder.getCloudFiles();
+                for(File file : files)
+                {
+                    file.delete();
+                }
+                files.clear();
+            }
+        }
+    }
     protected void buildCloudHistoryList()
     {
         linkBuilder = new ImageViewerLinkBuilder(false);
