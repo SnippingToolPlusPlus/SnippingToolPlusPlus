@@ -42,7 +42,9 @@ public class DBRegisterKey
             
             /*If we get a row back, then we know the key already exists.*/
             if(resultSet.next())
+            {
                 keyExists = true;
+            }
             else
             {
                 keyExists = false;

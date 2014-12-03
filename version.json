@@ -1,9 +1,9 @@
 {
-    "version_name": ":)",
+    "version_name": "New Magnifying Glass Feature!",
     "major": "6",
-    "minor": "1",
-    "patch": "2",
-    "download": "http://snippingtoolpluspl.us/downloads/SnippingToolPlusPlus-6.1.2.zip",
+    "minor": "2",
+    "patch": "0",
+    "download": "http://snippingtoolpluspl.us/downloads/SnippingToolPlusPlus-6.2.0.zip",
     "reset_prefs": "true",
     "changes": {
         "added": [

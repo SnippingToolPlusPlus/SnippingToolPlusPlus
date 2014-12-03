@@ -106,7 +106,7 @@ public class PreferencesUI
         frmPreferences.setIconImage(Toolkit.getDefaultToolkit().getImage(
             PreferencesUI.class.getResource("/images/icons/pref.png")));
         frmPreferences.setTitle("Preferences");
-        frmPreferences.setBounds(100, 100, 372, 332);
+        frmPreferences.setBounds(100, 100, 372, 330);
         frmPreferences.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
         frmPreferences.getContentPane().setLayout(
             new MigLayout("", "[430.00px]", "[244.00px,grow,baseline][20.00,grow]"));
@@ -520,8 +520,7 @@ public class PreferencesUI
 
         JPanel panel_1 = new JPanel();
         // tab3.add(panel_1, BorderLayout.CENTER);
-        panel_1.setLayout(new MigLayout("", "[189.00,grow,leading][39.00,grow]",
-            "[][][][][][][][][][][][][17.00][19.00][][][][][]"));
+        panel_1.setLayout(new MigLayout("", "[189.00,grow,leading][39.00,grow]", "[][][][][][][][15.00][][][][][][17.00][19.00][][][][][]"));
 
         JLabel lblEditor = new JLabel("Editor");
         lblEditor.setFont(new Font("Tahoma", Font.BOLD, 18));
@@ -560,93 +559,101 @@ public class PreferencesUI
 
         JSeparator separator_4 = new JSeparator();
         panel_1.add(separator_4, "cell 0 6 2 1,grow");
+        
+        JLabel lblMasterUploadsave = new JLabel("Master Upload/Save");
+        lblMasterUploadsave.setFont(new Font("Tahoma", Font.BOLD, 14));
+        panel_1.add(lblMasterUploadsave, "cell 0 7");
+        
+        JLabel lblPrintScreen = new JLabel("PRINT SCREEN");
+        lblPrintScreen.setFont(new Font("Tahoma", Font.BOLD, 12));
+        panel_1.add(lblPrintScreen, "cell 1 7");
 
         JLabel lblUploadSnippet = new JLabel("Upload Snippet");
         lblUploadSnippet.setFont(new Font("Tahoma", Font.PLAIN, 13));
-        panel_1.add(lblUploadSnippet, "cell 0 7");
+        panel_1.add(lblUploadSnippet, "cell 0 8");
 
         JLabel lblCtrlShift = new JLabel("CTRL + SHIFT + 1");
         lblCtrlShift.setFont(new Font("Tahoma", Font.BOLD, 11));
-        panel_1.add(lblCtrlShift, "cell 1 7");
+        panel_1.add(lblCtrlShift, "cell 1 8");
 
         JLabel lblUploadScreenshot = new JLabel("Upload Screenshot");
         lblUploadScreenshot.setFont(new Font("Tahoma", Font.PLAIN, 13));
-        panel_1.add(lblUploadScreenshot, "cell 0 8");
+        panel_1.add(lblUploadScreenshot, "cell 0 9");
 
         JLabel lblCtrlShift_1 = new JLabel("CTRL + SHIFT + 2");
         lblCtrlShift_1.setFont(new Font("Tahoma", Font.BOLD, 11));
-        panel_1.add(lblCtrlShift_1, "cell 1 8");
+        panel_1.add(lblCtrlShift_1, "cell 1 9");
 
         JLabel lblUploadClipboard = new JLabel("Upload Clipboard Img");
         lblUploadClipboard.setFont(new Font("Tahoma", Font.PLAIN, 13));
-        panel_1.add(lblUploadClipboard, "cell 0 9");
+        panel_1.add(lblUploadClipboard, "cell 0 10");
 
         JLabel lblCtrlShift_2 = new JLabel("CTRL + SHIFT + X");
         lblCtrlShift_2.setFont(new Font("Tahoma", Font.BOLD, 11));
-        panel_1.add(lblCtrlShift_2, "cell 1 9");
+        panel_1.add(lblCtrlShift_2, "cell 1 10");
 
         JLabel lblSaveSnippet = new JLabel("Save Snippet");
         lblSaveSnippet.setFont(new Font("Tahoma", Font.PLAIN, 13));
-        panel_1.add(lblSaveSnippet, "cell 0 10");
+        panel_1.add(lblSaveSnippet, "cell 0 11");
 
         JLabel lblCtrlShift_3 = new JLabel("CTRL + SHIFT + 3");
         lblCtrlShift_3.setFont(new Font("Tahoma", Font.BOLD, 11));
-        panel_1.add(lblCtrlShift_3, "cell 1 10");
+        panel_1.add(lblCtrlShift_3, "cell 1 11");
 
         JLabel lblSaveScreenshot = new JLabel("Save Screenshot");
         lblSaveScreenshot.setFont(new Font("Tahoma", Font.PLAIN, 13));
-        panel_1.add(lblSaveScreenshot, "cell 0 11");
+        panel_1.add(lblSaveScreenshot, "cell 0 12");
 
         JLabel lblCtrlshift = new JLabel("CTRL +SHIFT + 4");
         lblCtrlshift.setFont(new Font("Tahoma", Font.BOLD, 11));
-        panel_1.add(lblCtrlshift, "cell 1 11");
+        panel_1.add(lblCtrlshift, "cell 1 12");
 
         JScrollPane scrollPane = new JScrollPane(panel_1);
 
         JLabel lblFtpUploadSnippet = new JLabel("FTP Upload Snippet");
-        panel_1.add(lblFtpUploadSnippet, "cell 0 12");
+        panel_1.add(lblFtpUploadSnippet, "cell 0 13");
 
         JLabel lblAltshift = new JLabel("ALT +SHIFT + 1");
         lblAltshift.setFont(new Font("Tahoma", Font.BOLD, 11));
-        panel_1.add(lblAltshift, "cell 1 12");
+        panel_1.add(lblAltshift, "cell 1 13");
 
         JLabel lblFtpUploadScreenshot = new JLabel("FTP Upload Screenshot");
-        panel_1.add(lblFtpUploadScreenshot, "cell 0 13");
+        panel_1.add(lblFtpUploadScreenshot, "cell 0 14");
 
         JLabel lblAltshift_1 = new JLabel("ALT +SHIFT + 2");
         lblAltshift_1.setFont(new Font("Tahoma", Font.BOLD, 11));
-        panel_1.add(lblAltshift_1, "cell 1 13");
+        panel_1.add(lblAltshift_1, "cell 1 14");
 
         JLabel lblOverlayControls = new JLabel("Overlay");
         lblOverlayControls.setFont(new Font("Tahoma", Font.BOLD, 18));
-        panel_1.add(lblOverlayControls, "cell 0 14");
+        panel_1.add(lblOverlayControls, "cell 0 15");
 
         JSeparator separator_2 = new JSeparator();
-        panel_1.add(separator_2, "cell 0 15 2 1,growx");
+        panel_1.add(separator_2, "cell 0 16 2 1,growx");
 
         JLabel lblIncreaseTransparency = new JLabel("Inc. Transparency");
         lblIncreaseTransparency.setFont(new Font("Tahoma", Font.PLAIN, 13));
-        panel_1.add(lblIncreaseTransparency, "cell 0 16");
+        panel_1.add(lblIncreaseTransparency, "cell 0 17");
 
         JLabel lblMousewheelUp = new JLabel("WHEEL DOWN");
         lblMousewheelUp.setFont(new Font("Tahoma", Font.BOLD, 13));
-        panel_1.add(lblMousewheelUp, "cell 1 16");
+        panel_1.add(lblMousewheelUp, "cell 1 17");
 
         JLabel lblDecreaseTransparency = new JLabel("Dec. Transparency");
         lblDecreaseTransparency.setFont(new Font("Tahoma", Font.PLAIN, 13));
-        panel_1.add(lblDecreaseTransparency, "cell 0 17");
+        panel_1.add(lblDecreaseTransparency, "cell 0 18");
 
         JLabel lblWheelUp = new JLabel("WHEEL UP");
         lblWheelUp.setFont(new Font("Tahoma", Font.BOLD, 13));
-        panel_1.add(lblWheelUp, "cell 1 17");
+        panel_1.add(lblWheelUp, "cell 1 18");
 
         JLabel lblUpdateOverlay = new JLabel("Update Overlay");
         lblUpdateOverlay.setFont(new Font("Tahoma", Font.PLAIN, 13));
-        panel_1.add(lblUpdateOverlay, "cell 0 18");
+        panel_1.add(lblUpdateOverlay, "cell 0 19");
 
         JLabel lblMiddleClick = new JLabel("MIDDLE CLICK");
         lblMiddleClick.setFont(new Font("Tahoma", Font.BOLD, 13));
-        panel_1.add(lblMiddleClick, "cell 1 18");
+        panel_1.add(lblMiddleClick, "cell 1 19");
         scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
         scrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
         scrollPane.getVerticalScrollBar().setUnitIncrement(8);

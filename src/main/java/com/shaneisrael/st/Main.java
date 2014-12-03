@@ -46,8 +46,6 @@ import com.shaneisrael.st.utilities.ClipboardUtilities;
 import com.shaneisrael.st.utilities.ImageUtilities;
 import com.shaneisrael.st.utilities.Save;
 import com.shaneisrael.st.utilities.Upload;
-import com.shaneisrael.st.utilities.database.DBConnection;
-import com.shaneisrael.st.utilities.database.DBRegisterKey;
 import com.shaneisrael.st.utilities.version.UpdateChecker;
 import com.shaneisrael.st.utilities.version.Version;
 
@@ -193,7 +191,7 @@ public class Main extends JFrame implements ActionListener, JIntellitypeConstant
             @Override
             public void onHotKey(int identifier)
             {
-                if(identifier == 0)
+                if(identifier == 0) //PRINT SCREEN
                 {
                     uSnippet.doClick();
                 }
