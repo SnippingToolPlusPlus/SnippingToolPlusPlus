@@ -367,9 +367,9 @@ public class PreferencesUI
                     + "is a great way to check that you entered your Keyset correctly.\n\n"
                     + "<html><b>[Register a Keyset]</b></html>\n"
                     + "If you don't already have a Keyset, you will need to register a\n"
-                    + "new Keyset if you want access to your person upload stats and\n"
-                    + "or other features that may require it."
-                    + "</html>", "What are Keysets??"
+                    + "new Keyset if you want access to your personal upload stats and\n"
+                    + "/or any other features that may require it."
+                    , "What are Keysets?"
                     ,
                     JOptionPane.INFORMATION_MESSAGE);
             }
