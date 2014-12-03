@@ -51,7 +51,7 @@ import com.shaneisrael.st.utilities.database.DBRegisterKey;
 import com.shaneisrael.st.utilities.version.UpdateChecker;
 import com.shaneisrael.st.utilities.version.Version;
 
-public class Main extends JFrame implements ActionListener
+public class Main extends JFrame implements ActionListener, JIntellitypeConstants
 {
     public static boolean debugging = false;
     public static JXTrayIcon trayIcon;
@@ -173,6 +173,7 @@ public class Main extends JFrame implements ActionListener
         }
         if (keyhook != null)
         {
+            keyhook.registerHotKey(0, 0, 44); //PRINT_SCREEN
             keyhook.registerHotKey(1, JIntellitypeConstants.MOD_CONTROL + JIntellitypeConstants.MOD_SHIFT, '1');
             keyhook.registerHotKey(2, JIntellitypeConstants.MOD_CONTROL + JIntellitypeConstants.MOD_SHIFT, '2');
             keyhook.registerHotKey(3, JIntellitypeConstants.MOD_CONTROL + JIntellitypeConstants.MOD_SHIFT, '3');
@@ -192,6 +193,10 @@ public class Main extends JFrame implements ActionListener
             @Override
             public void onHotKey(int identifier)
             {
+                if(identifier == 0)
+                {
+                    uSnippet.doClick();
+                }
                 if (identifier == 1) // CTRL + SHIFT + 1
                 {
                     uSnippet.doClick();
