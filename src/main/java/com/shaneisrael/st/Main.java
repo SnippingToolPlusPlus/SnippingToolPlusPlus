@@ -84,7 +84,7 @@ public class Main extends JFrame implements ActionListener, JIntellitypeConstant
         {
             System.out.println("SnippingTool++ was not designed to take screenshots of terminals.");
             System.out.println("Feel free to implement the feature and submit a patch though!");
-            System.out.println("Source: https://github.com/ShaneIsrael/Snipping-Tool-Plus-Plus");
+            System.out.println("Source: https://github.com/SnippingToolPlusPlus/SnippingToolPlusPlus");
         }
     }
 
