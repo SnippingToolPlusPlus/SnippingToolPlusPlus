@@ -87,15 +87,15 @@ public class Upload implements ImgurResponseListener
         {
             ClipboardUtilities.setClipboard(uploadedImage.getLink());
             Main.showNotification("upload-done", STNotificationType.SUCCESS);
-            DBStats.addHistory(uploadedImage.getLink(), uploadedImage.getDeleteLink());
         } else
         {
             Browser.openToReddit(uploadedImage.getLink());
             Main.showNotification("upload-done-reddit", STNotificationType.SUCCESS);
         }
-
         SoundNotifications.playDing();
         doAfterUpload();
+        
+        DBStats.addHistory(uploadedImage.getLink(), uploadedImage.getDeleteLink());
     }
 
     @Override
