@@ -17,12 +17,13 @@ public class OverlayFrame extends JFrame
     private static final long serialVersionUID = 4640312842620083014L;
     public static boolean IsActive = false;
     private Overlay overlayPanel;
+    private OverlayFrame instance;
 
     public OverlayFrame()
     {
         IsActive = true; // the overlay is currently opened.
-
-        setUndecorated(true);
+        instance = this;
+        instance.setUndecorated(true);
         if (OperatingSystem.isWindows())
         {
             getRootPane().setWindowDecorationStyle(JRootPane.NONE);
@@ -31,12 +32,11 @@ public class OverlayFrame extends JFrame
         {
             this.setBounds(getScreenSize());
         }
-
-        overlayPanel = new Overlay(this);
-        this.add(overlayPanel);
-        this.setOpacity(1f);
-        this.setVisible(true);
-        this.addWindowListener(new WindowListener()
+        overlayPanel = new Overlay(instance);
+        instance.add(overlayPanel);
+        instance.setOpacity(1f);
+        instance.setVisible(true);
+        instance.addWindowListener(new WindowListener()
         {
 
             @Override
@@ -69,6 +69,9 @@ public class OverlayFrame extends JFrame
             public void windowClosed(WindowEvent arg0)
             {
                 IsActive = false;
+                overlayPanel.removeAll();
+                instance.removeAll();
+                instance.dispose();
                 System.gc();
             }
 
@@ -100,5 +103,14 @@ public class OverlayFrame extends JFrame
     public void setMode(int mode)
     {
         overlayPanel.setMode(mode);
+    }
+    public void disposeAll()
+    {
+        IsActive = false;
+        overlayPanel.removeAll();
+        overlayPanel.dispose();
+        instance.removeAll();
+        instance.dispose();
+        System.gc();
     }
 }

@@ -71,6 +71,8 @@ public class Overlay extends JPanel implements MouseListener, MouseMotionListene
     private BufferedImage screenshot;
     private BufferedImage background; //this is a slightly larger image than the screenshot used for the Zoom window
     private Image zoomImage; //Since scaling has to be an Image
+    
+    private Graphics2D g2d;
 
     /* Zoom Rects Values */
     private boolean zoomEnabled = true;
@@ -130,7 +132,7 @@ public class Overlay extends JPanel implements MouseListener, MouseMotionListene
                     }
 
                 }
-                parent.dispose(); // remove the overlay
+                parent.disposeAll(); // remove the overlay
             }
         };
         Action escape = new AbstractAction()
@@ -139,7 +141,7 @@ public class Overlay extends JPanel implements MouseListener, MouseMotionListene
             public void actionPerformed(ActionEvent e)
             {
                 // setOverlayVisible(false); //remove the overlay
-                parent.dispose();
+                parent.disposeAll();
             }
         };
         this.getInputMap().put(KeyStroke.getKeyStroke("ENTER"), "submit");
@@ -160,18 +162,25 @@ public class Overlay extends JPanel implements MouseListener, MouseMotionListene
         endPointList.clear();
         capture = new CaptureScreen();
         bounds = new ScreenBounds();
-        screenshot = capture.getScreenCapture();
-        background = new BufferedImage(screenshot.getWidth() + (screenOffset*2), screenshot.getHeight() + (screenOffset*2), BufferedImage.TYPE_INT_RGB);
-        Graphics2D g2d = background.createGraphics();
-        g2d.setColor(Color.BLACK);
-        g2d.fill(new Rectangle(background.getWidth(), background.getHeight()));
-        g2d.drawImage(screenshot, screenOffset/2, screenOffset/2, null);
-        g2d.dispose();
-        
-        screenshot = background;
+        screenshot = getScreenShot();
         
         screenRectangle = bounds.getBounds();
         // setMouseCursor();
+    }
+    
+    public BufferedImage getScreenShot()
+    {
+        BufferedImage screenCap = capture.getScreenCapture();
+        background = new BufferedImage(screenCap.getWidth() + (screenOffset*2), screenCap.getHeight() + (screenOffset*2), BufferedImage.TYPE_INT_RGB);
+        Graphics2D g2d = background.createGraphics();
+        g2d.setColor(Color.BLACK);
+        g2d.fill(new Rectangle(background.getWidth(), background.getHeight()));
+        g2d.drawImage(screenCap, screenOffset/2, screenOffset/2, null);
+        g2d.dispose();
+        
+        screenCap = background;
+        
+        return screenCap;
     }
 
     private void setMouseCursor()
@@ -187,7 +196,7 @@ public class Overlay extends JPanel implements MouseListener, MouseMotionListene
     public void paintComponent(Graphics g)
     {
         super.paintComponent(g);
-        Graphics2D g2d = (Graphics2D) g;
+        g2d = (Graphics2D) g;
 
         g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
         g2d.setStroke(new BasicStroke(1.35f));
@@ -405,7 +414,7 @@ public class Overlay extends JPanel implements MouseListener, MouseMotionListene
             SoundNotifications.playShutter();
             float op = parent.getOpacity();
             parent.setOpacity(0f);
-            screenshot = capture.getScreenCapture();
+            screenshot = getScreenShot();
             parent.setOpacity(op);
             parent.repaint();
         }
@@ -482,5 +491,13 @@ public class Overlay extends JPanel implements MouseListener, MouseMotionListene
             }
         }
 
+    }
+    public void dispose()
+    {
+        screenshot = null;
+        selectionImage = null;
+        background = null;
+        zoomImage = null;
+        g2d.dispose();
     }
 }
