@@ -54,14 +54,17 @@ public class ImageViewer extends JFrame implements ListSelectionListener
         initialize();
         setupUI();
     }
-
+    public void disposeAll()
+    {
+        disposeCloudData();
+        System.gc();
+    }
     private void initialize()
     {
         this.addWindowListener(new WindowAdapter() {
 
             public void windowClosing(WindowEvent evt) {
-                disposeCloudData();
-
+                disposeAll();
             }
         });
         setSize(740, 508);
@@ -172,6 +175,7 @@ public class ImageViewer extends JFrame implements ListSelectionListener
                     file.delete();
                 }
                 files.clear();
+                linkBuilder.getCloudFiles().clear();
             }
         }
     }

@@ -30,6 +30,7 @@ public class ViewerPanel extends JPanel
             e.printStackTrace();
         }
         repaint();
+        g2d.dispose();
     }
 
     public void setImage(BufferedImage image)
