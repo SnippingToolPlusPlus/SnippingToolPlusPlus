@@ -129,6 +129,7 @@ public class EditorPanel extends JPanel implements MouseMotionListener, MouseLis
         if (tool.equals("text") && textPoint != null)
             draw();
         this.repaint();
+        g2d.dispose();
     }
 
     private void drawEditingLayer(Graphics2D g2d)
@@ -512,5 +513,15 @@ public class EditorPanel extends JPanel implements MouseMotionListener, MouseLis
     public void copyImageToClipboard()
     {
         ClipboardUtilities.setClipboardImage(getImage());
+    }
+    public void disposeAll()
+    {
+        image = null;
+        editingLayer = null;
+        
+        editG2D.dispose();
+        layerG2D.dispose();
+        textLayerG2D.dispose();
+        addG2D.dispose();
     }
 }

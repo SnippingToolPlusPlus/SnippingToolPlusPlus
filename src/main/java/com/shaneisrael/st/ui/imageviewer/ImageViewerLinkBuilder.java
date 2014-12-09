@@ -47,10 +47,12 @@ public class ImageViewerLinkBuilder
     {
         return !cloudFiles.isEmpty();
     }
+
     public ArrayList<File> getCloudFiles()
     {
         return cloudFiles;
     }
+
     private File getLinkFile()
     {
         File linkFile = new File(
@@ -153,7 +155,7 @@ public class ImageViewerLinkBuilder
                 statement.setString(1, id);
 
                 result = statement.executeQuery();
-                
+
                 int poolSize = 15;
                 ExecutorService pool = Executors.newFixedThreadPool(poolSize);
 
@@ -161,13 +163,13 @@ public class ImageViewerLinkBuilder
                 while (result.next())
                 {
                     size++;
-                    
+
                     String uplink = result.getString("upload_link");
                     String dellink = result.getString("delete_link");
                     pool.submit(new DownloadTask(uplink, dellink));
                 }
                 dialog = ProgressBarDialog.createNewInstance("Downloading history...", size);
-                
+
                 pool.shutdown();
                 pool.awaitTermination(Long.MAX_VALUE, TimeUnit.MILLISECONDS);
                 result.close();
@@ -290,8 +292,8 @@ public class ImageViewerLinkBuilder
             cloudFiles.add(imageFile);
             imageData.put(imageFile,
                 new ImgurLinks(uplink, dellink));
-            
-            if(dialog != null)
+
+            if (dialog != null)
                 dialog.updateProgress();
 
         }

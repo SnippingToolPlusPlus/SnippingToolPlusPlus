@@ -1,6 +1,7 @@
 package com.shaneisrael.st.ui;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Desktop;
 import java.awt.Font;
 import java.awt.Toolkit;
@@ -38,6 +39,8 @@ import net.miginfocom.swing.MigLayout;
 import com.shaneisrael.st.data.Locations;
 import com.shaneisrael.st.prefs.Preferences;
 import com.shaneisrael.st.utilities.database.DBUniqueKey;
+
+import javax.swing.JTextPane;
 
 /**
  * 
@@ -103,13 +106,14 @@ public class PreferencesUI
     private void initialize()
     {
         frmPreferences = new JFrame();
+        frmPreferences.getContentPane().setEnabled(false);
         frmPreferences.setIconImage(Toolkit.getDefaultToolkit().getImage(
             PreferencesUI.class.getResource("/images/icons/pref.png")));
         frmPreferences.setTitle("Preferences");
-        frmPreferences.setBounds(100, 100, 372, 330);
+        frmPreferences.setBounds(100, 100, 372, 360);
         frmPreferences.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
         frmPreferences.getContentPane().setLayout(
-            new MigLayout("", "[430.00px]", "[244.00px,grow,baseline][20.00,grow]"));
+            new MigLayout("", "[430.00px]", "[244.00px,grow,baseline][][20.00,grow]"));
 
         JTabbedPane tabbedPane = new JTabbedPane(JTabbedPane.TOP);
         frmPreferences.getContentPane().add(tabbedPane, "cell 0 0,grow");
@@ -520,7 +524,7 @@ public class PreferencesUI
 
         JPanel panel_1 = new JPanel();
         // tab3.add(panel_1, BorderLayout.CENTER);
-        panel_1.setLayout(new MigLayout("", "[189.00,grow,leading][39.00,grow]", "[][][][][][][][15.00][][][][][][17.00][19.00][][][][][]"));
+        panel_1.setLayout(new MigLayout("", "[189.00,grow,leading][39.00,grow]", "[][][][][][][][15.00][][][][][][17.00][19.00][][][][][][][]"));
 
         JLabel lblEditor = new JLabel("Editor");
         lblEditor.setFont(new Font("Tahoma", Font.BOLD, 18));
@@ -630,22 +634,32 @@ public class PreferencesUI
 
         JSeparator separator_2 = new JSeparator();
         panel_1.add(separator_2, "cell 0 16 2 1,growx");
+        
+        JLabel lblZoomMagnifierInout = new JLabel("Zoom Magnifier In/Out");
+        lblZoomMagnifierInout.setFont(new Font("Tahoma", Font.PLAIN, 13));
+        panel_1.add(lblZoomMagnifierInout, "cell 0 17");
+        
+        JLabel lblMouseWheel = new JLabel("MOUSE WHEEL");
+        lblMouseWheel.setFont(new Font("Tahoma", Font.BOLD, 13));
+        panel_1.add(lblMouseWheel, "cell 1 17");
 
-        JLabel lblIncreaseTransparency = new JLabel("Inc. Transparency");
+        JLabel lblIncreaseTransparency = new JLabel("Change Overlay Transparency");
         lblIncreaseTransparency.setFont(new Font("Tahoma", Font.PLAIN, 13));
-        panel_1.add(lblIncreaseTransparency, "cell 0 17");
+        panel_1.add(lblIncreaseTransparency, "cell 0 18");
 
-        JLabel lblMousewheelUp = new JLabel("WHEEL DOWN");
+        JLabel lblMousewheelUp = new JLabel("MOUSE WHEEL");
         lblMousewheelUp.setFont(new Font("Tahoma", Font.BOLD, 13));
-        panel_1.add(lblMousewheelUp, "cell 1 17");
-
-        JLabel lblDecreaseTransparency = new JLabel("Dec. Transparency");
-        lblDecreaseTransparency.setFont(new Font("Tahoma", Font.PLAIN, 13));
-        panel_1.add(lblDecreaseTransparency, "cell 0 18");
-
-        JLabel lblWheelUp = new JLabel("WHEEL UP");
-        lblWheelUp.setFont(new Font("Tahoma", Font.BOLD, 13));
-        panel_1.add(lblWheelUp, "cell 1 18");
+        panel_1.add(lblMousewheelUp, "cell 1 18");
+        
+        JSeparator separator_6 = new JSeparator();
+        panel_1.add(separator_6, "cell 0 20 2 1,grow");
+        
+        JTextPane txtpnNote = new JTextPane();
+        txtpnNote.setFont(new Font("Tahoma", Font.PLAIN, 13));
+        txtpnNote.setBackground(new Color(240,240,240));
+        txtpnNote.setEditable(false);
+        txtpnNote.setText("* Note - To change overlay transparency, you must first hide the Magnifying Glass with [Right Click].");
+        panel_1.add(txtpnNote, "cell 0 21,growx");
 
         JLabel lblUpdateOverlay = new JLabel("Update Overlay");
         lblUpdateOverlay.setFont(new Font("Tahoma", Font.PLAIN, 13));
@@ -685,7 +699,7 @@ public class PreferencesUI
                 frmPreferences.dispose();
             }
         });
-        frmPreferences.getContentPane().add(btnApply, "cell 0 1,alignx right");
+        frmPreferences.getContentPane().add(btnApply, "cell 0 2,alignx right");
         frmPreferences.setLocationRelativeTo(null);
         frmPreferences.setVisible(true);
 
