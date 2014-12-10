@@ -217,9 +217,8 @@ public class Overlay extends JPanel implements MouseListener, MouseMotionListene
         }
         
         if(zoomEnabled)
-            drawZoomRect(g2d);
-        
-        this.repaint();
+            drawMagnifyingGlass(g2d);
+       
     }
 
     private void drawInfo(Graphics2D g2d)
@@ -303,7 +302,7 @@ public class Overlay extends JPanel implements MouseListener, MouseMotionListene
         }
     }
 
-    private void drawZoomRect(Graphics2D g2d)
+    private void drawMagnifyingGlass(Graphics2D g2d)
     {
         Rectangle zoom = getZoomRectangle();
         
