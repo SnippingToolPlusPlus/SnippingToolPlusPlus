@@ -1286,6 +1286,8 @@ public class PreferencesUI
           return "SCROLL_LOCK";
         case KeyEvent.VK_PAUSE:
           return "PAUSE";
+        case KeyEvent.VK_ENTER:
+            return "NONE";
 //        case KeyEvent.VK_BREAK:
 //          return "BREAK";
         case KeyEvent.VK_PRINTSCREEN:
