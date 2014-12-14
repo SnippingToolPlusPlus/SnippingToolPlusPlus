@@ -53,10 +53,10 @@ public final class PreferenceData
     @SerializedName("hotkey_codes")
     public int hotkeyCodes[] = {49, 50, 51, 52, 88, 49, 50}; //1, 2, 3, 4, X, 1, 2
     
-    @SerializedName("hotkey_Modsifier_1")
+    @SerializedName("hotkey_modifier_1")
     public int hotkeyModss1[] = {2, 2, 2, 2, 2, 1, 1}; //CTRL, CTRL, CTRL, CTRL, CTRL, ALT, ALT
     
-    @SerializedName("hotkey_Modsifier_2")
+    @SerializedName("hotkey_modifier_2")
     public int hotkeyModss2[] = {4, 4, 4, 4, 4, 4, 4}; //SHIFT
     
     
