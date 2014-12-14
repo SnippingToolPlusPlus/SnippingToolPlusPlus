@@ -7,9 +7,10 @@ import java.awt.Font;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
@@ -21,10 +22,10 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
 
-import javafx.scene.input.KeyCode;
-
+import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
+import javax.swing.JComboBox;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -36,6 +37,7 @@ import javax.swing.JSeparator;
 import javax.swing.JSlider;
 import javax.swing.JTabbedPane;
 import javax.swing.JTextField;
+import javax.swing.JTextPane;
 import javax.swing.ScrollPaneConstants;
 import javax.swing.SwingConstants;
 import javax.swing.WindowConstants;
@@ -43,17 +45,10 @@ import javax.swing.WindowConstants;
 import net.miginfocom.swing.MigLayout;
 
 import com.melloware.jintellitype.JIntellitype;
-import com.melloware.jintellitype.JIntellitypeConstants;
 import com.melloware.jintellitype.JIntellitypeException;
 import com.shaneisrael.st.data.Locations;
 import com.shaneisrael.st.prefs.Preferences;
 import com.shaneisrael.st.utilities.database.DBUniqueKey;
-
-import javax.swing.JTextPane;
-import javax.swing.JComboBox;
-import javax.swing.DefaultComboBoxModel;
-import java.awt.event.ItemListener;
-import java.awt.event.ItemEvent;
 
 /**
  * 
@@ -80,16 +75,17 @@ public class PreferencesUI
     private JTextField hostField;
     private JTextField userField;
     private JTextField portField;
-    
+
     private JPasswordField passwordField;
     private JTextField ftpPathField;
     public static JPasswordField keyField1;
     public static JPasswordField keyField2;
-    private String[] modifierKeys = {"NONE", "CTRL", "ALT", "SHIFT", "WIN"};
+    private String[] modifierKeys = { "NONE", "CTRL", "ALT", "SHIFT", "WIN" };
     private int hotkeyCodes[];
     private int hotkeyMods1[];
     private int hotkeyMods2[];
-    
+    public static final int NO_HOTKEY = 11111;
+
     /** HOTKEY FIELDS **/
     private JTextField upKeyField;
     private JTextField upScreenKeyField;
@@ -98,7 +94,7 @@ public class PreferencesUI
     private JTextField saveScreenKeyField;
     private JTextField ftpKeyField;
     private JTextField ftpScreenKeyField;
-    
+
     private JComboBox<String> upModBox1;
     private JComboBox<String> upModBox2;
     private JComboBox<String> upScreenModBox1;
@@ -113,8 +109,8 @@ public class PreferencesUI
     private JComboBox<String> ftpModBox2;
     private JComboBox<String> ftpScreenModBox1;
     private JComboBox<String> ftpScreenModBox2;
+
     /** END HOTKEY FIELDS **/
-    
 
     /**
      * Create the application.
@@ -142,11 +138,11 @@ public class PreferencesUI
         keyField1.setText(Preferences.getInstance().getUniqueKey1());
         keyField2.setText(Preferences.getInstance().getUniqueKey2());
         chckbxDontTrackUseage.setSelected(Preferences.getInstance().isTrackingDisabled());
-        
+
         hotkeyCodes = Preferences.getInstance().getHotkeyCodes();
         hotkeyMods1 = Preferences.getInstance().getFirstHotkeyMods();
         hotkeyMods2 = Preferences.getInstance().getSecondHotkeyMods();
-        
+
         upKeyField.setText(getKeyCharacter(hotkeyCodes[0]));
         upScreenKeyField.setText(getKeyCharacter(hotkeyCodes[1]));
         upClipKeyField.setText(getKeyCharacter(hotkeyCodes[4]));
@@ -154,7 +150,7 @@ public class PreferencesUI
         saveScreenKeyField.setText(getKeyCharacter(hotkeyCodes[3]));
         ftpKeyField.setText(getKeyCharacter(hotkeyCodes[5]));
         ftpScreenKeyField.setText(getKeyCharacter(hotkeyCodes[6]));
-        
+
         upModBox1.setSelectedIndex(getModBoxIndex(hotkeyMods1[0]));
         upModBox2.setSelectedIndex(getModBoxIndex(hotkeyMods2[0]));
         upScreenModBox1.setSelectedIndex(getModBoxIndex(hotkeyMods1[1]));
@@ -169,7 +165,7 @@ public class PreferencesUI
         ftpModBox2.setSelectedIndex(getModBoxIndex(hotkeyMods2[5]));
         ftpScreenModBox1.setSelectedIndex(getModBoxIndex(hotkeyMods1[6]));
         ftpScreenModBox2.setSelectedIndex(getModBoxIndex(hotkeyMods2[6]));
-        
+
     }
 
     /**
@@ -514,26 +510,26 @@ public class PreferencesUI
             }
         });
         tab5.add(btnSaveKeys, "flowx,cell 1 2");
-        
-                JButton btnValidate = new JButton("Validate");
-                btnValidate.addActionListener(new ActionListener()
-                {
-                    public void actionPerformed(ActionEvent arg0)
-                    {
-                        String key1 = new String(keyField1.getPassword());
-                        String key2 = new String(keyField2.getPassword());
 
-                        if (key1.equals("") || key2.equals(""))
-                            JOptionPane.showMessageDialog(null, "Your Key fields are empty!", "Empty Fields",
-                                JOptionPane.ERROR_MESSAGE);
-                        else if (DBUniqueKey.validate(key1, key2))
-                            JOptionPane.showMessageDialog(null, "Your Keys are valid!");
-                        else
-                            JOptionPane.showMessageDialog(null, "These keys are invalid!", "Invalid Keys!",
-                                JOptionPane.WARNING_MESSAGE);
-                    }
-                });
-                tab5.add(btnValidate, "cell 0 4,alignx left");
+        JButton btnValidate = new JButton("Validate");
+        btnValidate.addActionListener(new ActionListener()
+        {
+            public void actionPerformed(ActionEvent arg0)
+            {
+                String key1 = new String(keyField1.getPassword());
+                String key2 = new String(keyField2.getPassword());
+
+                if (key1.equals("") || key2.equals(""))
+                    JOptionPane.showMessageDialog(null, "Your Key fields are empty!", "Empty Fields",
+                        JOptionPane.ERROR_MESSAGE);
+                else if (DBUniqueKey.validate(key1, key2))
+                    JOptionPane.showMessageDialog(null, "Your Keys are valid!");
+                else
+                    JOptionPane.showMessageDialog(null, "These keys are invalid!", "Invalid Keys!",
+                        JOptionPane.WARNING_MESSAGE);
+            }
+        });
+        tab5.add(btnValidate, "cell 0 4,alignx left");
         tab5.add(btnRegisterKeyset, "cell 0 6,alignx left");
 
         JButton btnImport = new JButton("Import Keys");
@@ -578,17 +574,17 @@ public class PreferencesUI
 
         chckbxDontTrackUseage = new JCheckBox("Don't send statistics data");
         tab5.add(chckbxDontTrackUseage, "cell 1 6,alignx right");
-        
-                JButton btnUseDefault = new JButton("Use default keys");
-                btnUseDefault.addActionListener(new ActionListener()
-                {
-                    public void actionPerformed(ActionEvent arg0)
-                    {
-                        keyField1.setText("");
-                        keyField2.setText("");
-                    }
-                });
-                tab5.add(btnUseDefault, "cell 0 5,alignx left");
+
+        JButton btnUseDefault = new JButton("Use default keys");
+        btnUseDefault.addActionListener(new ActionListener()
+        {
+            public void actionPerformed(ActionEvent arg0)
+            {
+                keyField1.setText("");
+                keyField2.setText("");
+            }
+        });
+        tab5.add(btnUseDefault, "cell 0 5,alignx left");
 
         JPanel tab3 = new JPanel();
         tabbedPane.addTab("Controls/Hotkeys", null, tab3, null);
@@ -596,7 +592,8 @@ public class PreferencesUI
 
         JPanel panel_1 = new JPanel();
         // tab3.add(panel_1, BorderLayout.CENTER);
-        panel_1.setLayout(new MigLayout("", "[31.00,leading][83.00,grow,leading][81.00,grow]", "[][][][][][][][][][][][][17.00][19.00][][][][][][][]"));
+        panel_1.setLayout(new MigLayout("", "[31.00,leading][83.00,grow,leading][81.00,grow]",
+            "[][][][][][][][][][][][][17.00][19.00][][][][][][][]"));
 
         JLabel lblEditor = new JLabel("Editor");
         lblEditor.setFont(new Font("Tahoma", Font.BOLD, 18));
@@ -639,16 +636,18 @@ public class PreferencesUI
         JLabel lblUploadSnippet = new JLabel("Upload Snippet");
         lblUploadSnippet.setFont(new Font("Tahoma", Font.PLAIN, 13));
         panel_1.add(lblUploadSnippet, "cell 0 7,alignx leading");
-        
+
         upModBox1 = new JComboBox();
-        upModBox1.addItemListener(new ItemListener() {
-            public void itemStateChanged(ItemEvent e) {
+        upModBox1.addItemListener(new ItemListener()
+        {
+            public void itemStateChanged(ItemEvent e)
+            {
                 hotkeyMods1[0] = getHotkeyMod(upModBox1.getSelectedIndex());
             }
         });
         upModBox1.setModel(new DefaultComboBoxModel(modifierKeys));
         panel_1.add(upModBox1, "flowx,cell 1 7");
-        
+
         upKeyField = new JTextField();
         upKeyField.setText("NONE");
         upKeyField.setBackground(Color.white);
@@ -657,8 +656,13 @@ public class PreferencesUI
         {
             public void keyPressed(KeyEvent e)
             {
-                upKeyField.setText(""+getKeyCharacter(e.getKeyCode()).toUpperCase());
-                hotkeyCodes[0] = e.getKeyCode();
+                String text = getKeyCharacter(e.getKeyCode()).toUpperCase();
+                int code = e.getKeyCode();
+                if (text.equals("NONE"))
+                    code = NO_HOTKEY;
+
+                upKeyField.setText(text);
+                hotkeyCodes[0] = code;
             }
         });
         upKeyField.addMouseListener(new MouseAdapter()
@@ -667,10 +671,12 @@ public class PreferencesUI
             {
                 upKeyField.selectAll();
             }
+
             public void mouseEntered(MouseEvent e)
             {
                 upKeyField.setBackground(Color.green);
             }
+
             public void mouseExited(MouseEvent e)
             {
                 upKeyField.setBackground(Color.white);
@@ -682,15 +688,17 @@ public class PreferencesUI
         JLabel lblUploadScreenshot = new JLabel("Upload Screenshot");
         lblUploadScreenshot.setFont(new Font("Tahoma", Font.PLAIN, 13));
         panel_1.add(lblUploadScreenshot, "cell 0 8,alignx leading");
-        
+
         upScreenModBox1 = new JComboBox(modifierKeys);
-        upScreenModBox1.addItemListener(new ItemListener() {
-            public void itemStateChanged(ItemEvent e) {
+        upScreenModBox1.addItemListener(new ItemListener()
+        {
+            public void itemStateChanged(ItemEvent e)
+            {
                 hotkeyMods1[1] = getHotkeyMod(upScreenModBox1.getSelectedIndex());
             }
         });
         panel_1.add(upScreenModBox1, "flowx,cell 1 8");
-        
+
         upScreenKeyField = new JTextField();
         upScreenKeyField.setText("NONE");
         upScreenKeyField.setBackground(Color.white);
@@ -699,8 +707,13 @@ public class PreferencesUI
         {
             public void keyPressed(KeyEvent e)
             {
-                upScreenKeyField.setText(""+getKeyCharacter(e.getKeyCode()).toUpperCase());
-                hotkeyCodes[1] = e.getKeyCode();
+                String text = getKeyCharacter(e.getKeyCode()).toUpperCase();
+                int code = e.getKeyCode();
+                if (text.equals("NONE"))
+                    code = NO_HOTKEY;
+
+                upScreenKeyField.setText(text);
+                hotkeyCodes[1] = code;
             }
         });
         upScreenKeyField.addMouseListener(new MouseAdapter()
@@ -709,10 +722,12 @@ public class PreferencesUI
             {
                 upScreenKeyField.selectAll();
             }
+
             public void mouseEntered(MouseEvent e)
             {
                 upScreenKeyField.setBackground(Color.green);
             }
+
             public void mouseExited(MouseEvent e)
             {
                 upScreenKeyField.setBackground(Color.white);
@@ -723,15 +738,17 @@ public class PreferencesUI
         JLabel lblUploadClipboard = new JLabel("Upload Clipboard Img");
         lblUploadClipboard.setFont(new Font("Tahoma", Font.PLAIN, 13));
         panel_1.add(lblUploadClipboard, "cell 0 9,alignx leading");
-        
+
         upClipModBox1 = new JComboBox(modifierKeys);
-        upClipModBox1.addItemListener(new ItemListener() {
-            public void itemStateChanged(ItemEvent e) {
+        upClipModBox1.addItemListener(new ItemListener()
+        {
+            public void itemStateChanged(ItemEvent e)
+            {
                 hotkeyMods1[2] = getHotkeyMod(upClipModBox1.getSelectedIndex());
             }
         });
         panel_1.add(upClipModBox1, "flowx,cell 1 9");
-        
+
         upClipKeyField = new JTextField();
         upClipKeyField.setText("NONE");
         upClipKeyField.setBackground(Color.white);
@@ -740,8 +757,13 @@ public class PreferencesUI
         {
             public void keyPressed(KeyEvent e)
             {
-                upClipKeyField.setText(""+getKeyCharacter(e.getKeyCode()).toUpperCase());
-                hotkeyCodes[2] = e.getKeyCode();
+                String text = getKeyCharacter(e.getKeyCode()).toUpperCase();
+                int code = e.getKeyCode();
+                if (text.equals("NONE"))
+                    code = NO_HOTKEY;
+
+                upClipKeyField.setText(text);
+                hotkeyCodes[2] = code;
             }
         });
         upClipKeyField.addMouseListener(new MouseAdapter()
@@ -750,10 +772,12 @@ public class PreferencesUI
             {
                 upClipKeyField.selectAll();
             }
+
             public void mouseEntered(MouseEvent e)
             {
                 upClipKeyField.setBackground(Color.green);
             }
+
             public void mouseExited(MouseEvent e)
             {
                 upClipKeyField.setBackground(Color.white);
@@ -764,15 +788,17 @@ public class PreferencesUI
         JLabel lblSaveSnippet = new JLabel("Save Snippet");
         lblSaveSnippet.setFont(new Font("Tahoma", Font.PLAIN, 13));
         panel_1.add(lblSaveSnippet, "cell 0 10,alignx leading");
-        
+
         saveModBox1 = new JComboBox(modifierKeys);
-        saveModBox1.addItemListener(new ItemListener() {
-            public void itemStateChanged(ItemEvent e) {
+        saveModBox1.addItemListener(new ItemListener()
+        {
+            public void itemStateChanged(ItemEvent e)
+            {
                 hotkeyMods1[3] = getHotkeyMod(saveModBox1.getSelectedIndex());
             }
         });
         panel_1.add(saveModBox1, "flowx,cell 1 10");
-        
+
         saveKeyField = new JTextField();
         saveKeyField.setText("NONE");
         saveKeyField.setBackground(Color.white);
@@ -781,8 +807,13 @@ public class PreferencesUI
         {
             public void keyPressed(KeyEvent e)
             {
-                saveKeyField.setText(""+getKeyCharacter(e.getKeyCode()).toUpperCase());
-                hotkeyCodes[3] = e.getKeyCode();
+                String text = getKeyCharacter(e.getKeyCode()).toUpperCase();
+                int code = e.getKeyCode();
+                if (text.equals("NONE"))
+                    code = NO_HOTKEY;
+
+                saveKeyField.setText(text);
+                hotkeyCodes[3] = code;
             }
         });
         saveKeyField.addMouseListener(new MouseAdapter()
@@ -791,10 +822,12 @@ public class PreferencesUI
             {
                 saveKeyField.selectAll();
             }
+
             public void mouseEntered(MouseEvent e)
             {
                 saveKeyField.setBackground(Color.green);
             }
+
             public void mouseExited(MouseEvent e)
             {
                 saveKeyField.setBackground(Color.white);
@@ -807,15 +840,17 @@ public class PreferencesUI
         panel_1.add(lblSaveScreenshot, "cell 0 11,alignx leading");
 
         JScrollPane scrollPane = new JScrollPane(panel_1);
-        
+
         saveScreenModBox1 = new JComboBox(modifierKeys);
-        saveScreenModBox1.addItemListener(new ItemListener() {
-            public void itemStateChanged(ItemEvent e) {
+        saveScreenModBox1.addItemListener(new ItemListener()
+        {
+            public void itemStateChanged(ItemEvent e)
+            {
                 hotkeyMods1[4] = getHotkeyMod(saveScreenModBox1.getSelectedIndex());
             }
         });
         panel_1.add(saveScreenModBox1, "flowx,cell 1 11");
-        
+
         saveScreenKeyField = new JTextField();
         saveScreenKeyField.setText("NONE");
         saveScreenKeyField.setBackground(Color.white);
@@ -824,8 +859,13 @@ public class PreferencesUI
         {
             public void keyPressed(KeyEvent e)
             {
-                saveScreenKeyField.setText(""+getKeyCharacter(e.getKeyCode()).toUpperCase());
-                hotkeyCodes[4] = e.getKeyCode();
+                String text = getKeyCharacter(e.getKeyCode()).toUpperCase();
+                int code = e.getKeyCode();
+                if (text.equals("NONE"))
+                    code = NO_HOTKEY;
+
+                saveScreenKeyField.setText(text);
+                hotkeyCodes[4] = code;
             }
         });
         saveScreenKeyField.addMouseListener(new MouseAdapter()
@@ -834,10 +874,12 @@ public class PreferencesUI
             {
                 saveScreenKeyField.selectAll();
             }
+
             public void mouseEntered(MouseEvent e)
             {
                 saveScreenKeyField.setBackground(Color.green);
             }
+
             public void mouseExited(MouseEvent e)
             {
                 saveScreenKeyField.setBackground(Color.white);
@@ -847,15 +889,17 @@ public class PreferencesUI
 
         JLabel lblFtpUploadSnippet = new JLabel("FTP Upload Snippet");
         panel_1.add(lblFtpUploadSnippet, "cell 0 12,alignx leading");
-        
+
         ftpModBox1 = new JComboBox(modifierKeys);
-        ftpModBox1.addItemListener(new ItemListener() {
-            public void itemStateChanged(ItemEvent e) {
+        ftpModBox1.addItemListener(new ItemListener()
+        {
+            public void itemStateChanged(ItemEvent e)
+            {
                 hotkeyMods1[5] = getHotkeyMod(ftpModBox1.getSelectedIndex());
             }
         });
         panel_1.add(ftpModBox1, "flowx,cell 1 12");
-        
+
         ftpKeyField = new JTextField();
         ftpKeyField.setText("NONE");
         ftpKeyField.setBackground(Color.white);
@@ -864,8 +908,13 @@ public class PreferencesUI
         {
             public void keyPressed(KeyEvent e)
             {
-                ftpKeyField.setText(""+getKeyCharacter(e.getKeyCode()).toUpperCase());
-                hotkeyCodes[5] = e.getKeyCode();
+                String text = getKeyCharacter(e.getKeyCode()).toUpperCase();
+                int code = e.getKeyCode();
+                if (text.equals("NONE"))
+                    code = NO_HOTKEY;
+
+                ftpKeyField.setText(text);
+                hotkeyCodes[5] = code;
             }
         });
         ftpKeyField.addMouseListener(new MouseAdapter()
@@ -874,10 +923,12 @@ public class PreferencesUI
             {
                 ftpKeyField.selectAll();
             }
+
             public void mouseEntered(MouseEvent e)
             {
                 ftpKeyField.setBackground(Color.green);
             }
+
             public void mouseExited(MouseEvent e)
             {
                 ftpKeyField.setBackground(Color.white);
@@ -887,15 +938,17 @@ public class PreferencesUI
 
         JLabel lblFtpUploadScreenshot = new JLabel("FTP Upload Screen");
         panel_1.add(lblFtpUploadScreenshot, "cell 0 13,alignx leading");
-        
+
         ftpScreenModBox1 = new JComboBox(modifierKeys);
-        ftpScreenModBox1.addItemListener(new ItemListener() {
-            public void itemStateChanged(ItemEvent e) {
+        ftpScreenModBox1.addItemListener(new ItemListener()
+        {
+            public void itemStateChanged(ItemEvent e)
+            {
                 hotkeyMods1[6] = getHotkeyMod(ftpScreenModBox1.getSelectedIndex());
             }
         });
         panel_1.add(ftpScreenModBox1, "flowx,cell 1 13");
-        
+
         ftpScreenKeyField = new JTextField();
         ftpScreenKeyField.setText("NONE");
         ftpScreenKeyField.setBackground(Color.white);
@@ -904,8 +957,13 @@ public class PreferencesUI
         {
             public void keyPressed(KeyEvent e)
             {
-                ftpScreenKeyField.setText(""+getKeyCharacter(e.getKeyCode()).toUpperCase());
-                hotkeyCodes[6] = e.getKeyCode();
+                String text = getKeyCharacter(e.getKeyCode()).toUpperCase();
+                int code = e.getKeyCode();
+                if (text.equals("NONE"))
+                    code = NO_HOTKEY;
+
+                ftpScreenKeyField.setText(text);
+                hotkeyCodes[6] = code;
             }
         });
         ftpScreenKeyField.addMouseListener(new MouseAdapter()
@@ -914,10 +972,12 @@ public class PreferencesUI
             {
                 ftpScreenKeyField.selectAll();
             }
+
             public void mouseEntered(MouseEvent e)
             {
                 ftpScreenKeyField.setBackground(Color.green);
             }
+
             public void mouseExited(MouseEvent e)
             {
                 ftpScreenKeyField.setBackground(Color.white);
@@ -931,11 +991,11 @@ public class PreferencesUI
 
         JSeparator separator_2 = new JSeparator();
         panel_1.add(separator_2, "cell 0 15 2 1,growx");
-        
+
         JLabel lblZoomMagnifierInout = new JLabel("Magnifier Zoom");
         lblZoomMagnifierInout.setFont(new Font("Tahoma", Font.PLAIN, 13));
         panel_1.add(lblZoomMagnifierInout, "cell 0 16");
-        
+
         JLabel lblMouseWheel = new JLabel("MOUSE WHEEL");
         lblMouseWheel.setFont(new Font("Tahoma", Font.BOLD, 13));
         panel_1.add(lblMouseWheel, "cell 1 16");
@@ -947,15 +1007,16 @@ public class PreferencesUI
         JLabel lblMousewheelUp = new JLabel("MOUSE WHEEL");
         lblMousewheelUp.setFont(new Font("Tahoma", Font.BOLD, 13));
         panel_1.add(lblMousewheelUp, "cell 1 17");
-        
+
         JSeparator separator_6 = new JSeparator();
         panel_1.add(separator_6, "cell 0 19 2 1,grow");
-        
+
         JTextPane txtpnNote = new JTextPane();
         txtpnNote.setFont(new Font("Tahoma", Font.PLAIN, 13));
-        txtpnNote.setBackground(new Color(240,240,240));
+        txtpnNote.setBackground(new Color(240, 240, 240));
         txtpnNote.setEditable(false);
-        txtpnNote.setText("* Note - To change overlay transparency, you must first hide the Magnifying Glass with [Right Click].");
+        txtpnNote
+            .setText("* Note - To change overlay transparency, you must first hide the Magnifying Glass with [Right Click].");
         panel_1.add(txtpnNote, "cell 0 20,growx");
 
         JLabel lblUpdateOverlay = new JLabel("Update Overlay");
@@ -965,103 +1026,117 @@ public class PreferencesUI
         JLabel lblMiddleClick = new JLabel("MIDDLE CLICK");
         lblMiddleClick.setFont(new Font("Tahoma", Font.BOLD, 13));
         panel_1.add(lblMiddleClick, "cell 1 18");
-        
+
         JLabel label = new JLabel("+");
         panel_1.add(label, "cell 1 7");
-        
+
         upModBox2 = new JComboBox();
         upModBox2.setModel(new DefaultComboBoxModel(modifierKeys));
-        upModBox2.addItemListener(new ItemListener() {
-            public void itemStateChanged(ItemEvent e) {
+        upModBox2.addItemListener(new ItemListener()
+        {
+            public void itemStateChanged(ItemEvent e)
+            {
                 hotkeyMods2[0] = getHotkeyMod(upModBox2.getSelectedIndex());
             }
         });
         panel_1.add(upModBox2, "cell 1 7");
-        
+
         JLabel label_1 = new JLabel("+");
         panel_1.add(label_1, "cell 1 7");
-        
+
         JLabel label_2 = new JLabel("+");
         panel_1.add(label_2, "cell 1 8");
-        
+
         upScreenModBox2 = new JComboBox(modifierKeys);
-        upScreenModBox2.addItemListener(new ItemListener() {
-            public void itemStateChanged(ItemEvent e) {
+        upScreenModBox2.addItemListener(new ItemListener()
+        {
+            public void itemStateChanged(ItemEvent e)
+            {
                 hotkeyMods2[1] = getHotkeyMod(upScreenModBox2.getSelectedIndex());
             }
         });
         panel_1.add(upScreenModBox2, "cell 1 8");
-        
+
         JLabel label_3 = new JLabel("+");
         panel_1.add(label_3, "cell 1 8");
-        
+
         JLabel label_4 = new JLabel("+");
         panel_1.add(label_4, "cell 1 9");
-        
+
         upClipModBox2 = new JComboBox(modifierKeys);
-        upClipModBox2.addItemListener(new ItemListener() {
-            public void itemStateChanged(ItemEvent e) {
+        upClipModBox2.addItemListener(new ItemListener()
+        {
+            public void itemStateChanged(ItemEvent e)
+            {
                 hotkeyMods2[2] = getHotkeyMod(upClipModBox2.getSelectedIndex());
             }
         });
         panel_1.add(upClipModBox2, "cell 1 9");
-        
+
         JLabel label_5 = new JLabel("+");
         panel_1.add(label_5, "cell 1 9");
-        
+
         JLabel label_6 = new JLabel("+");
         panel_1.add(label_6, "cell 1 10");
-        
+
         saveModBox2 = new JComboBox(modifierKeys);
-        saveModBox2.addItemListener(new ItemListener() {
-            public void itemStateChanged(ItemEvent e) {
+        saveModBox2.addItemListener(new ItemListener()
+        {
+            public void itemStateChanged(ItemEvent e)
+            {
                 hotkeyMods2[3] = getHotkeyMod(saveModBox2.getSelectedIndex());
             }
         });
         panel_1.add(saveModBox2, "cell 1 10");
-        
+
         JLabel label_7 = new JLabel("+");
         panel_1.add(label_7, "cell 1 10");
-        
+
         JLabel label_8 = new JLabel("+");
         panel_1.add(label_8, "cell 1 11");
-        
+
         saveScreenModBox2 = new JComboBox(modifierKeys);
-        saveScreenModBox2.addItemListener(new ItemListener() {
-            public void itemStateChanged(ItemEvent e) {
+        saveScreenModBox2.addItemListener(new ItemListener()
+        {
+            public void itemStateChanged(ItemEvent e)
+            {
                 hotkeyMods2[4] = getHotkeyMod(saveScreenModBox2.getSelectedIndex());
             }
         });
         panel_1.add(saveScreenModBox2, "cell 1 11");
-        
+
         JLabel label_9 = new JLabel("+");
         panel_1.add(label_9, "cell 1 11");
-        
+
         JLabel label_10 = new JLabel("+");
         panel_1.add(label_10, "cell 1 12");
-        
+
         ftpModBox2 = new JComboBox(modifierKeys);
-        ftpModBox2.addItemListener(new ItemListener() {
-            public void itemStateChanged(ItemEvent e) {
+        ftpModBox2.addItemListener(new ItemListener()
+        {
+            public void itemStateChanged(ItemEvent e)
+            {
                 hotkeyMods2[5] = getHotkeyMod(ftpModBox2.getSelectedIndex());
             }
         });
         panel_1.add(ftpModBox2, "cell 1 12");
-        
+
         JLabel label_11 = new JLabel("+");
         panel_1.add(label_11, "cell 1 12");
-        
+
         JLabel label_12 = new JLabel("+");
         panel_1.add(label_12, "cell 1 13");
-        
+
         ftpScreenModBox2 = new JComboBox(modifierKeys);
-        ftpScreenModBox2.addItemListener(new ItemListener() {
-            public void itemStateChanged(ItemEvent e) {
+        ftpScreenModBox2.addItemListener(new ItemListener()
+        {
+            public void itemStateChanged(ItemEvent e)
+            {
                 hotkeyMods2[6] = getHotkeyMod(ftpScreenModBox2.getSelectedIndex());
             }
         });
         panel_1.add(ftpScreenModBox2, "cell 1 13");
-        
+
         JLabel label_13 = new JLabel("+");
         panel_1.add(label_13, "cell 1 13");
         scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
@@ -1091,41 +1166,37 @@ public class PreferencesUI
                 Preferences.getInstance().setUniqueKey2(new String(keyField2.getPassword()));
                 Preferences.getInstance().setTrackingDisabled(chckbxDontTrackUseage.isSelected());
                 Preferences.getInstance().setDefaultTool(0);
-                
-                registerAndSaveHotkeys();
-                
+
+                registerHotkeys();
+
                 Preferences.getInstance().setHotkeyCodes(hotkeyCodes);
                 Preferences.getInstance().setFirstHotkeyMods(hotkeyMods1);
                 Preferences.getInstance().setSecondHotkeyMods(hotkeyMods2);
-                
+
                 frmPreferences.dispose();
             }
 
-            private void registerAndSaveHotkeys()
+            private void registerHotkeys()
             {
-                // 1. save the new keys to preferences
-                // 2. unregister all identifiers
-                // 3. register the new hotkeys
-                
                 JIntellitype keyhook = null;
-                
+
                 try
                 {
                     keyhook = JIntellitype.getInstance();
                 }
-                catch(JIntellitypeException ex)
+                catch (JIntellitypeException ex)
                 {
                     ex.printStackTrace();
                 }
-                if(keyhook != null)
+                if (keyhook != null)
                 {
-                    for(int i = 1; i < 8; i++)
+                    for (int i = 1; i < 8; i++)
                         keyhook.unregisterHotKey(i);
-                    for(int i = 1; i < 8; i++)
-                        keyhook.registerHotKey(i, hotkeyMods1[i-1] + hotkeyMods2[i-1], hotkeyCodes[i-1]);
+                    for (int i = 1; i < 8; i++)
+                        if (hotkeyCodes[i - 1] != NO_HOTKEY)
+                            keyhook.registerHotKey(i, hotkeyMods1[i - 1] + hotkeyMods2[i - 1], hotkeyCodes[i - 1]);
                 }
-                
-                
+
             }
         });
         frmPreferences.getContentPane().add(btnApply, "cell 0 2,alignx right");
@@ -1133,10 +1204,10 @@ public class PreferencesUI
         frmPreferences.setVisible(true);
 
     }
-    
+
     public int getModBoxIndex(int mod)
     {
-        switch(mod)
+        switch (mod)
         {
         case 0:
             return 0;
@@ -1151,9 +1222,10 @@ public class PreferencesUI
         }
         return 0;
     }
+
     public int getHotkeyMod(int index)
     {
-        switch(index)
+        switch (index)
         {
         case 0:
             return 0;
@@ -1168,133 +1240,137 @@ public class PreferencesUI
         }
         return 0;
     }
-    public String getKeyCharacter(int keyCode){
+
+    public String getKeyCharacter(int keyCode)
+    {
         switch (keyCode) {
 
+        case NO_HOTKEY:
+            return "NONE";
         /* Keyboard and Mouse Masks */
         case KeyEvent.VK_ALT:
-          return "NONE";
+            return "NONE";
         case KeyEvent.VK_SHIFT:
-          return "NONE";
+            return "NONE";
         case KeyEvent.VK_CONTROL:
-          return "NONE";
+            return "NONE";
         case KeyEvent.VK_WINDOWS:
-          return "NONE";
+            return "NONE";
 
-        /* Non-Numeric Keypad Keys */
+            /* Non-Numeric Keypad Keys */
         case KeyEvent.VK_UP:
-          return "ARROW_UP";
+            return "ARROW_UP";
         case KeyEvent.VK_DOWN:
-          return "ARROW_DOWN";
+            return "ARROW_DOWN";
         case KeyEvent.VK_LEFT:
-          return "ARROW_LEFT";
+            return "ARROW_LEFT";
         case KeyEvent.VK_RIGHT:
-          return "ARROW_RIGHT";
+            return "ARROW_RIGHT";
         case KeyEvent.VK_PAGE_UP:
-          return "PAGE_UP";
+            return "PAGE_UP";
         case KeyEvent.VK_PAGE_DOWN:
-          return "PAGE_DOWN";
+            return "PAGE_DOWN";
         case KeyEvent.VK_HOME:
-          return "HOME";
+            return "HOME";
         case KeyEvent.VK_END:
-          return "END";
+            return "END";
         case KeyEvent.VK_INSERT:
-          return "INSERT";
+            return "INSERT";
 
-        /* Virtual and Ascii Keys */
+            /* Virtual and Ascii Keys */
         case KeyEvent.VK_DELETE:
-          return "DEL";
+            return "DEL";
         case KeyEvent.VK_ESCAPE:
-          return "NONE";
+            return "NONE";
         case KeyEvent.VK_TAB:
-          return "TAB";
+            return "TAB";
 
-        /* Functions Keys */
+            /* Functions Keys */
         case KeyEvent.VK_F1:
-          return "F1";
+            return "F1";
         case KeyEvent.VK_F2:
-          return "F2";
+            return "F2";
         case KeyEvent.VK_F3:
-          return "F3";
+            return "F3";
         case KeyEvent.VK_F4:
-          return "F4";
+            return "F4";
         case KeyEvent.VK_F5:
-          return "F5";
+            return "F5";
         case KeyEvent.VK_F6:
-          return "F6";
+            return "F6";
         case KeyEvent.VK_F7:
-          return "F7";
+            return "F7";
         case KeyEvent.VK_F8:
-          return "F8";
+            return "F8";
         case KeyEvent.VK_F9:
-          return "F9";
+            return "F9";
         case KeyEvent.VK_F10:
-          return "F10";
+            return "F10";
         case KeyEvent.VK_F11:
-          return "F11";
+            return "F11";
         case KeyEvent.VK_F12:
-          return "F12";
+            return "F12";
         case KeyEvent.VK_F13:
-          return "F13";
+            return "F13";
         case KeyEvent.VK_F14:
-          return "F14";
+            return "F14";
         case KeyEvent.VK_F15:
-          return "F15";
+            return "F15";
 
-        /* Numeric Keypad Keys */
+            /* Numeric Keypad Keys */
         case KeyEvent.VK_ADD:
-          return "ADD";
+            return "ADD";
         case KeyEvent.VK_SUBTRACT:
-          return "SUBTRACT";
+            return "SUBTRACT";
         case KeyEvent.VK_MULTIPLY:
-          return "MULTIPLY";
+            return "MULTIPLY";
         case KeyEvent.VK_DIVIDE:
-          return "DIVIDE";
+            return "DIVIDE";
         case KeyEvent.VK_DECIMAL:
-          return "DECIMAL";
-//        case KeyEvent.VK_CR:
-//          return "NUMPADCR";
+            return "DECIMAL";
+            //        case KeyEvent.VK_CR:
+            //          return "NUMPADCR";
         case KeyEvent.VK_NUMPAD0:
-          return "NUM_0";
+            return "NUM_0";
         case KeyEvent.VK_NUMPAD1:
-          return "NUM_1";
+            return "NUM_1";
         case KeyEvent.VK_NUMPAD2:
-          return "NUM_2";
+            return "NUM_2";
         case KeyEvent.VK_NUMPAD3:
-          return "NUM_3";
+            return "NUM_3";
         case KeyEvent.VK_NUMPAD4:
-          return "NUM_4";
+            return "NUM_4";
         case KeyEvent.VK_NUMPAD5:
-          return "NUM_5";
+            return "NUM_5";
         case KeyEvent.VK_NUMPAD6:
-          return "NUM_6";
+            return "NUM_6";
         case KeyEvent.VK_NUMPAD7:
-          return "NUM_7";
+            return "NUM_7";
         case KeyEvent.VK_NUMPAD8:
-          return "NUM_8";
+            return "NUM_8";
         case KeyEvent.VK_NUMPAD9:
-          return "NUM_9";
+            return "NUM_9";
         case KeyEvent.VK_EQUALS:
-          return "NUM_EQUALS";
+            return "NUM_EQUALS";
 
-        /* Other keys */
+            /* Other keys */
         case KeyEvent.VK_CAPS_LOCK:
-          return "CAPS_LOCK";
+            return "CAPS_LOCK";
         case KeyEvent.VK_NUM_LOCK:
-          return "NUM_LOCK";
+            return "NUM_LOCK";
         case KeyEvent.VK_SCROLL_LOCK:
-          return "SCROLL_LOCK";
+            return "SCROLL_LOCK";
         case KeyEvent.VK_PAUSE:
-          return "PAUSE";
+            return "PAUSE";
         case KeyEvent.VK_ENTER:
             return "NONE";
-//        case KeyEvent.VK_BREAK:
-//          return "BREAK";
+            //        case KeyEvent.VK_BREAK:
+            //          return "BREAK";
         case KeyEvent.VK_PRINTSCREEN:
-          return "PRINT_SCREEN";
+            return "PRINT_SCREEN";
         case KeyEvent.VK_HELP:
-          return "HELP";
+            return "HELP";
         }
-        return ""+(char)keyCode;
+        return "" + (char) keyCode;
     }
 }

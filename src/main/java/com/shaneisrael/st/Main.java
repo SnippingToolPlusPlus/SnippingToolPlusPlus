@@ -178,7 +178,8 @@ public class Main extends JFrame implements ActionListener, JIntellitypeConstant
             for(int i = 1; i < 8; i++)
                 keyhook.unregisterHotKey(i);
             for(int i = 1; i < 8; i++)
-                keyhook.registerHotKey(i, hotkeyMods1[i-1] + hotkeyMods2[i-1], hotkeyCodes[i-1]);
+                if (hotkeyCodes[i - 1] != PreferencesUI.NO_HOTKEY)
+                    keyhook.registerHotKey(i, hotkeyMods1[i-1] + hotkeyMods2[i-1], hotkeyCodes[i-1]);
 
         }
         /*
