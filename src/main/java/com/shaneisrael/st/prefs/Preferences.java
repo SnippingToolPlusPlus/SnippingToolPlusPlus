@@ -312,6 +312,37 @@ public class Preferences
         preferences.setTrackingDisabled(track);
         save();
     }
+    
+    /**
+     * 
+     * @param codes
+     */
+    public void setHotkeyCodes(int[] codes)
+    {
+        preferences.setHotkeyCodes(codes);
+        save();
+    }
+    
+    /**
+     * 
+     * @param mods
+     */
+    public void setFirstHotkeyMods(int[] mods)
+    {
+        preferences.setFirstHotkeyMods(mods);
+        save();
+    }
+    
+    /**
+     * 
+     * @param mods
+     */
+    public void setSecondHotkeyMods(int[] mods)
+    {
+        preferences.setSecondHotkeyMods(mods);
+        save();
+    }
+    
     /**
      * @return the ftp host url
      */
@@ -387,6 +418,33 @@ public class Preferences
     }
     
     /**
+     * 
+     * @return the hotkey codes array
+     */
+    public int[] getHotkeyCodes()
+    {
+        return preferences.getHotkeyCodes();
+    }
+    
+    /**
+     * 
+     * @return the first hotkeys Modsifiers array
+     */
+    public int[] getFirstHotkeyMods()
+    {
+        return preferences.getFirstHotkeyMods();
+    }
+    
+    /**
+     * 
+     * @return the second hotkeys Modsifiers array
+     */
+    public int[] getSecondHotkeyMods()
+    {
+        return preferences.getSecondHotkeyMods();
+    }
+    
+    /**
      * @return
      *          is tracking statistics data disabled
      */
@@ -423,4 +481,5 @@ public class Preferences
         
         return true;
     }
+
 }

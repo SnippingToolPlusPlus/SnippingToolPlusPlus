@@ -171,14 +171,14 @@ public class Main extends JFrame implements ActionListener, JIntellitypeConstant
         }
         if (keyhook != null)
         {
-            keyhook.registerHotKey(0, 0, 44); //PRINT_SCREEN
-            keyhook.registerHotKey(1, JIntellitypeConstants.MOD_CONTROL + JIntellitypeConstants.MOD_SHIFT, '1');
-            keyhook.registerHotKey(2, JIntellitypeConstants.MOD_CONTROL + JIntellitypeConstants.MOD_SHIFT, '2');
-            keyhook.registerHotKey(3, JIntellitypeConstants.MOD_CONTROL + JIntellitypeConstants.MOD_SHIFT, '3');
-            keyhook.registerHotKey(4, JIntellitypeConstants.MOD_CONTROL + JIntellitypeConstants.MOD_SHIFT, '4');
-            keyhook.registerHotKey(5, JIntellitypeConstants.MOD_CONTROL + JIntellitypeConstants.MOD_SHIFT, 'X');
-            keyhook.registerHotKey(6, JIntellitypeConstants.MOD_ALT + JIntellitypeConstants.MOD_SHIFT, '1');
-            keyhook.registerHotKey(7, JIntellitypeConstants.MOD_ALT + JIntellitypeConstants.MOD_SHIFT, '2');
+            int[] hotkeyMods1 = Preferences.getInstance().getFirstHotkeyMods();
+            int[] hotkeyMods2 = Preferences.getInstance().getSecondHotkeyMods();
+            int[] hotkeyCodes = Preferences.getInstance().getHotkeyCodes();
+            
+            for(int i = 1; i < 8; i++)
+                keyhook.unregisterHotKey(i);
+            for(int i = 1; i < 8; i++)
+                keyhook.registerHotKey(i, hotkeyMods1[i-1] + hotkeyMods2[i-1], hotkeyCodes[i-1]);
 
         }
         /*

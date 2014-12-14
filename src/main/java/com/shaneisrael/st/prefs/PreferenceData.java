@@ -50,6 +50,15 @@ public final class PreferenceData
     @SerializedName("disable_tracking")
     public boolean disableTracking = false;
     
+    @SerializedName("hotkey_codes")
+    public int hotkeyCodes[] = {49, 50, 51, 52, 88, 49, 50}; //1, 2, 3, 4, X, 1, 2
+    
+    @SerializedName("hotkey_Modsifier_1")
+    public int hotkeyModss1[] = {2, 2, 2, 2, 2, 1, 1}; //CTRL, CTRL, CTRL, CTRL, CTRL, ALT, ALT
+    
+    @SerializedName("hotkey_Modsifier_2")
+    public int hotkeyModss2[] = {4, 4, 4, 4, 4, 4, 4}; //SHIFT
+    
     
     PreferenceData()
     {
@@ -216,6 +225,34 @@ public final class PreferenceData
     {
         this.disableTracking = track;
     }
+    
+    /**
+     * 
+     * @param codes
+     */
+    void setHotkeyCodes(int[] codes)
+    {
+        this.hotkeyCodes = codes;
+    }
+    
+    /**
+     * 
+     * @param Modss
+     */
+    void setFirstHotkeyMods(int[] mods)
+    {
+        this.hotkeyModss1 = mods;
+    }
+    
+    /**
+     * 
+     * @param Modss
+     */
+    void setSecondHotkeyMods(int[] mods)
+    {
+        this.hotkeyModss2 = mods;
+    }
+    
     /**
      * @return the enabled
      */
@@ -312,6 +349,34 @@ public final class PreferenceData
     {
         return key2;
     }
+    
+    /**
+     * 
+     * @return the hotkey codes array
+     */
+    public int[] getHotkeyCodes()
+    {
+        return hotkeyCodes;
+    }
+    
+    /**
+     * 
+     * @return the first Modsifier keys
+     */
+    public int[] getFirstHotkeyMods()
+    {
+        return hotkeyModss1;
+    }
+    
+    /**
+     * 
+     * @return the second Modsifier keys
+     */
+    public int[] getSecondHotkeyMods()
+    {
+        return hotkeyModss2;
+    }
+    
     /**
      * 
      * @return

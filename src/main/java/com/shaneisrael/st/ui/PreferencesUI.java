@@ -7,6 +7,10 @@ import java.awt.Font;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
+import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.io.BufferedReader;
@@ -16,6 +20,8 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
+
+import javafx.scene.input.KeyCode;
 
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
@@ -36,11 +42,18 @@ import javax.swing.WindowConstants;
 
 import net.miginfocom.swing.MigLayout;
 
+import com.melloware.jintellitype.JIntellitype;
+import com.melloware.jintellitype.JIntellitypeConstants;
+import com.melloware.jintellitype.JIntellitypeException;
 import com.shaneisrael.st.data.Locations;
 import com.shaneisrael.st.prefs.Preferences;
 import com.shaneisrael.st.utilities.database.DBUniqueKey;
 
 import javax.swing.JTextPane;
+import javax.swing.JComboBox;
+import javax.swing.DefaultComboBoxModel;
+import java.awt.event.ItemListener;
+import java.awt.event.ItemEvent;
 
 /**
  * 
@@ -67,10 +80,41 @@ public class PreferencesUI
     private JTextField hostField;
     private JTextField userField;
     private JTextField portField;
+    
     private JPasswordField passwordField;
     private JTextField ftpPathField;
     public static JPasswordField keyField1;
     public static JPasswordField keyField2;
+    private String[] modifierKeys = {"NONE", "CTRL", "ALT", "SHIFT", "WIN"};
+    private int hotkeyCodes[];
+    private int hotkeyMods1[];
+    private int hotkeyMods2[];
+    
+    /** HOTKEY FIELDS **/
+    private JTextField upKeyField;
+    private JTextField upScreenKeyField;
+    private JTextField upClipKeyField;
+    private JTextField saveKeyField;
+    private JTextField saveScreenKeyField;
+    private JTextField ftpKeyField;
+    private JTextField ftpScreenKeyField;
+    
+    private JComboBox<String> upModBox1;
+    private JComboBox<String> upModBox2;
+    private JComboBox<String> upScreenModBox1;
+    private JComboBox<String> upScreenModBox2;
+    private JComboBox<String> saveModBox1;
+    private JComboBox<String> saveModBox2;
+    private JComboBox<String> saveScreenModBox1;
+    private JComboBox<String> saveScreenModBox2;
+    private JComboBox<String> upClipModBox1;
+    private JComboBox<String> upClipModBox2;
+    private JComboBox<String> ftpModBox1;
+    private JComboBox<String> ftpModBox2;
+    private JComboBox<String> ftpScreenModBox1;
+    private JComboBox<String> ftpScreenModBox2;
+    /** END HOTKEY FIELDS **/
+    
 
     /**
      * Create the application.
@@ -98,6 +142,34 @@ public class PreferencesUI
         keyField1.setText(Preferences.getInstance().getUniqueKey1());
         keyField2.setText(Preferences.getInstance().getUniqueKey2());
         chckbxDontTrackUseage.setSelected(Preferences.getInstance().isTrackingDisabled());
+        
+        hotkeyCodes = Preferences.getInstance().getHotkeyCodes();
+        hotkeyMods1 = Preferences.getInstance().getFirstHotkeyMods();
+        hotkeyMods2 = Preferences.getInstance().getSecondHotkeyMods();
+        
+        upKeyField.setText(getKeyCharacter(hotkeyCodes[0]));
+        upScreenKeyField.setText(getKeyCharacter(hotkeyCodes[1]));
+        upClipKeyField.setText(getKeyCharacter(hotkeyCodes[4]));
+        saveKeyField.setText(getKeyCharacter(hotkeyCodes[2]));
+        saveScreenKeyField.setText(getKeyCharacter(hotkeyCodes[3]));
+        ftpKeyField.setText(getKeyCharacter(hotkeyCodes[5]));
+        ftpScreenKeyField.setText(getKeyCharacter(hotkeyCodes[6]));
+        
+        upModBox1.setSelectedIndex(getModBoxIndex(hotkeyMods1[0]));
+        upModBox2.setSelectedIndex(getModBoxIndex(hotkeyMods2[0]));
+        upScreenModBox1.setSelectedIndex(getModBoxIndex(hotkeyMods1[1]));
+        upScreenModBox2.setSelectedIndex(getModBoxIndex(hotkeyMods2[1]));
+        saveModBox1.setSelectedIndex(getModBoxIndex(hotkeyMods1[2]));
+        saveModBox2.setSelectedIndex(getModBoxIndex(hotkeyMods2[2]));
+        saveScreenModBox1.setSelectedIndex(getModBoxIndex(hotkeyMods1[3]));
+        saveScreenModBox2.setSelectedIndex(getModBoxIndex(hotkeyMods2[3]));
+        upClipModBox1.setSelectedIndex(getModBoxIndex(hotkeyMods1[4]));
+        upClipModBox2.setSelectedIndex(getModBoxIndex(hotkeyMods2[4]));
+        ftpModBox1.setSelectedIndex(getModBoxIndex(hotkeyMods1[5]));
+        ftpModBox2.setSelectedIndex(getModBoxIndex(hotkeyMods2[5]));
+        ftpScreenModBox1.setSelectedIndex(getModBoxIndex(hotkeyMods1[6]));
+        ftpScreenModBox2.setSelectedIndex(getModBoxIndex(hotkeyMods2[6]));
+        
     }
 
     /**
@@ -110,13 +182,13 @@ public class PreferencesUI
         frmPreferences.setIconImage(Toolkit.getDefaultToolkit().getImage(
             PreferencesUI.class.getResource("/images/icons/pref.png")));
         frmPreferences.setTitle("Preferences");
-        frmPreferences.setBounds(100, 100, 372, 360);
+        frmPreferences.setBounds(100, 100, 444, 380);
         frmPreferences.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
         frmPreferences.getContentPane().setLayout(
             new MigLayout("", "[430.00px]", "[244.00px,grow,baseline][][20.00,grow]"));
 
         JTabbedPane tabbedPane = new JTabbedPane(JTabbedPane.TOP);
-        frmPreferences.getContentPane().add(tabbedPane, "cell 0 0,grow");
+        frmPreferences.getContentPane().add(tabbedPane, "cell 0 0,growy");
 
         JPanel tab1 = new JPanel();
         tabbedPane.addTab("General", null, tab1, null);
@@ -231,7 +303,7 @@ public class PreferencesUI
 
         JPanel tab4 = new JPanel();
         tabbedPane.addTab("FTP", null, tab4, null);
-        tab4.setLayout(new MigLayout("", "[84.00][205.00,grow]", "[][][27.00][][][-17.00][][]"));
+        tab4.setLayout(new MigLayout("", "[84.00][266.00]", "[][][27.00][][][-17.00][][]"));
 
         JLabel lblHost = new JLabel("Host:");
         tab4.add(lblHost, "flowx,cell 0 0,alignx right");
@@ -244,7 +316,7 @@ public class PreferencesUI
         tab4.add(lblUser, "flowx,cell 0 1,alignx right");
 
         userField = new JTextField();
-        tab4.add(userField, "flowx,cell 1 1,alignx center");
+        tab4.add(userField, "flowx,cell 1 1,alignx left");
         userField.setColumns(10);
 
         JLabel lblPassword = new JLabel("Password:");
@@ -411,25 +483,6 @@ public class PreferencesUI
             }
         });
 
-        JButton btnValidate = new JButton("Validate");
-        btnValidate.addActionListener(new ActionListener()
-        {
-            public void actionPerformed(ActionEvent arg0)
-            {
-                String key1 = new String(keyField1.getPassword());
-                String key2 = new String(keyField2.getPassword());
-
-                if (key1.equals("") || key2.equals(""))
-                    JOptionPane.showMessageDialog(null, "Your Key fields are empty!", "Empty Fields",
-                        JOptionPane.ERROR_MESSAGE);
-                else if (DBUniqueKey.validate(key1, key2))
-                    JOptionPane.showMessageDialog(null, "Your Keys are valid!");
-                else
-                    JOptionPane.showMessageDialog(null, "These keys are invalid!", "Invalid Keys!",
-                        JOptionPane.WARNING_MESSAGE);
-            }
-        });
-
         JButton btnSaveKeys = new JButton("Save");
         btnSaveKeys.addActionListener(new ActionListener()
         {
@@ -461,18 +514,26 @@ public class PreferencesUI
             }
         });
         tab5.add(btnSaveKeys, "flowx,cell 1 2");
-        tab5.add(btnValidate, "cell 0 5,alignx left");
+        
+                JButton btnValidate = new JButton("Validate");
+                btnValidate.addActionListener(new ActionListener()
+                {
+                    public void actionPerformed(ActionEvent arg0)
+                    {
+                        String key1 = new String(keyField1.getPassword());
+                        String key2 = new String(keyField2.getPassword());
 
-        JButton btnUseDefault = new JButton("Use default keys");
-        btnUseDefault.addActionListener(new ActionListener()
-        {
-            public void actionPerformed(ActionEvent arg0)
-            {
-                keyField1.setText("");
-                keyField2.setText("");
-            }
-        });
-        tab5.add(btnUseDefault, "cell 1 5,alignx right");
+                        if (key1.equals("") || key2.equals(""))
+                            JOptionPane.showMessageDialog(null, "Your Key fields are empty!", "Empty Fields",
+                                JOptionPane.ERROR_MESSAGE);
+                        else if (DBUniqueKey.validate(key1, key2))
+                            JOptionPane.showMessageDialog(null, "Your Keys are valid!");
+                        else
+                            JOptionPane.showMessageDialog(null, "These keys are invalid!", "Invalid Keys!",
+                                JOptionPane.WARNING_MESSAGE);
+                    }
+                });
+                tab5.add(btnValidate, "cell 0 4,alignx left");
         tab5.add(btnRegisterKeyset, "cell 0 6,alignx left");
 
         JButton btnImport = new JButton("Import Keys");
@@ -517,6 +578,17 @@ public class PreferencesUI
 
         chckbxDontTrackUseage = new JCheckBox("Don't send statistics data");
         tab5.add(chckbxDontTrackUseage, "cell 1 6,alignx right");
+        
+                JButton btnUseDefault = new JButton("Use default keys");
+                btnUseDefault.addActionListener(new ActionListener()
+                {
+                    public void actionPerformed(ActionEvent arg0)
+                    {
+                        keyField1.setText("");
+                        keyField2.setText("");
+                    }
+                });
+                tab5.add(btnUseDefault, "cell 0 5,alignx left");
 
         JPanel tab3 = new JPanel();
         tabbedPane.addTab("Controls/Hotkeys", null, tab3, null);
@@ -524,7 +596,7 @@ public class PreferencesUI
 
         JPanel panel_1 = new JPanel();
         // tab3.add(panel_1, BorderLayout.CENTER);
-        panel_1.setLayout(new MigLayout("", "[189.00,grow,leading][39.00,grow]", "[][][][][][][][15.00][][][][][][17.00][19.00][][][][][][][]"));
+        panel_1.setLayout(new MigLayout("", "[31.00,leading][83.00,grow,leading][81.00,grow]", "[][][][][][][][][][][][][17.00][19.00][][][][][][][]"));
 
         JLabel lblEditor = new JLabel("Editor");
         lblEditor.setFont(new Font("Tahoma", Font.BOLD, 18));
@@ -563,116 +635,439 @@ public class PreferencesUI
 
         JSeparator separator_4 = new JSeparator();
         panel_1.add(separator_4, "cell 0 6 2 1,grow");
-        
-        JLabel lblMasterUploadsave = new JLabel("Master Upload/Save");
-        lblMasterUploadsave.setFont(new Font("Tahoma", Font.BOLD, 14));
-        panel_1.add(lblMasterUploadsave, "cell 0 7");
-        
-        JLabel lblPrintScreen = new JLabel("PRINT SCREEN");
-        lblPrintScreen.setFont(new Font("Tahoma", Font.BOLD, 12));
-        panel_1.add(lblPrintScreen, "cell 1 7");
 
         JLabel lblUploadSnippet = new JLabel("Upload Snippet");
         lblUploadSnippet.setFont(new Font("Tahoma", Font.PLAIN, 13));
-        panel_1.add(lblUploadSnippet, "cell 0 8");
-
-        JLabel lblCtrlShift = new JLabel("CTRL + SHIFT + 1");
-        lblCtrlShift.setFont(new Font("Tahoma", Font.BOLD, 11));
-        panel_1.add(lblCtrlShift, "cell 1 8");
+        panel_1.add(lblUploadSnippet, "cell 0 7,alignx leading");
+        
+        upModBox1 = new JComboBox();
+        upModBox1.addItemListener(new ItemListener() {
+            public void itemStateChanged(ItemEvent e) {
+                hotkeyMods1[0] = getHotkeyMod(upModBox1.getSelectedIndex());
+            }
+        });
+        upModBox1.setModel(new DefaultComboBoxModel(modifierKeys));
+        panel_1.add(upModBox1, "flowx,cell 1 7");
+        
+        upKeyField = new JTextField();
+        upKeyField.setText("NONE");
+        upKeyField.setBackground(Color.white);
+        upKeyField.setEditable(false);
+        upKeyField.addKeyListener(new KeyAdapter()
+        {
+            public void keyPressed(KeyEvent e)
+            {
+                upKeyField.setText(""+getKeyCharacter(e.getKeyCode()).toUpperCase());
+                hotkeyCodes[0] = e.getKeyCode();
+            }
+        });
+        upKeyField.addMouseListener(new MouseAdapter()
+        {
+            public void mouseClicked(MouseEvent e)
+            {
+                upKeyField.selectAll();
+            }
+            public void mouseEntered(MouseEvent e)
+            {
+                upKeyField.setBackground(Color.green);
+            }
+            public void mouseExited(MouseEvent e)
+            {
+                upKeyField.setBackground(Color.white);
+            }
+        });
+        panel_1.add(upKeyField, "cell 2 7");
+        upKeyField.setColumns(10);
 
         JLabel lblUploadScreenshot = new JLabel("Upload Screenshot");
         lblUploadScreenshot.setFont(new Font("Tahoma", Font.PLAIN, 13));
-        panel_1.add(lblUploadScreenshot, "cell 0 9");
-
-        JLabel lblCtrlShift_1 = new JLabel("CTRL + SHIFT + 2");
-        lblCtrlShift_1.setFont(new Font("Tahoma", Font.BOLD, 11));
-        panel_1.add(lblCtrlShift_1, "cell 1 9");
+        panel_1.add(lblUploadScreenshot, "cell 0 8,alignx leading");
+        
+        upScreenModBox1 = new JComboBox(modifierKeys);
+        upScreenModBox1.addItemListener(new ItemListener() {
+            public void itemStateChanged(ItemEvent e) {
+                hotkeyMods1[1] = getHotkeyMod(upScreenModBox1.getSelectedIndex());
+            }
+        });
+        panel_1.add(upScreenModBox1, "flowx,cell 1 8");
+        
+        upScreenKeyField = new JTextField();
+        upScreenKeyField.setText("NONE");
+        upScreenKeyField.setBackground(Color.white);
+        upScreenKeyField.setEditable(false);
+        upScreenKeyField.addKeyListener(new KeyAdapter()
+        {
+            public void keyPressed(KeyEvent e)
+            {
+                upScreenKeyField.setText(""+getKeyCharacter(e.getKeyCode()).toUpperCase());
+                hotkeyCodes[1] = e.getKeyCode();
+            }
+        });
+        upScreenKeyField.addMouseListener(new MouseAdapter()
+        {
+            public void mouseClicked(MouseEvent e)
+            {
+                upScreenKeyField.selectAll();
+            }
+            public void mouseEntered(MouseEvent e)
+            {
+                upScreenKeyField.setBackground(Color.green);
+            }
+            public void mouseExited(MouseEvent e)
+            {
+                upScreenKeyField.setBackground(Color.white);
+            }
+        });
+        panel_1.add(upScreenKeyField, "cell 2 8,growx");
 
         JLabel lblUploadClipboard = new JLabel("Upload Clipboard Img");
         lblUploadClipboard.setFont(new Font("Tahoma", Font.PLAIN, 13));
-        panel_1.add(lblUploadClipboard, "cell 0 10");
-
-        JLabel lblCtrlShift_2 = new JLabel("CTRL + SHIFT + X");
-        lblCtrlShift_2.setFont(new Font("Tahoma", Font.BOLD, 11));
-        panel_1.add(lblCtrlShift_2, "cell 1 10");
+        panel_1.add(lblUploadClipboard, "cell 0 9,alignx leading");
+        
+        upClipModBox1 = new JComboBox(modifierKeys);
+        upClipModBox1.addItemListener(new ItemListener() {
+            public void itemStateChanged(ItemEvent e) {
+                hotkeyMods1[2] = getHotkeyMod(upClipModBox1.getSelectedIndex());
+            }
+        });
+        panel_1.add(upClipModBox1, "flowx,cell 1 9");
+        
+        upClipKeyField = new JTextField();
+        upClipKeyField.setText("NONE");
+        upClipKeyField.setBackground(Color.white);
+        upClipKeyField.setEditable(false);
+        upClipKeyField.addKeyListener(new KeyAdapter()
+        {
+            public void keyPressed(KeyEvent e)
+            {
+                upClipKeyField.setText(""+getKeyCharacter(e.getKeyCode()).toUpperCase());
+                hotkeyCodes[2] = e.getKeyCode();
+            }
+        });
+        upClipKeyField.addMouseListener(new MouseAdapter()
+        {
+            public void mouseClicked(MouseEvent e)
+            {
+                upClipKeyField.selectAll();
+            }
+            public void mouseEntered(MouseEvent e)
+            {
+                upClipKeyField.setBackground(Color.green);
+            }
+            public void mouseExited(MouseEvent e)
+            {
+                upClipKeyField.setBackground(Color.white);
+            }
+        });
+        panel_1.add(upClipKeyField, "cell 2 9,growx");
 
         JLabel lblSaveSnippet = new JLabel("Save Snippet");
         lblSaveSnippet.setFont(new Font("Tahoma", Font.PLAIN, 13));
-        panel_1.add(lblSaveSnippet, "cell 0 11");
-
-        JLabel lblCtrlShift_3 = new JLabel("CTRL + SHIFT + 3");
-        lblCtrlShift_3.setFont(new Font("Tahoma", Font.BOLD, 11));
-        panel_1.add(lblCtrlShift_3, "cell 1 11");
+        panel_1.add(lblSaveSnippet, "cell 0 10,alignx leading");
+        
+        saveModBox1 = new JComboBox(modifierKeys);
+        saveModBox1.addItemListener(new ItemListener() {
+            public void itemStateChanged(ItemEvent e) {
+                hotkeyMods1[3] = getHotkeyMod(saveModBox1.getSelectedIndex());
+            }
+        });
+        panel_1.add(saveModBox1, "flowx,cell 1 10");
+        
+        saveKeyField = new JTextField();
+        saveKeyField.setText("NONE");
+        saveKeyField.setBackground(Color.white);
+        saveKeyField.setEditable(false);
+        saveKeyField.addKeyListener(new KeyAdapter()
+        {
+            public void keyPressed(KeyEvent e)
+            {
+                saveKeyField.setText(""+getKeyCharacter(e.getKeyCode()).toUpperCase());
+                hotkeyCodes[3] = e.getKeyCode();
+            }
+        });
+        saveKeyField.addMouseListener(new MouseAdapter()
+        {
+            public void mouseClicked(MouseEvent e)
+            {
+                saveKeyField.selectAll();
+            }
+            public void mouseEntered(MouseEvent e)
+            {
+                saveKeyField.setBackground(Color.green);
+            }
+            public void mouseExited(MouseEvent e)
+            {
+                saveKeyField.setBackground(Color.white);
+            }
+        });
+        panel_1.add(saveKeyField, "cell 2 10,growx");
 
         JLabel lblSaveScreenshot = new JLabel("Save Screenshot");
         lblSaveScreenshot.setFont(new Font("Tahoma", Font.PLAIN, 13));
-        panel_1.add(lblSaveScreenshot, "cell 0 12");
-
-        JLabel lblCtrlshift = new JLabel("CTRL +SHIFT + 4");
-        lblCtrlshift.setFont(new Font("Tahoma", Font.BOLD, 11));
-        panel_1.add(lblCtrlshift, "cell 1 12");
+        panel_1.add(lblSaveScreenshot, "cell 0 11,alignx leading");
 
         JScrollPane scrollPane = new JScrollPane(panel_1);
+        
+        saveScreenModBox1 = new JComboBox(modifierKeys);
+        saveScreenModBox1.addItemListener(new ItemListener() {
+            public void itemStateChanged(ItemEvent e) {
+                hotkeyMods1[4] = getHotkeyMod(saveScreenModBox1.getSelectedIndex());
+            }
+        });
+        panel_1.add(saveScreenModBox1, "flowx,cell 1 11");
+        
+        saveScreenKeyField = new JTextField();
+        saveScreenKeyField.setText("NONE");
+        saveScreenKeyField.setBackground(Color.white);
+        saveScreenKeyField.setEditable(false);
+        saveScreenKeyField.addKeyListener(new KeyAdapter()
+        {
+            public void keyPressed(KeyEvent e)
+            {
+                saveScreenKeyField.setText(""+getKeyCharacter(e.getKeyCode()).toUpperCase());
+                hotkeyCodes[4] = e.getKeyCode();
+            }
+        });
+        saveScreenKeyField.addMouseListener(new MouseAdapter()
+        {
+            public void mouseClicked(MouseEvent e)
+            {
+                saveScreenKeyField.selectAll();
+            }
+            public void mouseEntered(MouseEvent e)
+            {
+                saveScreenKeyField.setBackground(Color.green);
+            }
+            public void mouseExited(MouseEvent e)
+            {
+                saveScreenKeyField.setBackground(Color.white);
+            }
+        });
+        panel_1.add(saveScreenKeyField, "cell 2 11,growx");
 
         JLabel lblFtpUploadSnippet = new JLabel("FTP Upload Snippet");
-        panel_1.add(lblFtpUploadSnippet, "cell 0 13");
+        panel_1.add(lblFtpUploadSnippet, "cell 0 12,alignx leading");
+        
+        ftpModBox1 = new JComboBox(modifierKeys);
+        ftpModBox1.addItemListener(new ItemListener() {
+            public void itemStateChanged(ItemEvent e) {
+                hotkeyMods1[5] = getHotkeyMod(ftpModBox1.getSelectedIndex());
+            }
+        });
+        panel_1.add(ftpModBox1, "flowx,cell 1 12");
+        
+        ftpKeyField = new JTextField();
+        ftpKeyField.setText("NONE");
+        ftpKeyField.setBackground(Color.white);
+        ftpKeyField.setEditable(false);
+        ftpKeyField.addKeyListener(new KeyAdapter()
+        {
+            public void keyPressed(KeyEvent e)
+            {
+                ftpKeyField.setText(""+getKeyCharacter(e.getKeyCode()).toUpperCase());
+                hotkeyCodes[5] = e.getKeyCode();
+            }
+        });
+        ftpKeyField.addMouseListener(new MouseAdapter()
+        {
+            public void mouseClicked(MouseEvent e)
+            {
+                ftpKeyField.selectAll();
+            }
+            public void mouseEntered(MouseEvent e)
+            {
+                ftpKeyField.setBackground(Color.green);
+            }
+            public void mouseExited(MouseEvent e)
+            {
+                ftpKeyField.setBackground(Color.white);
+            }
+        });
+        panel_1.add(ftpKeyField, "cell 2 12,growx");
 
-        JLabel lblAltshift = new JLabel("ALT +SHIFT + 1");
-        lblAltshift.setFont(new Font("Tahoma", Font.BOLD, 11));
-        panel_1.add(lblAltshift, "cell 1 13");
-
-        JLabel lblFtpUploadScreenshot = new JLabel("FTP Upload Screenshot");
-        panel_1.add(lblFtpUploadScreenshot, "cell 0 14");
-
-        JLabel lblAltshift_1 = new JLabel("ALT +SHIFT + 2");
-        lblAltshift_1.setFont(new Font("Tahoma", Font.BOLD, 11));
-        panel_1.add(lblAltshift_1, "cell 1 14");
+        JLabel lblFtpUploadScreenshot = new JLabel("FTP Upload Screen");
+        panel_1.add(lblFtpUploadScreenshot, "cell 0 13,alignx leading");
+        
+        ftpScreenModBox1 = new JComboBox(modifierKeys);
+        ftpScreenModBox1.addItemListener(new ItemListener() {
+            public void itemStateChanged(ItemEvent e) {
+                hotkeyMods1[6] = getHotkeyMod(ftpScreenModBox1.getSelectedIndex());
+            }
+        });
+        panel_1.add(ftpScreenModBox1, "flowx,cell 1 13");
+        
+        ftpScreenKeyField = new JTextField();
+        ftpScreenKeyField.setText("NONE");
+        ftpScreenKeyField.setBackground(Color.white);
+        ftpScreenKeyField.setEditable(false);
+        ftpScreenKeyField.addKeyListener(new KeyAdapter()
+        {
+            public void keyPressed(KeyEvent e)
+            {
+                ftpScreenKeyField.setText(""+getKeyCharacter(e.getKeyCode()).toUpperCase());
+                hotkeyCodes[6] = e.getKeyCode();
+            }
+        });
+        ftpScreenKeyField.addMouseListener(new MouseAdapter()
+        {
+            public void mouseClicked(MouseEvent e)
+            {
+                ftpScreenKeyField.selectAll();
+            }
+            public void mouseEntered(MouseEvent e)
+            {
+                ftpScreenKeyField.setBackground(Color.green);
+            }
+            public void mouseExited(MouseEvent e)
+            {
+                ftpScreenKeyField.setBackground(Color.white);
+            }
+        });
+        panel_1.add(ftpScreenKeyField, "cell 2 13,growx");
 
         JLabel lblOverlayControls = new JLabel("Overlay");
         lblOverlayControls.setFont(new Font("Tahoma", Font.BOLD, 18));
-        panel_1.add(lblOverlayControls, "cell 0 15");
+        panel_1.add(lblOverlayControls, "cell 0 14");
 
         JSeparator separator_2 = new JSeparator();
-        panel_1.add(separator_2, "cell 0 16 2 1,growx");
+        panel_1.add(separator_2, "cell 0 15 2 1,growx");
         
-        JLabel lblZoomMagnifierInout = new JLabel("Zoom Magnifier In/Out");
+        JLabel lblZoomMagnifierInout = new JLabel("Magnifier Zoom");
         lblZoomMagnifierInout.setFont(new Font("Tahoma", Font.PLAIN, 13));
-        panel_1.add(lblZoomMagnifierInout, "cell 0 17");
+        panel_1.add(lblZoomMagnifierInout, "cell 0 16");
         
         JLabel lblMouseWheel = new JLabel("MOUSE WHEEL");
         lblMouseWheel.setFont(new Font("Tahoma", Font.BOLD, 13));
-        panel_1.add(lblMouseWheel, "cell 1 17");
+        panel_1.add(lblMouseWheel, "cell 1 16");
 
-        JLabel lblIncreaseTransparency = new JLabel("Change Overlay Transparency");
+        JLabel lblIncreaseTransparency = new JLabel("Overlay Opacity");
         lblIncreaseTransparency.setFont(new Font("Tahoma", Font.PLAIN, 13));
-        panel_1.add(lblIncreaseTransparency, "cell 0 18");
+        panel_1.add(lblIncreaseTransparency, "cell 0 17");
 
         JLabel lblMousewheelUp = new JLabel("MOUSE WHEEL");
         lblMousewheelUp.setFont(new Font("Tahoma", Font.BOLD, 13));
-        panel_1.add(lblMousewheelUp, "cell 1 18");
+        panel_1.add(lblMousewheelUp, "cell 1 17");
         
         JSeparator separator_6 = new JSeparator();
-        panel_1.add(separator_6, "cell 0 20 2 1,grow");
+        panel_1.add(separator_6, "cell 0 19 2 1,grow");
         
         JTextPane txtpnNote = new JTextPane();
         txtpnNote.setFont(new Font("Tahoma", Font.PLAIN, 13));
         txtpnNote.setBackground(new Color(240,240,240));
         txtpnNote.setEditable(false);
         txtpnNote.setText("* Note - To change overlay transparency, you must first hide the Magnifying Glass with [Right Click].");
-        panel_1.add(txtpnNote, "cell 0 21,growx");
+        panel_1.add(txtpnNote, "cell 0 20,growx");
 
         JLabel lblUpdateOverlay = new JLabel("Update Overlay");
         lblUpdateOverlay.setFont(new Font("Tahoma", Font.PLAIN, 13));
-        panel_1.add(lblUpdateOverlay, "cell 0 19");
+        panel_1.add(lblUpdateOverlay, "cell 0 18");
 
         JLabel lblMiddleClick = new JLabel("MIDDLE CLICK");
         lblMiddleClick.setFont(new Font("Tahoma", Font.BOLD, 13));
-        panel_1.add(lblMiddleClick, "cell 1 19");
+        panel_1.add(lblMiddleClick, "cell 1 18");
+        
+        JLabel label = new JLabel("+");
+        panel_1.add(label, "cell 1 7");
+        
+        upModBox2 = new JComboBox();
+        upModBox2.setModel(new DefaultComboBoxModel(modifierKeys));
+        upModBox2.addItemListener(new ItemListener() {
+            public void itemStateChanged(ItemEvent e) {
+                hotkeyMods2[0] = getHotkeyMod(upModBox2.getSelectedIndex());
+            }
+        });
+        panel_1.add(upModBox2, "cell 1 7");
+        
+        JLabel label_1 = new JLabel("+");
+        panel_1.add(label_1, "cell 1 7");
+        
+        JLabel label_2 = new JLabel("+");
+        panel_1.add(label_2, "cell 1 8");
+        
+        upScreenModBox2 = new JComboBox(modifierKeys);
+        upScreenModBox2.addItemListener(new ItemListener() {
+            public void itemStateChanged(ItemEvent e) {
+                hotkeyMods2[1] = getHotkeyMod(upScreenModBox2.getSelectedIndex());
+            }
+        });
+        panel_1.add(upScreenModBox2, "cell 1 8");
+        
+        JLabel label_3 = new JLabel("+");
+        panel_1.add(label_3, "cell 1 8");
+        
+        JLabel label_4 = new JLabel("+");
+        panel_1.add(label_4, "cell 1 9");
+        
+        upClipModBox2 = new JComboBox(modifierKeys);
+        upClipModBox2.addItemListener(new ItemListener() {
+            public void itemStateChanged(ItemEvent e) {
+                hotkeyMods2[2] = getHotkeyMod(upClipModBox2.getSelectedIndex());
+            }
+        });
+        panel_1.add(upClipModBox2, "cell 1 9");
+        
+        JLabel label_5 = new JLabel("+");
+        panel_1.add(label_5, "cell 1 9");
+        
+        JLabel label_6 = new JLabel("+");
+        panel_1.add(label_6, "cell 1 10");
+        
+        saveModBox2 = new JComboBox(modifierKeys);
+        saveModBox2.addItemListener(new ItemListener() {
+            public void itemStateChanged(ItemEvent e) {
+                hotkeyMods2[3] = getHotkeyMod(saveModBox2.getSelectedIndex());
+            }
+        });
+        panel_1.add(saveModBox2, "cell 1 10");
+        
+        JLabel label_7 = new JLabel("+");
+        panel_1.add(label_7, "cell 1 10");
+        
+        JLabel label_8 = new JLabel("+");
+        panel_1.add(label_8, "cell 1 11");
+        
+        saveScreenModBox2 = new JComboBox(modifierKeys);
+        saveScreenModBox2.addItemListener(new ItemListener() {
+            public void itemStateChanged(ItemEvent e) {
+                hotkeyMods2[4] = getHotkeyMod(saveScreenModBox2.getSelectedIndex());
+            }
+        });
+        panel_1.add(saveScreenModBox2, "cell 1 11");
+        
+        JLabel label_9 = new JLabel("+");
+        panel_1.add(label_9, "cell 1 11");
+        
+        JLabel label_10 = new JLabel("+");
+        panel_1.add(label_10, "cell 1 12");
+        
+        ftpModBox2 = new JComboBox(modifierKeys);
+        ftpModBox2.addItemListener(new ItemListener() {
+            public void itemStateChanged(ItemEvent e) {
+                hotkeyMods2[5] = getHotkeyMod(ftpModBox2.getSelectedIndex());
+            }
+        });
+        panel_1.add(ftpModBox2, "cell 1 12");
+        
+        JLabel label_11 = new JLabel("+");
+        panel_1.add(label_11, "cell 1 12");
+        
+        JLabel label_12 = new JLabel("+");
+        panel_1.add(label_12, "cell 1 13");
+        
+        ftpScreenModBox2 = new JComboBox(modifierKeys);
+        ftpScreenModBox2.addItemListener(new ItemListener() {
+            public void itemStateChanged(ItemEvent e) {
+                hotkeyMods2[6] = getHotkeyMod(ftpScreenModBox2.getSelectedIndex());
+            }
+        });
+        panel_1.add(ftpScreenModBox2, "cell 1 13");
+        
+        JLabel label_13 = new JLabel("+");
+        panel_1.add(label_13, "cell 1 13");
         scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
-        scrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
         scrollPane.getVerticalScrollBar().setUnitIncrement(8);
         // scrollPane.setMaximumSize(new Dimension(200,100));
-        tab3.add(scrollPane, BorderLayout.EAST);
+        tab3.add(scrollPane, BorderLayout.CENTER);
 
         JButton btnApply = new JButton("Apply");
         btnApply.addActionListener(new ActionListener()
@@ -696,12 +1091,208 @@ public class PreferencesUI
                 Preferences.getInstance().setUniqueKey2(new String(keyField2.getPassword()));
                 Preferences.getInstance().setTrackingDisabled(chckbxDontTrackUseage.isSelected());
                 Preferences.getInstance().setDefaultTool(0);
+                
+                registerAndSaveHotkeys();
+                
+                Preferences.getInstance().setHotkeyCodes(hotkeyCodes);
+                Preferences.getInstance().setFirstHotkeyMods(hotkeyMods1);
+                Preferences.getInstance().setSecondHotkeyMods(hotkeyMods2);
+                
                 frmPreferences.dispose();
+            }
+
+            private void registerAndSaveHotkeys()
+            {
+                // 1. save the new keys to preferences
+                // 2. unregister all identifiers
+                // 3. register the new hotkeys
+                
+                JIntellitype keyhook = null;
+                
+                try
+                {
+                    keyhook = JIntellitype.getInstance();
+                }
+                catch(JIntellitypeException ex)
+                {
+                    ex.printStackTrace();
+                }
+                if(keyhook != null)
+                {
+                    for(int i = 1; i < 8; i++)
+                        keyhook.unregisterHotKey(i);
+                    for(int i = 1; i < 8; i++)
+                        keyhook.registerHotKey(i, hotkeyMods1[i-1] + hotkeyMods2[i-1], hotkeyCodes[i-1]);
+                }
+                
+                
             }
         });
         frmPreferences.getContentPane().add(btnApply, "cell 0 2,alignx right");
         frmPreferences.setLocationRelativeTo(null);
         frmPreferences.setVisible(true);
 
+    }
+    
+    public int getModBoxIndex(int mod)
+    {
+        switch(mod)
+        {
+        case 0:
+            return 0;
+        case 2:
+            return 1;
+        case 1:
+            return 2;
+        case 4:
+            return 3;
+        case 8:
+            return 4;
+        }
+        return 0;
+    }
+    public int getHotkeyMod(int index)
+    {
+        switch(index)
+        {
+        case 0:
+            return 0;
+        case 1:
+            return 2;
+        case 2:
+            return 1;
+        case 3:
+            return 4;
+        case 4:
+            return 8;
+        }
+        return 0;
+    }
+    public String getKeyCharacter(int keyCode){
+        switch (keyCode) {
+
+        /* Keyboard and Mouse Masks */
+        case KeyEvent.VK_ALT:
+          return "NONE";
+        case KeyEvent.VK_SHIFT:
+          return "NONE";
+        case KeyEvent.VK_CONTROL:
+          return "NONE";
+        case KeyEvent.VK_WINDOWS:
+          return "NONE";
+
+        /* Non-Numeric Keypad Keys */
+        case KeyEvent.VK_UP:
+          return "ARROW_UP";
+        case KeyEvent.VK_DOWN:
+          return "ARROW_DOWN";
+        case KeyEvent.VK_LEFT:
+          return "ARROW_LEFT";
+        case KeyEvent.VK_RIGHT:
+          return "ARROW_RIGHT";
+        case KeyEvent.VK_PAGE_UP:
+          return "PAGE_UP";
+        case KeyEvent.VK_PAGE_DOWN:
+          return "PAGE_DOWN";
+        case KeyEvent.VK_HOME:
+          return "HOME";
+        case KeyEvent.VK_END:
+          return "END";
+        case KeyEvent.VK_INSERT:
+          return "INSERT";
+
+        /* Virtual and Ascii Keys */
+        case KeyEvent.VK_DELETE:
+          return "DEL";
+        case KeyEvent.VK_ESCAPE:
+          return "NONE";
+        case KeyEvent.VK_TAB:
+          return "TAB";
+
+        /* Functions Keys */
+        case KeyEvent.VK_F1:
+          return "F1";
+        case KeyEvent.VK_F2:
+          return "F2";
+        case KeyEvent.VK_F3:
+          return "F3";
+        case KeyEvent.VK_F4:
+          return "F4";
+        case KeyEvent.VK_F5:
+          return "F5";
+        case KeyEvent.VK_F6:
+          return "F6";
+        case KeyEvent.VK_F7:
+          return "F7";
+        case KeyEvent.VK_F8:
+          return "F8";
+        case KeyEvent.VK_F9:
+          return "F9";
+        case KeyEvent.VK_F10:
+          return "F10";
+        case KeyEvent.VK_F11:
+          return "F11";
+        case KeyEvent.VK_F12:
+          return "F12";
+        case KeyEvent.VK_F13:
+          return "F13";
+        case KeyEvent.VK_F14:
+          return "F14";
+        case KeyEvent.VK_F15:
+          return "F15";
+
+        /* Numeric Keypad Keys */
+        case KeyEvent.VK_ADD:
+          return "ADD";
+        case KeyEvent.VK_SUBTRACT:
+          return "SUBTRACT";
+        case KeyEvent.VK_MULTIPLY:
+          return "MULTIPLY";
+        case KeyEvent.VK_DIVIDE:
+          return "DIVIDE";
+        case KeyEvent.VK_DECIMAL:
+          return "DECIMAL";
+//        case KeyEvent.VK_CR:
+//          return "NUMPADCR";
+        case KeyEvent.VK_NUMPAD0:
+          return "0";
+        case KeyEvent.VK_NUMPAD1:
+          return "1";
+        case KeyEvent.VK_NUMPAD2:
+          return "2";
+        case KeyEvent.VK_NUMPAD3:
+          return "3";
+        case KeyEvent.VK_NUMPAD4:
+          return "4";
+        case KeyEvent.VK_NUMPAD5:
+          return "5";
+        case KeyEvent.VK_NUMPAD6:
+          return "6";
+        case KeyEvent.VK_NUMPAD7:
+          return "7";
+        case KeyEvent.VK_NUMPAD8:
+          return "8";
+        case KeyEvent.VK_NUMPAD9:
+          return "9";
+        case KeyEvent.VK_EQUALS:
+          return "EQUALS";
+
+        /* Other keys */
+        case KeyEvent.VK_CAPS_LOCK:
+          return "CAPS_LOCK";
+        case KeyEvent.VK_NUM_LOCK:
+          return "NUM_LOCK";
+        case KeyEvent.VK_SCROLL_LOCK:
+          return "SCROLL_LOCK";
+        case KeyEvent.VK_PAUSE:
+          return "PAUSE";
+//        case KeyEvent.VK_BREAK:
+//          return "BREAK";
+        case KeyEvent.VK_PRINTSCREEN:
+          return "PRINT_SCREEN";
+        case KeyEvent.VK_HELP:
+          return "HELP";
+        }
+        return ""+(char)keyCode;
     }
 }
