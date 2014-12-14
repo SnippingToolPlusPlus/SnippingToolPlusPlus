@@ -1275,7 +1275,7 @@ public class PreferencesUI
         case KeyEvent.VK_NUMPAD9:
           return "NUM_9";
         case KeyEvent.VK_EQUALS:
-          return "EQUALS";
+          return "NUM_EQUALS";
 
         /* Other keys */
         case KeyEvent.VK_CAPS_LOCK:
