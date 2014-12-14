@@ -1255,25 +1255,25 @@ public class PreferencesUI
 //        case KeyEvent.VK_CR:
 //          return "NUMPADCR";
         case KeyEvent.VK_NUMPAD0:
-          return "0";
+          return "NUM_0";
         case KeyEvent.VK_NUMPAD1:
-          return "1";
+          return "NUM_1";
         case KeyEvent.VK_NUMPAD2:
-          return "2";
+          return "NUM_2";
         case KeyEvent.VK_NUMPAD3:
-          return "3";
+          return "NUM_3";
         case KeyEvent.VK_NUMPAD4:
-          return "4";
+          return "NUM_4";
         case KeyEvent.VK_NUMPAD5:
-          return "5";
+          return "NUM_5";
         case KeyEvent.VK_NUMPAD6:
-          return "6";
+          return "NUM_6";
         case KeyEvent.VK_NUMPAD7:
-          return "7";
+          return "NUM_7";
         case KeyEvent.VK_NUMPAD8:
-          return "8";
+          return "NUM_8";
         case KeyEvent.VK_NUMPAD9:
-          return "9";
+          return "NUM_9";
         case KeyEvent.VK_EQUALS:
           return "EQUALS";
 
