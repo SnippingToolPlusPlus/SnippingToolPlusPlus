@@ -20,7 +20,7 @@ import java.awt.image.BufferedImage;
 import javax.swing.ImageIcon;
 import javax.swing.JPanel;
 
-import com.shaneisrael.st.Main;
+import com.shaneisrael.st.SnippingToolPlusPlus;
 import com.shaneisrael.st.data.OperatingSystem;
 import com.shaneisrael.st.utilities.ClipboardUtilities;
 import com.shaneisrael.st.utilities.ImageUtilities;

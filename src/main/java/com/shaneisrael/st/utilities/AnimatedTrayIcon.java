@@ -7,7 +7,7 @@ import java.util.List;
 import javax.swing.ImageIcon;
 
 import com.shaneisrael.st.Config;
-import com.shaneisrael.st.Main;
+import com.shaneisrael.st.SnippingToolPlusPlus;
 
 public class AnimatedTrayIcon implements Runnable
 {
@@ -34,7 +34,7 @@ public class AnimatedTrayIcon implements Runnable
         {
             for (Image frame : frames)
             {
-                Main.trayIcon.setImage(frame);
+                SnippingToolPlusPlus.trayIcon.setImage(frame);
                 try
                 {
                     Thread.sleep(delayMs);
@@ -44,7 +44,7 @@ public class AnimatedTrayIcon implements Runnable
                 }
             }
         }
-        Main.trayIcon.setImage(new ImageIcon(this.getClass().getResource(originalIconPath)).getImage());
+        SnippingToolPlusPlus.trayIcon.setImage(new ImageIcon(this.getClass().getResource(originalIconPath)).getImage());
     }
 
     public void stopAnimating()

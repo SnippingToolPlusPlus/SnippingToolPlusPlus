@@ -9,7 +9,7 @@ import java.awt.datatransfer.UnsupportedFlavorException;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 
-import com.shaneisrael.st.Main;
+import com.shaneisrael.st.SnippingToolPlusPlus;
 import com.shaneisrael.st.notification.STNotificationType;
 
 public abstract class ClipboardUtilities implements ClipboardOwner
@@ -77,7 +77,7 @@ public abstract class ClipboardUtilities implements ClipboardOwner
             }
         }, null);
         
-        Main.showNotification("copied", STNotificationType.SUCCESS);
+        SnippingToolPlusPlus.showNotification("copied", STNotificationType.SUCCESS);
     }
 
     /**
@@ -96,7 +96,7 @@ public abstract class ClipboardUtilities implements ClipboardOwner
 
         if (img == null)
         {
-            Main.showNotification("upload-failed", STNotificationType.ERROR);
+            SnippingToolPlusPlus.showNotification("upload-failed", STNotificationType.ERROR);
         } else
         {
             new Upload(img, false);

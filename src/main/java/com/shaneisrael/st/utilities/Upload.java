@@ -7,7 +7,7 @@ import java.io.IOException;
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 
-import com.shaneisrael.st.Main;
+import com.shaneisrael.st.SnippingToolPlusPlus;
 import com.shaneisrael.st.data.LinkDataSaver;
 import com.shaneisrael.st.data.OperatingSystem;
 import com.shaneisrael.st.imgur.ImgurImage;
@@ -54,9 +54,9 @@ public class Upload implements ImgurResponseListener
             new Thread(animatedIcon, "upload-animation").start();
         } else
         {
-            Main.trayIcon.setImage(new ImageIcon(this.getClass().getResource("/images/uploadMac.png")).getImage());
+            SnippingToolPlusPlus.trayIcon.setImage(new ImageIcon(this.getClass().getResource("/images/uploadMac.png")).getImage());
         }
-        Main.showNotification("uploading", STNotificationType.INFO);
+        SnippingToolPlusPlus.showNotification("uploading", STNotificationType.INFO);
     }
 
     private void doAfterUpload()
@@ -69,7 +69,7 @@ public class Upload implements ImgurResponseListener
             }
         } else
         {
-            Main.trayIcon.setImage(new ImageIcon(this.getClass().getResource("/images/trayIconMac.png")).getImage());
+            SnippingToolPlusPlus.trayIcon.setImage(new ImageIcon(this.getClass().getResource("/images/trayIconMac.png")).getImage());
         }
     }
 
@@ -86,11 +86,11 @@ public class Upload implements ImgurResponseListener
         if (!uploadToreddit)
         {
             ClipboardUtilities.setClipboard(uploadedImage.getLink());
-            Main.showNotification("upload-done", STNotificationType.SUCCESS);
+            SnippingToolPlusPlus.showNotification("upload-done", STNotificationType.SUCCESS);
         } else
         {
             Browser.openToReddit(uploadedImage.getLink());
-            Main.showNotification("upload-done-reddit", STNotificationType.SUCCESS);
+            SnippingToolPlusPlus.showNotification("upload-done-reddit", STNotificationType.SUCCESS);
         }
         SoundNotifications.playDing();
         doAfterUpload();
@@ -101,7 +101,7 @@ public class Upload implements ImgurResponseListener
     @Override
     public void onImgurResponseFail(ImgurResponse response)
     {
-        Main.showNotification("upload-failed", STNotificationType.ERROR);
+        SnippingToolPlusPlus.showNotification("upload-failed", STNotificationType.ERROR);
         doAfterUpload();
     }
 

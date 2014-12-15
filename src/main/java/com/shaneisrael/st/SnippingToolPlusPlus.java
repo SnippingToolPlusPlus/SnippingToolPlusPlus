@@ -50,7 +50,7 @@ import com.shaneisrael.st.utilities.Upload;
 import com.shaneisrael.st.utilities.version.UpdateChecker;
 import com.shaneisrael.st.utilities.version.Version;
 
-public class Main extends JFrame implements ActionListener, JIntellitypeConstants
+public class SnippingToolPlusPlus extends JFrame implements ActionListener, JIntellitypeConstants
 {
     public static boolean debugging = false;
     public static JXTrayIcon trayIcon;
@@ -76,10 +76,10 @@ public class Main extends JFrame implements ActionListener, JIntellitypeConstant
     public static void main(String... args)
     {
         processArguments(args);
-        Main frame = null;
+        SnippingToolPlusPlus frame = null;
         try
         {
-            frame = new Main();
+            frame = new SnippingToolPlusPlus();
             frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         } catch (HeadlessException ex)
         {
@@ -102,7 +102,7 @@ public class Main extends JFrame implements ActionListener, JIntellitypeConstant
         }
     }
 
-    public Main()
+    public SnippingToolPlusPlus()
     {
         Preferences.getInstance().refresh();
         Preferences.getInstance().checkDirectories();

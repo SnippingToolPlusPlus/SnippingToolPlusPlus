@@ -29,7 +29,7 @@ import javax.swing.ImageIcon;
 import javax.swing.JPanel;
 import javax.swing.KeyStroke;
 
-import com.shaneisrael.st.Main;
+import com.shaneisrael.st.SnippingToolPlusPlus;
 import com.shaneisrael.st.editor.Editor;
 import com.shaneisrael.st.prefs.Preferences;
 import com.shaneisrael.st.upload.SimpleFTPUploader;
