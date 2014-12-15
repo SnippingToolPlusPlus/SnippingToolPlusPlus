@@ -38,7 +38,7 @@ public class Hotkeys
 
     }
     
-    public static String getHotkeyText(int identifier)
+    public static String getHotkeyComboText(int identifier)
     {
         
         int[] hotkeyMods1 = Preferences.getInstance().getFirstHotkeyMods();

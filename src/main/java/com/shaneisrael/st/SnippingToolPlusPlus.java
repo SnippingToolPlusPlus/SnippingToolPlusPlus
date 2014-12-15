@@ -292,25 +292,25 @@ public class SnippingToolPlusPlus extends JFrame implements ActionListener, JInt
         prefMenu.setIcon(new ImageIcon(this.getClass().getResource("/images/icons/pref.png")));
         prefMenu.addActionListener(this);
         prefMenu.setActionCommand("preferences");
-        uScreenshot = new JMenuItem("Screenshot ["+Hotkeys.getHotkeyText(Config.UPLOAD_SCREEN_ID)+"]");
+        uScreenshot = new JMenuItem("Screenshot ["+Hotkeys.getHotkeyComboText(Config.UPLOAD_SCREEN_ID)+"]");
         uScreenshot.setIcon(new ImageIcon(this.getClass().getResource("/images/icons/screenshot.png")));
         uScreenshot.addActionListener(this);
         uScreenshot.setActionCommand("uScreen");
-        uSnippet = new JMenuItem("Snippet ["+Hotkeys.getHotkeyText(Config.UPLOAD_SNIPPET_ID)+"]");
+        uSnippet = new JMenuItem("Snippet ["+Hotkeys.getHotkeyComboText(Config.UPLOAD_SNIPPET_ID)+"]");
         uSnippet.setIcon(new ImageIcon(this.getClass().getResource("/images/icons/snippet.png")));
         uSnippet.addActionListener(this);
         uSnippet.setActionCommand("uSnippet");
 
-        uClipboardImg = new JMenuItem("Clipboard Image ["+Hotkeys.getHotkeyText(Config.UPLOAD_CLIPBOARD_ID)+"]");
+        uClipboardImg = new JMenuItem("Clipboard Image ["+Hotkeys.getHotkeyComboText(Config.UPLOAD_CLIPBOARD_ID)+"]");
         uClipboardImg.setIcon(new ImageIcon(this.getClass().getResource("/images/icons/image_upload.png")));
         uClipboardImg.addActionListener(this);
         uClipboardImg.setActionCommand("uClipboardImg");
 
-        sScreenshot = new JMenuItem("Screenshot ["+Hotkeys.getHotkeyText(Config.SAVE_SCREEN_ID)+"]");
+        sScreenshot = new JMenuItem("Screenshot ["+Hotkeys.getHotkeyComboText(Config.SAVE_SCREEN_ID)+"]");
         sScreenshot.setIcon(new ImageIcon(this.getClass().getResource("/images/icons/screenshot.png")));
         sScreenshot.addActionListener(this);
         sScreenshot.setActionCommand("sScreen");
-        sSnippet = new JMenuItem("Snippet ["+Hotkeys.getHotkeyText(Config.SAVE_SNIPPET_ID)+"]");
+        sSnippet = new JMenuItem("Snippet ["+Hotkeys.getHotkeyComboText(Config.SAVE_SNIPPET_ID)+"]");
         sSnippet.setIcon(new ImageIcon(this.getClass().getResource("/images/icons/snippet.png")));
         sSnippet.addActionListener(this);
         sSnippet.setActionCommand("sSnippet");
