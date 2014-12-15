@@ -9,10 +9,10 @@ import com.shaneisrael.st.prefs.Preferences;
 
 public class Hotkeys
 {
-    
+
+    public static final String[] MODIFIER_KEYS = { "NONE", "CTRL", "ALT", "SHIFT", "WIN" };
     public static final int NO_HOTKEY = 11111;
-    
-    
+
     public void registerHotkeys()
     {
         int[] hotkeyMods1 = Preferences.getInstance().getFirstHotkeyMods();
@@ -23,8 +23,7 @@ public class Hotkeys
         try
         {
             keyhook = JIntellitype.getInstance();
-        }
-        catch (JIntellitypeException ex)
+        } catch (JIntellitypeException ex)
         {
             ex.printStackTrace();
         }
@@ -39,6 +38,28 @@ public class Hotkeys
 
     }
     
+    public static String getHotkeyText(int identifier)
+    {
+        
+        int[] hotkeyMods1 = Preferences.getInstance().getFirstHotkeyMods();
+        int[] hotkeyMods2 = Preferences.getInstance().getSecondHotkeyMods();
+        int[] hotkeyCodes = Preferences.getInstance().getHotkeyCodes();
+        
+        String text = "";
+        
+        if(hotkeyMods1[identifier] != NO_HOTKEY)
+            text += MODIFIER_KEYS[hotkeyMods1[identifier]];
+        if(hotkeyMods2[identifier] != NO_HOTKEY)
+            text += MODIFIER_KEYS[hotkeyMods2[identifier]];
+        if(hotkeyCodes[identifier] != NO_HOTKEY)
+            text += KeyEvent.getKeyText(hotkeyCodes[identifier]);
+        if(text.equals(""))
+            text = "NO HOTKEY SET!";
+        
+        return text;
+        
+    }
+
     public static int getModBoxIndex(int mod)
     {
         switch (mod)

@@ -81,7 +81,6 @@ public class PreferencesUI
     private JTextField ftpPathField;
     public static JPasswordField keyField1;
     public static JPasswordField keyField2;
-    private String[] modifierKeys = { "NONE", "CTRL", "ALT", "SHIFT", "WIN" };
     private int hotkeyCodes[];
     private int hotkeyMods1[];
     private int hotkeyMods2[];
@@ -647,7 +646,7 @@ public class PreferencesUI
                 hotkeyMods1[0] = Hotkeys.getHotkeyMod(upModBox1.getSelectedIndex());
             }
         });
-        upModBox1.setModel(new DefaultComboBoxModel(modifierKeys));
+        upModBox1.setModel(new DefaultComboBoxModel(Hotkeys.MODIFIER_KEYS));
         panel_1.add(upModBox1, "flowx,cell 1 7");
 
         upKeyField = new JTextField();
@@ -691,7 +690,7 @@ public class PreferencesUI
         lblUploadScreenshot.setFont(new Font("Tahoma", Font.PLAIN, 13));
         panel_1.add(lblUploadScreenshot, "cell 0 8,alignx leading");
 
-        upScreenModBox1 = new JComboBox(modifierKeys);
+        upScreenModBox1 = new JComboBox(Hotkeys.MODIFIER_KEYS);
         upScreenModBox1.addItemListener(new ItemListener()
         {
             public void itemStateChanged(ItemEvent e)
@@ -741,7 +740,7 @@ public class PreferencesUI
         lblUploadClipboard.setFont(new Font("Tahoma", Font.PLAIN, 13));
         panel_1.add(lblUploadClipboard, "cell 0 9,alignx leading");
 
-        upClipModBox1 = new JComboBox(modifierKeys);
+        upClipModBox1 = new JComboBox(Hotkeys.MODIFIER_KEYS);
         upClipModBox1.addItemListener(new ItemListener()
         {
             public void itemStateChanged(ItemEvent e)
@@ -791,7 +790,7 @@ public class PreferencesUI
         lblSaveSnippet.setFont(new Font("Tahoma", Font.PLAIN, 13));
         panel_1.add(lblSaveSnippet, "cell 0 10,alignx leading");
 
-        saveModBox1 = new JComboBox(modifierKeys);
+        saveModBox1 = new JComboBox(Hotkeys.MODIFIER_KEYS);
         saveModBox1.addItemListener(new ItemListener()
         {
             public void itemStateChanged(ItemEvent e)
@@ -843,7 +842,7 @@ public class PreferencesUI
 
         JScrollPane scrollPane = new JScrollPane(panel_1);
 
-        saveScreenModBox1 = new JComboBox(modifierKeys);
+        saveScreenModBox1 = new JComboBox(Hotkeys.MODIFIER_KEYS);
         saveScreenModBox1.addItemListener(new ItemListener()
         {
             public void itemStateChanged(ItemEvent e)
@@ -892,7 +891,7 @@ public class PreferencesUI
         JLabel lblFtpUploadSnippet = new JLabel("FTP Upload Snippet");
         panel_1.add(lblFtpUploadSnippet, "cell 0 12,alignx leading");
 
-        ftpModBox1 = new JComboBox(modifierKeys);
+        ftpModBox1 = new JComboBox(Hotkeys.MODIFIER_KEYS);
         ftpModBox1.addItemListener(new ItemListener()
         {
             public void itemStateChanged(ItemEvent e)
@@ -941,7 +940,7 @@ public class PreferencesUI
         JLabel lblFtpUploadScreenshot = new JLabel("FTP Upload Screen");
         panel_1.add(lblFtpUploadScreenshot, "cell 0 13,alignx leading");
 
-        ftpScreenModBox1 = new JComboBox(modifierKeys);
+        ftpScreenModBox1 = new JComboBox(Hotkeys.MODIFIER_KEYS);
         ftpScreenModBox1.addItemListener(new ItemListener()
         {
             public void itemStateChanged(ItemEvent e)
@@ -1033,7 +1032,7 @@ public class PreferencesUI
         panel_1.add(label, "cell 1 7");
 
         upModBox2 = new JComboBox();
-        upModBox2.setModel(new DefaultComboBoxModel(modifierKeys));
+        upModBox2.setModel(new DefaultComboBoxModel(Hotkeys.MODIFIER_KEYS));
         upModBox2.addItemListener(new ItemListener()
         {
             public void itemStateChanged(ItemEvent e)
@@ -1049,7 +1048,7 @@ public class PreferencesUI
         JLabel label_2 = new JLabel("+");
         panel_1.add(label_2, "cell 1 8");
 
-        upScreenModBox2 = new JComboBox(modifierKeys);
+        upScreenModBox2 = new JComboBox(Hotkeys.MODIFIER_KEYS);
         upScreenModBox2.addItemListener(new ItemListener()
         {
             public void itemStateChanged(ItemEvent e)
@@ -1065,7 +1064,7 @@ public class PreferencesUI
         JLabel label_4 = new JLabel("+");
         panel_1.add(label_4, "cell 1 9");
 
-        upClipModBox2 = new JComboBox(modifierKeys);
+        upClipModBox2 = new JComboBox(Hotkeys.MODIFIER_KEYS);
         upClipModBox2.addItemListener(new ItemListener()
         {
             public void itemStateChanged(ItemEvent e)
@@ -1081,7 +1080,7 @@ public class PreferencesUI
         JLabel label_6 = new JLabel("+");
         panel_1.add(label_6, "cell 1 10");
 
-        saveModBox2 = new JComboBox(modifierKeys);
+        saveModBox2 = new JComboBox(Hotkeys.MODIFIER_KEYS);
         saveModBox2.addItemListener(new ItemListener()
         {
             public void itemStateChanged(ItemEvent e)
@@ -1097,7 +1096,7 @@ public class PreferencesUI
         JLabel label_8 = new JLabel("+");
         panel_1.add(label_8, "cell 1 11");
 
-        saveScreenModBox2 = new JComboBox(modifierKeys);
+        saveScreenModBox2 = new JComboBox(Hotkeys.MODIFIER_KEYS);
         saveScreenModBox2.addItemListener(new ItemListener()
         {
             public void itemStateChanged(ItemEvent e)
@@ -1113,7 +1112,7 @@ public class PreferencesUI
         JLabel label_10 = new JLabel("+");
         panel_1.add(label_10, "cell 1 12");
 
-        ftpModBox2 = new JComboBox(modifierKeys);
+        ftpModBox2 = new JComboBox(Hotkeys.MODIFIER_KEYS);
         ftpModBox2.addItemListener(new ItemListener()
         {
             public void itemStateChanged(ItemEvent e)
@@ -1129,7 +1128,7 @@ public class PreferencesUI
         JLabel label_12 = new JLabel("+");
         panel_1.add(label_12, "cell 1 13");
 
-        ftpScreenModBox2 = new JComboBox(modifierKeys);
+        ftpScreenModBox2 = new JComboBox(Hotkeys.MODIFIER_KEYS);
         ftpScreenModBox2.addItemListener(new ItemListener()
         {
             public void itemStateChanged(ItemEvent e)

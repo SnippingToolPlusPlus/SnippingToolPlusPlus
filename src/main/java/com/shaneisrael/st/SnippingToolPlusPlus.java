@@ -186,23 +186,19 @@ public class SnippingToolPlusPlus extends JFrame implements ActionListener, JInt
             @Override
             public void onHotKey(int identifier)
             {
-                if(identifier == 0) //PRINT SCREEN
+                if (identifier == 1) 
                 {
                     uSnippet.doClick();
-                }
-                if (identifier == 1) // CTRL + SHIFT + 1
-                {
-                    uSnippet.doClick();
-                } else if (identifier == 2) // CTRL + SHIFT + 2
+                } else if (identifier == 2) 
                 {
                     uScreenshot.doClick();
-                } else if (identifier == 3) // CTRL + SHIFT + 3
+                } else if (identifier == 3) 
                 {
                     sSnippet.doClick();
-                } else if (identifier == 4) // CTRL + SHIFT + 4
+                } else if (identifier == 4)
                 {
                     sScreenshot.doClick();
-                } else if (identifier == 5) // CTRL + SHIFT + X
+                } else if (identifier == 5)
                 {
                     uClipboardImg.doClick();
                 } else if (identifier == 6)
@@ -295,25 +291,25 @@ public class SnippingToolPlusPlus extends JFrame implements ActionListener, JInt
         prefMenu.setIcon(new ImageIcon(this.getClass().getResource("/images/icons/pref.png")));
         prefMenu.addActionListener(this);
         prefMenu.setActionCommand("preferences");
-        uScreenshot = new JMenuItem("Screenshot [Ctrl+Shift+2]");
+        uScreenshot = new JMenuItem("Screenshot ["+Hotkeys.getHotkeyText(2)+"]");
         uScreenshot.setIcon(new ImageIcon(this.getClass().getResource("/images/icons/screenshot.png")));
         uScreenshot.addActionListener(this);
         uScreenshot.setActionCommand("uScreen");
-        uSnippet = new JMenuItem("Snippet [Ctrl+Shift+1]");
+        uSnippet = new JMenuItem("Snippet ["+Hotkeys.getHotkeyText(1)+"]");
         uSnippet.setIcon(new ImageIcon(this.getClass().getResource("/images/icons/snippet.png")));
         uSnippet.addActionListener(this);
         uSnippet.setActionCommand("uSnippet");
 
-        uClipboardImg = new JMenuItem("Clipboard Image [Ctrl+Shift+X]");
+        uClipboardImg = new JMenuItem("Clipboard Image ["+Hotkeys.getHotkeyText(3)+"]");
         uClipboardImg.setIcon(new ImageIcon(this.getClass().getResource("/images/icons/image_upload.png")));
         uClipboardImg.addActionListener(this);
         uClipboardImg.setActionCommand("uClipboardImg");
 
-        sScreenshot = new JMenuItem("Screenshot [Ctrl+Shift+4]");
+        sScreenshot = new JMenuItem("Screenshot ["+Hotkeys.getHotkeyText(5)+"]");
         sScreenshot.setIcon(new ImageIcon(this.getClass().getResource("/images/icons/screenshot.png")));
         sScreenshot.addActionListener(this);
         sScreenshot.setActionCommand("sScreen");
-        sSnippet = new JMenuItem("Snippet [Ctrl+Shift+3]");
+        sSnippet = new JMenuItem("Snippet ["+Hotkeys.getHotkeyText(4)+"]");
         sSnippet.setIcon(new ImageIcon(this.getClass().getResource("/images/icons/snippet.png")));
         sSnippet.addActionListener(this);
         sSnippet.setActionCommand("sSnippet");
