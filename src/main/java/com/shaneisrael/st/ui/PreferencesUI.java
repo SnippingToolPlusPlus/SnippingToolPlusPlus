@@ -46,6 +46,7 @@ import net.miginfocom.swing.MigLayout;
 
 import com.melloware.jintellitype.JIntellitype;
 import com.melloware.jintellitype.JIntellitypeException;
+import com.shaneisrael.st.Config;
 import com.shaneisrael.st.data.Locations;
 import com.shaneisrael.st.prefs.Preferences;
 import com.shaneisrael.st.prefs.Hotkeys.Hotkeys;
@@ -643,7 +644,7 @@ public class PreferencesUI
         {
             public void itemStateChanged(ItemEvent e)
             {
-                hotkeyMods1[0] = Hotkeys.getHotkeyMod(upModBox1.getSelectedIndex());
+                hotkeyMods1[Config.UPLOAD_SNIPPET_ID] = Hotkeys.getHotkeyMod(upModBox1.getSelectedIndex());
             }
         });
         upModBox1.setModel(new DefaultComboBoxModel(Hotkeys.MODIFIER_KEYS));
@@ -663,7 +664,7 @@ public class PreferencesUI
                     code = Hotkeys.NO_HOTKEY;
 
                 upKeyField.setText(text);
-                hotkeyCodes[0] = code;
+                hotkeyCodes[Config.UPLOAD_SNIPPET_ID] = code;
             }
         });
         upKeyField.addMouseListener(new MouseAdapter()
@@ -695,7 +696,7 @@ public class PreferencesUI
         {
             public void itemStateChanged(ItemEvent e)
             {
-                hotkeyMods1[1] = Hotkeys.getHotkeyMod(upScreenModBox1.getSelectedIndex());
+                hotkeyMods1[Config.UPLOAD_SCREEN_ID] = Hotkeys.getHotkeyMod(upScreenModBox1.getSelectedIndex());
             }
         });
         panel_1.add(upScreenModBox1, "flowx,cell 1 8");
@@ -714,7 +715,7 @@ public class PreferencesUI
                     code = Hotkeys.NO_HOTKEY;
 
                 upScreenKeyField.setText(text);
-                hotkeyCodes[1] = code;
+                hotkeyCodes[Config.UPLOAD_SCREEN_ID] = code;
             }
         });
         upScreenKeyField.addMouseListener(new MouseAdapter()
@@ -745,7 +746,7 @@ public class PreferencesUI
         {
             public void itemStateChanged(ItemEvent e)
             {
-                hotkeyMods1[2] = Hotkeys.getHotkeyMod(upClipModBox1.getSelectedIndex());
+                hotkeyMods1[Config.UPLOAD_CLIPBOARD_ID] = Hotkeys.getHotkeyMod(upClipModBox1.getSelectedIndex());
             }
         });
         panel_1.add(upClipModBox1, "flowx,cell 1 9");
@@ -764,7 +765,7 @@ public class PreferencesUI
                     code = Hotkeys.NO_HOTKEY;
 
                 upClipKeyField.setText(text);
-                hotkeyCodes[2] = code;
+                hotkeyCodes[Config.UPLOAD_CLIPBOARD_ID] = code;
             }
         });
         upClipKeyField.addMouseListener(new MouseAdapter()
@@ -795,7 +796,7 @@ public class PreferencesUI
         {
             public void itemStateChanged(ItemEvent e)
             {
-                hotkeyMods1[3] = Hotkeys.getHotkeyMod(saveModBox1.getSelectedIndex());
+                hotkeyMods1[Config.SAVE_SNIPPET_ID] = Hotkeys.getHotkeyMod(saveModBox1.getSelectedIndex());
             }
         });
         panel_1.add(saveModBox1, "flowx,cell 1 10");
@@ -814,7 +815,7 @@ public class PreferencesUI
                     code = Hotkeys.NO_HOTKEY;
 
                 saveKeyField.setText(text);
-                hotkeyCodes[3] = code;
+                hotkeyCodes[Config.SAVE_SNIPPET_ID] = code;
             }
         });
         saveKeyField.addMouseListener(new MouseAdapter()
@@ -847,7 +848,7 @@ public class PreferencesUI
         {
             public void itemStateChanged(ItemEvent e)
             {
-                hotkeyMods1[4] = Hotkeys.getHotkeyMod(saveScreenModBox1.getSelectedIndex());
+                hotkeyMods1[Config.SAVE_SCREEN_ID] = Hotkeys.getHotkeyMod(saveScreenModBox1.getSelectedIndex());
             }
         });
         panel_1.add(saveScreenModBox1, "flowx,cell 1 11");
@@ -866,7 +867,7 @@ public class PreferencesUI
                     code = Hotkeys.NO_HOTKEY;
 
                 saveScreenKeyField.setText(text);
-                hotkeyCodes[4] = code;
+                hotkeyCodes[Config.SAVE_SCREEN_ID] = code;
             }
         });
         saveScreenKeyField.addMouseListener(new MouseAdapter()
@@ -896,7 +897,7 @@ public class PreferencesUI
         {
             public void itemStateChanged(ItemEvent e)
             {
-                hotkeyMods1[5] = Hotkeys.getHotkeyMod(ftpModBox1.getSelectedIndex());
+                hotkeyMods1[Config.FTP_UPLOAD_SNIPPET_ID] = Hotkeys.getHotkeyMod(ftpModBox1.getSelectedIndex());
             }
         });
         panel_1.add(ftpModBox1, "flowx,cell 1 12");
@@ -915,7 +916,7 @@ public class PreferencesUI
                     code = Hotkeys.NO_HOTKEY;
 
                 ftpKeyField.setText(text);
-                hotkeyCodes[5] = code;
+                hotkeyCodes[Config.FTP_UPLOAD_SNIPPET_ID] = code;
             }
         });
         ftpKeyField.addMouseListener(new MouseAdapter()
@@ -945,7 +946,7 @@ public class PreferencesUI
         {
             public void itemStateChanged(ItemEvent e)
             {
-                hotkeyMods1[6] = Hotkeys.getHotkeyMod(ftpScreenModBox1.getSelectedIndex());
+                hotkeyMods1[Config.FTP_UPLOAD_SCREEN_ID] = Hotkeys.getHotkeyMod(ftpScreenModBox1.getSelectedIndex());
             }
         });
         panel_1.add(ftpScreenModBox1, "flowx,cell 1 13");
@@ -964,7 +965,7 @@ public class PreferencesUI
                     code = Hotkeys.NO_HOTKEY;
 
                 ftpScreenKeyField.setText(text);
-                hotkeyCodes[6] = code;
+                hotkeyCodes[Config.FTP_UPLOAD_SCREEN_ID] = code;
             }
         });
         ftpScreenKeyField.addMouseListener(new MouseAdapter()
@@ -1037,7 +1038,7 @@ public class PreferencesUI
         {
             public void itemStateChanged(ItemEvent e)
             {
-                hotkeyMods2[0] = Hotkeys.getHotkeyMod(upModBox2.getSelectedIndex());
+                hotkeyMods2[Config.UPLOAD_SNIPPET_ID] = Hotkeys.getHotkeyMod(upModBox2.getSelectedIndex());
             }
         });
         panel_1.add(upModBox2, "cell 1 7");
@@ -1053,7 +1054,7 @@ public class PreferencesUI
         {
             public void itemStateChanged(ItemEvent e)
             {
-                hotkeyMods2[1] = Hotkeys.getHotkeyMod(upScreenModBox2.getSelectedIndex());
+                hotkeyMods2[Config.UPLOAD_SCREEN_ID] = Hotkeys.getHotkeyMod(upScreenModBox2.getSelectedIndex());
             }
         });
         panel_1.add(upScreenModBox2, "cell 1 8");
@@ -1069,7 +1070,7 @@ public class PreferencesUI
         {
             public void itemStateChanged(ItemEvent e)
             {
-                hotkeyMods2[2] = Hotkeys.getHotkeyMod(upClipModBox2.getSelectedIndex());
+                hotkeyMods2[Config.UPLOAD_CLIPBOARD_ID] = Hotkeys.getHotkeyMod(upClipModBox2.getSelectedIndex());
             }
         });
         panel_1.add(upClipModBox2, "cell 1 9");
@@ -1085,7 +1086,7 @@ public class PreferencesUI
         {
             public void itemStateChanged(ItemEvent e)
             {
-                hotkeyMods2[3] = Hotkeys.getHotkeyMod(saveModBox2.getSelectedIndex());
+                hotkeyMods2[Config.SAVE_SNIPPET_ID] = Hotkeys.getHotkeyMod(saveModBox2.getSelectedIndex());
             }
         });
         panel_1.add(saveModBox2, "cell 1 10");
@@ -1101,7 +1102,7 @@ public class PreferencesUI
         {
             public void itemStateChanged(ItemEvent e)
             {
-                hotkeyMods2[4] = Hotkeys.getHotkeyMod(saveScreenModBox2.getSelectedIndex());
+                hotkeyMods2[Config.SAVE_SCREEN_ID] = Hotkeys.getHotkeyMod(saveScreenModBox2.getSelectedIndex());
             }
         });
         panel_1.add(saveScreenModBox2, "cell 1 11");
@@ -1117,7 +1118,7 @@ public class PreferencesUI
         {
             public void itemStateChanged(ItemEvent e)
             {
-                hotkeyMods2[5] = Hotkeys.getHotkeyMod(ftpModBox2.getSelectedIndex());
+                hotkeyMods2[Config.FTP_UPLOAD_SNIPPET_ID] = Hotkeys.getHotkeyMod(ftpModBox2.getSelectedIndex());
             }
         });
         panel_1.add(ftpModBox2, "cell 1 12");
@@ -1133,7 +1134,7 @@ public class PreferencesUI
         {
             public void itemStateChanged(ItemEvent e)
             {
-                hotkeyMods2[6] = Hotkeys.getHotkeyMod(ftpScreenModBox2.getSelectedIndex());
+                hotkeyMods2[Config.FTP_UPLOAD_SCREEN_ID] = Hotkeys.getHotkeyMod(ftpScreenModBox2.getSelectedIndex());
             }
         });
         panel_1.add(ftpScreenModBox2, "cell 1 13");

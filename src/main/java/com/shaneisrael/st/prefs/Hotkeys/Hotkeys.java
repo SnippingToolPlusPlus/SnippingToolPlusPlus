@@ -29,11 +29,11 @@ public class Hotkeys
         }
         if (keyhook != null)
         {
-            for (int i = 1; i < hotkeyMods1.length; i++)
+            for (int i = 0; i < hotkeyMods1.length; i++)
                 keyhook.unregisterHotKey(i);
-            for (int i = 1; i < hotkeyMods1.length; i++)
-                if (hotkeyCodes[i - 1] != Hotkeys.NO_HOTKEY)
-                    keyhook.registerHotKey(i, hotkeyMods1[i - 1] + hotkeyMods2[i - 1], hotkeyCodes[i - 1]);
+            for (int i = 0; i < hotkeyMods1.length; i++)
+                if (hotkeyCodes[i] != Hotkeys.NO_HOTKEY)
+                    keyhook.registerHotKey(i, hotkeyMods1[i] + hotkeyMods2[i], hotkeyCodes[i]);
         }
 
     }
@@ -48,9 +48,9 @@ public class Hotkeys
         String text = "";
         
         if(hotkeyMods1[identifier] != NO_HOTKEY)
-            text += MODIFIER_KEYS[hotkeyMods1[identifier]];
+            text += MODIFIER_KEYS[getModBoxIndex(hotkeyMods1[identifier])] + " + ";
         if(hotkeyMods2[identifier] != NO_HOTKEY)
-            text += MODIFIER_KEYS[hotkeyMods2[identifier]];
+            text += MODIFIER_KEYS[getModBoxIndex(hotkeyMods2[identifier])]+ " + ";
         if(hotkeyCodes[identifier] != NO_HOTKEY)
             text += KeyEvent.getKeyText(hotkeyCodes[identifier]);
         if(text.equals(""))

@@ -18,5 +18,14 @@ public class Config
     //icons
     public static final String TRAY_ICON_BASE_DIR = "/images/upload/";
     public static final String TRAY_ICON_STATIC = "/images/trayIcon.png";
+    
+    //identifiers
+    public static final int UPLOAD_SNIPPET_ID = 0;
+    public static final int UPLOAD_SCREEN_ID = 1;
+    public static final int SAVE_SNIPPET_ID = 2;
+    public static final int SAVE_SCREEN_ID = 3;
+    public static final int UPLOAD_CLIPBOARD_ID = 4;
+    public static final int FTP_UPLOAD_SNIPPET_ID = 5;
+    public static final int FTP_UPLOAD_SCREEN_ID = 6;
 
 }

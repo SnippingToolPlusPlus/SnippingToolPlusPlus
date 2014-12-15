@@ -186,27 +186,28 @@ public class SnippingToolPlusPlus extends JFrame implements ActionListener, JInt
             @Override
             public void onHotKey(int identifier)
             {
-                if (identifier == 1) 
+                if (identifier == Config.UPLOAD_SNIPPET_ID) 
                 {
                     uSnippet.doClick();
-                } else if (identifier == 2) 
+                } else if (identifier == Config.UPLOAD_SCREEN_ID) 
                 {
                     uScreenshot.doClick();
-                } else if (identifier == 3) 
+                } else if (identifier == Config.SAVE_SNIPPET_ID) 
                 {
                     sSnippet.doClick();
-                } else if (identifier == 4)
+                } else if (identifier == Config.SAVE_SCREEN_ID)
                 {
                     sScreenshot.doClick();
-                } else if (identifier == 5)
+                } else if (identifier == Config.UPLOAD_CLIPBOARD_ID)
                 {
                     uClipboardImg.doClick();
-                } else if (identifier == 6)
+                } else if (identifier == Config.FTP_UPLOAD_SNIPPET_ID)
                 {
                     displayOverlay();
                     overlay.setMode(Overlay.UPLOAD_FTP);
-                } else if (identifier == 7)
+                } else if (identifier == Config.FTP_UPLOAD_SCREEN_ID)
                 {
+                    System.out.println("test!");
                     new SimpleFTPUploader(ImageUtilities.saveTemporarily(capture.getScreenCapture()));
                 }
 
@@ -291,25 +292,25 @@ public class SnippingToolPlusPlus extends JFrame implements ActionListener, JInt
         prefMenu.setIcon(new ImageIcon(this.getClass().getResource("/images/icons/pref.png")));
         prefMenu.addActionListener(this);
         prefMenu.setActionCommand("preferences");
-        uScreenshot = new JMenuItem("Screenshot ["+Hotkeys.getHotkeyText(2)+"]");
+        uScreenshot = new JMenuItem("Screenshot ["+Hotkeys.getHotkeyText(Config.UPLOAD_SCREEN_ID)+"]");
         uScreenshot.setIcon(new ImageIcon(this.getClass().getResource("/images/icons/screenshot.png")));
         uScreenshot.addActionListener(this);
         uScreenshot.setActionCommand("uScreen");
-        uSnippet = new JMenuItem("Snippet ["+Hotkeys.getHotkeyText(1)+"]");
+        uSnippet = new JMenuItem("Snippet ["+Hotkeys.getHotkeyText(Config.UPLOAD_SNIPPET_ID)+"]");
         uSnippet.setIcon(new ImageIcon(this.getClass().getResource("/images/icons/snippet.png")));
         uSnippet.addActionListener(this);
         uSnippet.setActionCommand("uSnippet");
 
-        uClipboardImg = new JMenuItem("Clipboard Image ["+Hotkeys.getHotkeyText(3)+"]");
+        uClipboardImg = new JMenuItem("Clipboard Image ["+Hotkeys.getHotkeyText(Config.UPLOAD_CLIPBOARD_ID)+"]");
         uClipboardImg.setIcon(new ImageIcon(this.getClass().getResource("/images/icons/image_upload.png")));
         uClipboardImg.addActionListener(this);
         uClipboardImg.setActionCommand("uClipboardImg");
 
-        sScreenshot = new JMenuItem("Screenshot ["+Hotkeys.getHotkeyText(5)+"]");
+        sScreenshot = new JMenuItem("Screenshot ["+Hotkeys.getHotkeyText(Config.SAVE_SCREEN_ID)+"]");
         sScreenshot.setIcon(new ImageIcon(this.getClass().getResource("/images/icons/screenshot.png")));
         sScreenshot.addActionListener(this);
         sScreenshot.setActionCommand("sScreen");
-        sSnippet = new JMenuItem("Snippet ["+Hotkeys.getHotkeyText(4)+"]");
+        sSnippet = new JMenuItem("Snippet ["+Hotkeys.getHotkeyText(Config.SAVE_SNIPPET_ID)+"]");
         sSnippet.setIcon(new ImageIcon(this.getClass().getResource("/images/icons/snippet.png")));
         sSnippet.addActionListener(this);
         sSnippet.setActionCommand("sSnippet");
