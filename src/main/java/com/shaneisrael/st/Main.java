@@ -35,6 +35,7 @@ import com.shaneisrael.st.notification.STTheme;
 import com.shaneisrael.st.overlay.Overlay;
 import com.shaneisrael.st.overlay.OverlayFrame;
 import com.shaneisrael.st.prefs.Preferences;
+import com.shaneisrael.st.prefs.Hotkeys.Hotkeys;
 import com.shaneisrael.st.ui.AboutFrame;
 import com.shaneisrael.st.ui.MultiUploader;
 import com.shaneisrael.st.ui.PreferencesUI;
@@ -161,6 +162,7 @@ public class Main extends JFrame implements ActionListener, JIntellitypeConstant
          * register hotkeys
          */
         JIntellitype keyhook = null;
+        Hotkeys hotkeys;
         try
         {
             keyhook = JIntellitype.getInstance();
@@ -171,16 +173,8 @@ public class Main extends JFrame implements ActionListener, JIntellitypeConstant
         }
         if (keyhook != null)
         {
-            int[] hotkeyMods1 = Preferences.getInstance().getFirstHotkeyMods();
-            int[] hotkeyMods2 = Preferences.getInstance().getSecondHotkeyMods();
-            int[] hotkeyCodes = Preferences.getInstance().getHotkeyCodes();
-            
-            for(int i = 1; i < 8; i++)
-                keyhook.unregisterHotKey(i);
-            for(int i = 1; i < 8; i++)
-                if (hotkeyCodes[i - 1] != PreferencesUI.NO_HOTKEY)
-                    keyhook.registerHotKey(i, hotkeyMods1[i-1] + hotkeyMods2[i-1], hotkeyCodes[i-1]);
-
+            hotkeys = new Hotkeys();
+            hotkeys.registerHotkeys();
         }
         /*
          * events

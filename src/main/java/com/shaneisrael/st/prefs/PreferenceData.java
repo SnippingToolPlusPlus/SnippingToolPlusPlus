@@ -54,10 +54,10 @@ public final class PreferenceData
     public int hotkeyCodes[] = {49, 50, 51, 52, 88, 49, 50}; //1, 2, 3, 4, X, 1, 2
     
     @SerializedName("hotkey_modifier_1")
-    public int hotkeyModss1[] = {2, 2, 2, 2, 2, 1, 1}; //CTRL, CTRL, CTRL, CTRL, CTRL, ALT, ALT
+    public int hotkeyMods1[] = {2, 2, 2, 2, 2, 1, 1}; //CTRL, CTRL, CTRL, CTRL, CTRL, ALT, ALT
     
     @SerializedName("hotkey_modifier_2")
-    public int hotkeyModss2[] = {4, 4, 4, 4, 4, 4, 4}; //SHIFT
+    public int hotkeyMods2[] = {4, 4, 4, 4, 4, 4, 4}; //SHIFT
     
     
     PreferenceData()
@@ -241,7 +241,7 @@ public final class PreferenceData
      */
     void setFirstHotkeyMods(int[] mods)
     {
-        this.hotkeyModss1 = mods;
+        this.hotkeyMods1 = mods;
     }
     
     /**
@@ -250,7 +250,7 @@ public final class PreferenceData
      */
     void setSecondHotkeyMods(int[] mods)
     {
-        this.hotkeyModss2 = mods;
+        this.hotkeyMods2 = mods;
     }
     
     /**
@@ -365,7 +365,7 @@ public final class PreferenceData
      */
     public int[] getFirstHotkeyMods()
     {
-        return hotkeyModss1;
+        return hotkeyMods1;
     }
     
     /**
@@ -374,7 +374,7 @@ public final class PreferenceData
      */
     public int[] getSecondHotkeyMods()
     {
-        return hotkeyModss2;
+        return hotkeyMods2;
     }
     
     /**

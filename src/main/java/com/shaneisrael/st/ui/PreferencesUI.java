@@ -48,6 +48,7 @@ import com.melloware.jintellitype.JIntellitype;
 import com.melloware.jintellitype.JIntellitypeException;
 import com.shaneisrael.st.data.Locations;
 import com.shaneisrael.st.prefs.Preferences;
+import com.shaneisrael.st.prefs.Hotkeys.Hotkeys;
 import com.shaneisrael.st.utilities.database.DBUniqueKey;
 
 /**
@@ -84,7 +85,8 @@ public class PreferencesUI
     private int hotkeyCodes[];
     private int hotkeyMods1[];
     private int hotkeyMods2[];
-    public static final int NO_HOTKEY = 11111;
+    private Hotkeys hotkeys;
+    
 
     /** HOTKEY FIELDS **/
     private JTextField upKeyField;
@@ -143,28 +145,28 @@ public class PreferencesUI
         hotkeyMods1 = Preferences.getInstance().getFirstHotkeyMods();
         hotkeyMods2 = Preferences.getInstance().getSecondHotkeyMods();
 
-        upKeyField.setText(getKeyCharacter(hotkeyCodes[0]));
-        upScreenKeyField.setText(getKeyCharacter(hotkeyCodes[1]));
-        upClipKeyField.setText(getKeyCharacter(hotkeyCodes[4]));
-        saveKeyField.setText(getKeyCharacter(hotkeyCodes[2]));
-        saveScreenKeyField.setText(getKeyCharacter(hotkeyCodes[3]));
-        ftpKeyField.setText(getKeyCharacter(hotkeyCodes[5]));
-        ftpScreenKeyField.setText(getKeyCharacter(hotkeyCodes[6]));
+        upKeyField.setText(Hotkeys.getKeyCharacter(hotkeyCodes[0]));
+        upScreenKeyField.setText(Hotkeys.getKeyCharacter(hotkeyCodes[1]));
+        upClipKeyField.setText(Hotkeys.getKeyCharacter(hotkeyCodes[4]));
+        saveKeyField.setText(Hotkeys.getKeyCharacter(hotkeyCodes[2]));
+        saveScreenKeyField.setText(Hotkeys.getKeyCharacter(hotkeyCodes[3]));
+        ftpKeyField.setText(Hotkeys.getKeyCharacter(hotkeyCodes[5]));
+        ftpScreenKeyField.setText(Hotkeys.getKeyCharacter(hotkeyCodes[6]));
 
-        upModBox1.setSelectedIndex(getModBoxIndex(hotkeyMods1[0]));
-        upModBox2.setSelectedIndex(getModBoxIndex(hotkeyMods2[0]));
-        upScreenModBox1.setSelectedIndex(getModBoxIndex(hotkeyMods1[1]));
-        upScreenModBox2.setSelectedIndex(getModBoxIndex(hotkeyMods2[1]));
-        saveModBox1.setSelectedIndex(getModBoxIndex(hotkeyMods1[2]));
-        saveModBox2.setSelectedIndex(getModBoxIndex(hotkeyMods2[2]));
-        saveScreenModBox1.setSelectedIndex(getModBoxIndex(hotkeyMods1[3]));
-        saveScreenModBox2.setSelectedIndex(getModBoxIndex(hotkeyMods2[3]));
-        upClipModBox1.setSelectedIndex(getModBoxIndex(hotkeyMods1[4]));
-        upClipModBox2.setSelectedIndex(getModBoxIndex(hotkeyMods2[4]));
-        ftpModBox1.setSelectedIndex(getModBoxIndex(hotkeyMods1[5]));
-        ftpModBox2.setSelectedIndex(getModBoxIndex(hotkeyMods2[5]));
-        ftpScreenModBox1.setSelectedIndex(getModBoxIndex(hotkeyMods1[6]));
-        ftpScreenModBox2.setSelectedIndex(getModBoxIndex(hotkeyMods2[6]));
+        upModBox1.setSelectedIndex(Hotkeys.getModBoxIndex(hotkeyMods1[0]));
+        upModBox2.setSelectedIndex(Hotkeys.getModBoxIndex(hotkeyMods2[0]));
+        upScreenModBox1.setSelectedIndex(Hotkeys.getModBoxIndex(hotkeyMods1[1]));
+        upScreenModBox2.setSelectedIndex(Hotkeys.getModBoxIndex(hotkeyMods2[1]));
+        saveModBox1.setSelectedIndex(Hotkeys.getModBoxIndex(hotkeyMods1[2]));
+        saveModBox2.setSelectedIndex(Hotkeys.getModBoxIndex(hotkeyMods2[2]));
+        saveScreenModBox1.setSelectedIndex(Hotkeys.getModBoxIndex(hotkeyMods1[3]));
+        saveScreenModBox2.setSelectedIndex(Hotkeys.getModBoxIndex(hotkeyMods2[3]));
+        upClipModBox1.setSelectedIndex(Hotkeys.getModBoxIndex(hotkeyMods1[4]));
+        upClipModBox2.setSelectedIndex(Hotkeys.getModBoxIndex(hotkeyMods2[4]));
+        ftpModBox1.setSelectedIndex(Hotkeys.getModBoxIndex(hotkeyMods1[5]));
+        ftpModBox2.setSelectedIndex(Hotkeys.getModBoxIndex(hotkeyMods2[5]));
+        ftpScreenModBox1.setSelectedIndex(Hotkeys.getModBoxIndex(hotkeyMods1[6]));
+        ftpScreenModBox2.setSelectedIndex(Hotkeys.getModBoxIndex(hotkeyMods2[6]));
 
     }
 
@@ -642,7 +644,7 @@ public class PreferencesUI
         {
             public void itemStateChanged(ItemEvent e)
             {
-                hotkeyMods1[0] = getHotkeyMod(upModBox1.getSelectedIndex());
+                hotkeyMods1[0] = Hotkeys.getHotkeyMod(upModBox1.getSelectedIndex());
             }
         });
         upModBox1.setModel(new DefaultComboBoxModel(modifierKeys));
@@ -656,10 +658,10 @@ public class PreferencesUI
         {
             public void keyPressed(KeyEvent e)
             {
-                String text = getKeyCharacter(e.getKeyCode()).toUpperCase();
+                String text = Hotkeys.getKeyCharacter(e.getKeyCode()).toUpperCase();
                 int code = e.getKeyCode();
                 if (text.equals("NONE"))
-                    code = NO_HOTKEY;
+                    code = Hotkeys.NO_HOTKEY;
 
                 upKeyField.setText(text);
                 hotkeyCodes[0] = code;
@@ -694,7 +696,7 @@ public class PreferencesUI
         {
             public void itemStateChanged(ItemEvent e)
             {
-                hotkeyMods1[1] = getHotkeyMod(upScreenModBox1.getSelectedIndex());
+                hotkeyMods1[1] = Hotkeys.getHotkeyMod(upScreenModBox1.getSelectedIndex());
             }
         });
         panel_1.add(upScreenModBox1, "flowx,cell 1 8");
@@ -707,10 +709,10 @@ public class PreferencesUI
         {
             public void keyPressed(KeyEvent e)
             {
-                String text = getKeyCharacter(e.getKeyCode()).toUpperCase();
+                String text = Hotkeys.getKeyCharacter(e.getKeyCode()).toUpperCase();
                 int code = e.getKeyCode();
                 if (text.equals("NONE"))
-                    code = NO_HOTKEY;
+                    code = Hotkeys.NO_HOTKEY;
 
                 upScreenKeyField.setText(text);
                 hotkeyCodes[1] = code;
@@ -744,7 +746,7 @@ public class PreferencesUI
         {
             public void itemStateChanged(ItemEvent e)
             {
-                hotkeyMods1[2] = getHotkeyMod(upClipModBox1.getSelectedIndex());
+                hotkeyMods1[2] = Hotkeys.getHotkeyMod(upClipModBox1.getSelectedIndex());
             }
         });
         panel_1.add(upClipModBox1, "flowx,cell 1 9");
@@ -757,10 +759,10 @@ public class PreferencesUI
         {
             public void keyPressed(KeyEvent e)
             {
-                String text = getKeyCharacter(e.getKeyCode()).toUpperCase();
+                String text = Hotkeys.getKeyCharacter(e.getKeyCode()).toUpperCase();
                 int code = e.getKeyCode();
                 if (text.equals("NONE"))
-                    code = NO_HOTKEY;
+                    code = Hotkeys.NO_HOTKEY;
 
                 upClipKeyField.setText(text);
                 hotkeyCodes[2] = code;
@@ -794,7 +796,7 @@ public class PreferencesUI
         {
             public void itemStateChanged(ItemEvent e)
             {
-                hotkeyMods1[3] = getHotkeyMod(saveModBox1.getSelectedIndex());
+                hotkeyMods1[3] = Hotkeys.getHotkeyMod(saveModBox1.getSelectedIndex());
             }
         });
         panel_1.add(saveModBox1, "flowx,cell 1 10");
@@ -807,10 +809,10 @@ public class PreferencesUI
         {
             public void keyPressed(KeyEvent e)
             {
-                String text = getKeyCharacter(e.getKeyCode()).toUpperCase();
+                String text = Hotkeys.getKeyCharacter(e.getKeyCode()).toUpperCase();
                 int code = e.getKeyCode();
                 if (text.equals("NONE"))
-                    code = NO_HOTKEY;
+                    code = Hotkeys.NO_HOTKEY;
 
                 saveKeyField.setText(text);
                 hotkeyCodes[3] = code;
@@ -846,7 +848,7 @@ public class PreferencesUI
         {
             public void itemStateChanged(ItemEvent e)
             {
-                hotkeyMods1[4] = getHotkeyMod(saveScreenModBox1.getSelectedIndex());
+                hotkeyMods1[4] = Hotkeys.getHotkeyMod(saveScreenModBox1.getSelectedIndex());
             }
         });
         panel_1.add(saveScreenModBox1, "flowx,cell 1 11");
@@ -859,10 +861,10 @@ public class PreferencesUI
         {
             public void keyPressed(KeyEvent e)
             {
-                String text = getKeyCharacter(e.getKeyCode()).toUpperCase();
+                String text = Hotkeys.getKeyCharacter(e.getKeyCode()).toUpperCase();
                 int code = e.getKeyCode();
                 if (text.equals("NONE"))
-                    code = NO_HOTKEY;
+                    code = Hotkeys.NO_HOTKEY;
 
                 saveScreenKeyField.setText(text);
                 hotkeyCodes[4] = code;
@@ -895,7 +897,7 @@ public class PreferencesUI
         {
             public void itemStateChanged(ItemEvent e)
             {
-                hotkeyMods1[5] = getHotkeyMod(ftpModBox1.getSelectedIndex());
+                hotkeyMods1[5] = Hotkeys.getHotkeyMod(ftpModBox1.getSelectedIndex());
             }
         });
         panel_1.add(ftpModBox1, "flowx,cell 1 12");
@@ -908,10 +910,10 @@ public class PreferencesUI
         {
             public void keyPressed(KeyEvent e)
             {
-                String text = getKeyCharacter(e.getKeyCode()).toUpperCase();
+                String text = Hotkeys.getKeyCharacter(e.getKeyCode()).toUpperCase();
                 int code = e.getKeyCode();
                 if (text.equals("NONE"))
-                    code = NO_HOTKEY;
+                    code = Hotkeys.NO_HOTKEY;
 
                 ftpKeyField.setText(text);
                 hotkeyCodes[5] = code;
@@ -944,7 +946,7 @@ public class PreferencesUI
         {
             public void itemStateChanged(ItemEvent e)
             {
-                hotkeyMods1[6] = getHotkeyMod(ftpScreenModBox1.getSelectedIndex());
+                hotkeyMods1[6] = Hotkeys.getHotkeyMod(ftpScreenModBox1.getSelectedIndex());
             }
         });
         panel_1.add(ftpScreenModBox1, "flowx,cell 1 13");
@@ -957,10 +959,10 @@ public class PreferencesUI
         {
             public void keyPressed(KeyEvent e)
             {
-                String text = getKeyCharacter(e.getKeyCode()).toUpperCase();
+                String text = Hotkeys.getKeyCharacter(e.getKeyCode()).toUpperCase();
                 int code = e.getKeyCode();
                 if (text.equals("NONE"))
-                    code = NO_HOTKEY;
+                    code = Hotkeys.NO_HOTKEY;
 
                 ftpScreenKeyField.setText(text);
                 hotkeyCodes[6] = code;
@@ -1036,7 +1038,7 @@ public class PreferencesUI
         {
             public void itemStateChanged(ItemEvent e)
             {
-                hotkeyMods2[0] = getHotkeyMod(upModBox2.getSelectedIndex());
+                hotkeyMods2[0] = Hotkeys.getHotkeyMod(upModBox2.getSelectedIndex());
             }
         });
         panel_1.add(upModBox2, "cell 1 7");
@@ -1052,7 +1054,7 @@ public class PreferencesUI
         {
             public void itemStateChanged(ItemEvent e)
             {
-                hotkeyMods2[1] = getHotkeyMod(upScreenModBox2.getSelectedIndex());
+                hotkeyMods2[1] = Hotkeys.getHotkeyMod(upScreenModBox2.getSelectedIndex());
             }
         });
         panel_1.add(upScreenModBox2, "cell 1 8");
@@ -1068,7 +1070,7 @@ public class PreferencesUI
         {
             public void itemStateChanged(ItemEvent e)
             {
-                hotkeyMods2[2] = getHotkeyMod(upClipModBox2.getSelectedIndex());
+                hotkeyMods2[2] = Hotkeys.getHotkeyMod(upClipModBox2.getSelectedIndex());
             }
         });
         panel_1.add(upClipModBox2, "cell 1 9");
@@ -1084,7 +1086,7 @@ public class PreferencesUI
         {
             public void itemStateChanged(ItemEvent e)
             {
-                hotkeyMods2[3] = getHotkeyMod(saveModBox2.getSelectedIndex());
+                hotkeyMods2[3] = Hotkeys.getHotkeyMod(saveModBox2.getSelectedIndex());
             }
         });
         panel_1.add(saveModBox2, "cell 1 10");
@@ -1100,7 +1102,7 @@ public class PreferencesUI
         {
             public void itemStateChanged(ItemEvent e)
             {
-                hotkeyMods2[4] = getHotkeyMod(saveScreenModBox2.getSelectedIndex());
+                hotkeyMods2[4] = Hotkeys.getHotkeyMod(saveScreenModBox2.getSelectedIndex());
             }
         });
         panel_1.add(saveScreenModBox2, "cell 1 11");
@@ -1116,7 +1118,7 @@ public class PreferencesUI
         {
             public void itemStateChanged(ItemEvent e)
             {
-                hotkeyMods2[5] = getHotkeyMod(ftpModBox2.getSelectedIndex());
+                hotkeyMods2[5] = Hotkeys.getHotkeyMod(ftpModBox2.getSelectedIndex());
             }
         });
         panel_1.add(ftpModBox2, "cell 1 12");
@@ -1132,7 +1134,7 @@ public class PreferencesUI
         {
             public void itemStateChanged(ItemEvent e)
             {
-                hotkeyMods2[6] = getHotkeyMod(ftpScreenModBox2.getSelectedIndex());
+                hotkeyMods2[6] = Hotkeys.getHotkeyMod(ftpScreenModBox2.getSelectedIndex());
             }
         });
         panel_1.add(ftpScreenModBox2, "cell 1 13");
@@ -1166,38 +1168,16 @@ public class PreferencesUI
                 Preferences.getInstance().setUniqueKey2(new String(keyField2.getPassword()));
                 Preferences.getInstance().setTrackingDisabled(chckbxDontTrackUseage.isSelected());
                 Preferences.getInstance().setDefaultTool(0);
-
-                registerHotkeys();
-
                 Preferences.getInstance().setHotkeyCodes(hotkeyCodes);
                 Preferences.getInstance().setFirstHotkeyMods(hotkeyMods1);
                 Preferences.getInstance().setSecondHotkeyMods(hotkeyMods2);
+                
+                hotkeys = new Hotkeys();
+                hotkeys.registerHotkeys();
 
                 frmPreferences.dispose();
             }
 
-            private void registerHotkeys()
-            {
-                JIntellitype keyhook = null;
-
-                try
-                {
-                    keyhook = JIntellitype.getInstance();
-                }
-                catch (JIntellitypeException ex)
-                {
-                    ex.printStackTrace();
-                }
-                if (keyhook != null)
-                {
-                    for (int i = 1; i < 8; i++)
-                        keyhook.unregisterHotKey(i);
-                    for (int i = 1; i < 8; i++)
-                        if (hotkeyCodes[i - 1] != NO_HOTKEY)
-                            keyhook.registerHotKey(i, hotkeyMods1[i - 1] + hotkeyMods2[i - 1], hotkeyCodes[i - 1]);
-                }
-
-            }
         });
         frmPreferences.getContentPane().add(btnApply, "cell 0 2,alignx right");
         frmPreferences.setLocationRelativeTo(null);
@@ -1205,49 +1185,5 @@ public class PreferencesUI
 
     }
 
-    public int getModBoxIndex(int mod)
-    {
-        switch (mod)
-        {
-        case 0:
-            return 0;
-        case 2:
-            return 1;
-        case 1:
-            return 2;
-        case 4:
-            return 3;
-        case 8:
-            return 4;
-        }
-        return 0;
-    }
-
-    public int getHotkeyMod(int index)
-    {
-        switch (index)
-        {
-        case 0:
-            return 0;
-        case 1:
-            return 2;
-        case 2:
-            return 1;
-        case 3:
-            return 4;
-        case 4:
-            return 8;
-        }
-        return 0;
-    }
-
-    public String getKeyCharacter(int keyCode)
-    {
-        if (keyCode == NO_HOTKEY || keyCode == KeyEvent.VK_ESCAPE || keyCode == KeyEvent.VK_ENTER
-            || keyCode == KeyEvent.VK_CONTROL || keyCode == KeyEvent.VK_ALT || keyCode == KeyEvent.VK_SHIFT
-            || keyCode == KeyEvent.VK_WINDOWS)
-            return "NONE";
-        else
-            return KeyEvent.getKeyText(keyCode);
-    }
+    
 }
