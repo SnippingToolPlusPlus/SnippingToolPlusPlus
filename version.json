@@ -1,7 +1,7 @@
 {
-    "version_name": "New Magnifying Glass Feature!",
+    "version_name": "Now with customizeable hotkeys!",
     "major": "6",
-    "minor": "2",
+    "minor": "3",
     "patch": "0",
     "download": "http://snippingtoolpluspl.us/downloads/SnippingToolPlusPlus-6.2.0.zip",
     "reset_prefs": "true",
