@@ -76,9 +76,10 @@ public class Overlay extends JPanel implements MouseListener, MouseMotionListene
 
     /* Zoom Rects Values */
     private boolean zoomEnabled = true;
-    private int zoomDimension = 80;
+    private int zoomDimension = 40;
     private int zoomDimensionMax = 120;
-    private int zoomFactor = 8;
+    private int zoomFactor = 4;
+    private int zoomGridMinWidth = zoomFactor*2;
     private int zoomMargin = 25;
     private int zoomWindowWidth = 120;
     private int zoomCrosshairRadius = 40;
@@ -321,12 +322,28 @@ public class Overlay extends JPanel implements MouseListener, MouseMotionListene
             g2d.setStroke(new BasicStroke(2f));
             g2d.drawRect(zoomX, zoomY, zoomImage.getWidth(null), zoomImage.getHeight(null));
            
+            //draw grid
+            int gridWidth = zoomDimensionMax/(zoomDimensionMax/zoomDimension);
+            if(gridWidth <= zoomGridMinWidth)
+            {
+                g2d.setColor(Color.lightGray);
+                g2d.setStroke(new BasicStroke(1f));
+                
+                for(int i = 0; i <= zoomDimensionMax; i+=(zoomDimensionMax/zoomDimension))
+                {
+                    g2d.drawLine(zoomX + i, zoomY, zoomX+i, zoomY+zoomWindowWidth);
+                    g2d.drawLine(zoomX, zoomY + i ,zoomX+zoomWindowWidth, zoomY + i);
+                }
+            }
+            
             g2d.setColor(Color.red);
-            g2d.setStroke(new BasicStroke(3f));
+            g2d.setStroke(new BasicStroke(2.5f));
+            
             g2d.drawLine(zoomX + (zoomWindowWidth / 2), zoomY + zoomCrosshairMargin, zoomX + (zoomWindowWidth / 2), zoomY + zoomWindowWidth
                 - zoomCrosshairMargin);
             g2d.drawLine(zoomX + zoomCrosshairMargin, zoomY + (zoomWindowWidth / 2), zoomX + zoomWindowWidth - zoomCrosshairMargin, zoomY
                 + (zoomWindowWidth / 2));
+            
             
             g2d.setStroke(new BasicStroke(1.35f));
         }
