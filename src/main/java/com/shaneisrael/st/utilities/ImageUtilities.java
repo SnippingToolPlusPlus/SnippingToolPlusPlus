@@ -1,10 +1,13 @@
 package com.shaneisrael.st.utilities;
 
+import java.awt.Color;
 import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.GraphicsConfiguration;
 import java.awt.GraphicsDevice;
 import java.awt.GraphicsEnvironment;
 import java.awt.Image;
+import java.awt.Rectangle;
 import java.awt.Transparency;
 import java.awt.image.BufferedImage;
 import java.awt.image.BufferedImageOp;
@@ -14,13 +17,13 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.util.ArrayList;
 import java.util.Iterator;
 
 import javax.imageio.IIOImage;
 import javax.imageio.ImageIO;
 import javax.imageio.ImageWriteParam;
 import javax.imageio.ImageWriter;
-import javax.imageio.stream.FileImageOutputStream;
 import javax.imageio.stream.ImageOutputStream;
 
 public class ImageUtilities
@@ -133,6 +136,43 @@ public class ImageUtilities
             e.printStackTrace();
         }
         return null;
+    }
+
+    /**
+     * 
+     * @param selections
+     *          An array list of BufferedImages
+     * @return 
+     *          returns a combined image
+     */
+    public static BufferedImage createMultiSnippet(ArrayList<BufferedImage> selections)
+    {
+        Graphics2D g2d;
+        BufferedImage result = null;
+        int maxWidth = 0;
+        int maxHeight = 0;
+        
+        for(BufferedImage img : selections)
+        {
+            if(img.getWidth() > maxWidth)
+                maxWidth = img.getWidth();
+            maxHeight += img.getHeight();
+        }
+        
+        result = new BufferedImage(maxWidth, maxHeight, BufferedImage.TYPE_INT_RGB);
+        g2d = result.createGraphics();
+        g2d.setColor(Color.white);
+        g2d.fill(new Rectangle(maxWidth, maxHeight));
+        
+        int y = 0;
+        for(BufferedImage img : selections)
+        {
+            g2d.drawImage(img, 0, y, null);
+            y+=img.getHeight();
+        }
+        g2d.dispose();
+        
+        return result;
     }
 
 }

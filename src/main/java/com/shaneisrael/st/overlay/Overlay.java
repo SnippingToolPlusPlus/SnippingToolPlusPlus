@@ -71,23 +71,21 @@ public class Overlay extends JPanel implements MouseListener, MouseMotionListene
     private BufferedImage screenshot;
     private BufferedImage background; //this is a slightly larger image than the screenshot used for the Zoom window
     private Image zoomImage; //Since scaling has to be an Image
-    
+
     private Graphics2D g2d;
 
     /* Zoom Rects Values */
     private boolean zoomEnabled = true;
     private int zoomDimension = 40;
-    private int zoomDimensionMax = 120;
     private int zoomFactor = 4;
-    private int zoomGridMinWidth = zoomFactor*2;
+    private int zoomGridMinWidth = zoomFactor * 2;
     private int zoomMargin = 25;
     private int zoomWindowWidth = 120;
     private int zoomCrosshairRadius = 40;
     private int zoomCrosshairMargin = zoomWindowWidth - zoomCrosshairRadius;
     private int zoomX = 0;
     private int zoomY = 0;
-    private int screenOffset = zoomDimensionMax;
-
+    private int screenOffset = zoomWindowWidth;
 
     private CaptureScreen capture;
     private ScreenBounds bounds;
@@ -95,6 +93,8 @@ public class Overlay extends JPanel implements MouseListener, MouseMotionListene
     private OverlayFrame parent;
     private Editor editor;
     private Save save;
+
+    private ArrayList<BufferedImage> selections;
 
     public Overlay(OverlayFrame of)
     {
@@ -110,7 +110,12 @@ public class Overlay extends JPanel implements MouseListener, MouseMotionListene
             @Override
             public void actionPerformed(ActionEvent e)
             {
-                // setOverlayVisible(false); //remove the overlay
+                //create the multi-snippet image 
+                if (selections.isEmpty() == false)
+                {
+                    selectionImage = ImageUtilities.createMultiSnippet(selections);
+                }
+
                 if (Preferences.getInstance().isEditorEnabled())
                 {
                     // send the snippet to the editor
@@ -136,6 +141,14 @@ public class Overlay extends JPanel implements MouseListener, MouseMotionListene
                 parent.disposeAll(); // remove the overlay
             }
         };
+        Action add = new AbstractAction()
+        {
+            public void actionPerformed(ActionEvent e)
+            {
+                SoundNotifications.playShutter();
+                selections.add(selectionImage);
+            }
+        };
         Action escape = new AbstractAction()
         {
             @Override
@@ -149,6 +162,10 @@ public class Overlay extends JPanel implements MouseListener, MouseMotionListene
         this.getActionMap().put("submit", submit);
         this.getInputMap().put(KeyStroke.getKeyStroke("ESCAPE"), "escape");
         this.getActionMap().put("escape", escape);
+        this.getInputMap().put(KeyStroke.getKeyStroke("SPACE"), "add");
+        this.getActionMap().put("add", add);
+
+        selections = new ArrayList<BufferedImage>();
 
         setFocusable(true);
         requestFocus();
@@ -164,23 +181,24 @@ public class Overlay extends JPanel implements MouseListener, MouseMotionListene
         capture = new CaptureScreen();
         bounds = new ScreenBounds();
         screenshot = getScreenShot();
-        
+
         screenRectangle = bounds.getBounds();
         // setMouseCursor();
     }
-    
+
     public BufferedImage getScreenShot()
     {
         BufferedImage screenCap = capture.getScreenCapture();
-        background = new BufferedImage(screenCap.getWidth() + (screenOffset*2), screenCap.getHeight() + (screenOffset*2), BufferedImage.TYPE_INT_RGB);
+        background = new BufferedImage(screenCap.getWidth() + (screenOffset * 2), screenCap.getHeight()
+            + (screenOffset * 2), BufferedImage.TYPE_INT_RGB);
         Graphics2D g2d = background.createGraphics();
         g2d.setColor(Color.BLACK);
         g2d.fill(new Rectangle(background.getWidth(), background.getHeight()));
-        g2d.drawImage(screenCap, screenOffset/2, screenOffset/2, null);
+        g2d.drawImage(screenCap, screenOffset / 2, screenOffset / 2, null);
         g2d.dispose();
-        
+
         screenCap = background;
-        
+
         return screenCap;
     }
 
@@ -201,7 +219,7 @@ public class Overlay extends JPanel implements MouseListener, MouseMotionListene
 
         g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
         g2d.setStroke(new BasicStroke(1.35f));
-        
+
         drawOverlay(g2d);
         drawSelection(g2d);
 
@@ -216,12 +234,12 @@ public class Overlay extends JPanel implements MouseListener, MouseMotionListene
         {
             e.printStackTrace();
         }
-        
-        if(zoomEnabled)
+
+        if (zoomEnabled)
             drawMagnifyingGlass(g2d);
-        
+
         super.repaint();
-       
+
     }
 
     private void drawInfo(Graphics2D g2d)
@@ -286,7 +304,7 @@ public class Overlay extends JPanel implements MouseListener, MouseMotionListene
 
     private void drawOverlay(Graphics2D g2d)
     {
-        g2d.drawImage(screenshot, -screenOffset/2, -screenOffset/2, null);
+        g2d.drawImage(screenshot, -screenOffset / 2, -screenOffset / 2, null);
         g2d.setColor(overlayColor);
         g2d.fillRect(0, 0, screenRectangle.width, screenRectangle.height);
     }
@@ -300,7 +318,7 @@ public class Overlay extends JPanel implements MouseListener, MouseMotionListene
         if (getSubimage() != null)
         {
             selectionImage = getSubimage();
-            g2d.drawImage(selectionImage, select.x , select.y, null);
+            g2d.drawImage(selectionImage, select.x, select.y, null);
             g2d.drawRect(select.x, select.y, select.width, select.height);
         }
     }
@@ -308,7 +326,7 @@ public class Overlay extends JPanel implements MouseListener, MouseMotionListene
     private void drawMagnifyingGlass(Graphics2D g2d)
     {
         Rectangle zoom = getZoomRectangle();
-        
+
         if (getSubimage(zoom) != null)
         {
             zoomImage = getSubimage(zoom);
@@ -321,30 +339,31 @@ public class Overlay extends JPanel implements MouseListener, MouseMotionListene
             g2d.setColor(Color.BLACK);
             g2d.setStroke(new BasicStroke(2f));
             g2d.drawRect(zoomX, zoomY, zoomImage.getWidth(null), zoomImage.getHeight(null));
-           
+
             //draw grid
-            int gridWidth = zoomDimensionMax/(zoomDimensionMax/zoomDimension);
-            if(gridWidth <= zoomGridMinWidth)
+            int gridWidth = zoomWindowWidth / (zoomWindowWidth / zoomDimension);
+            if (gridWidth <= zoomGridMinWidth)
             {
                 g2d.setColor(Color.lightGray);
                 g2d.setStroke(new BasicStroke(1f));
-                
-                for(int i = 0; i <= zoomDimensionMax; i+=(zoomDimensionMax/zoomDimension))
+
+                for (int i = 0; i <= zoomWindowWidth; i += (Math.round(zoomWindowWidth / zoomDimension)))
                 {
-                    g2d.drawLine(zoomX + i, zoomY, zoomX+i, zoomY+zoomWindowWidth);
-                    g2d.drawLine(zoomX, zoomY + i ,zoomX+zoomWindowWidth, zoomY + i);
+                    g2d.drawLine(zoomX + i, zoomY, zoomX + i, zoomY + zoomWindowWidth);
+                    g2d.drawLine(zoomX, zoomY + i, zoomX + zoomWindowWidth, zoomY + i);
                 }
             }
-            
+
             g2d.setColor(Color.red);
             g2d.setStroke(new BasicStroke(2.5f));
-            
-            g2d.drawLine(zoomX + (zoomWindowWidth / 2), zoomY + zoomCrosshairMargin, zoomX + (zoomWindowWidth / 2), zoomY + zoomWindowWidth
-                - zoomCrosshairMargin);
-            g2d.drawLine(zoomX + zoomCrosshairMargin, zoomY + (zoomWindowWidth / 2), zoomX + zoomWindowWidth - zoomCrosshairMargin, zoomY
+
+            g2d.drawLine(zoomX + (zoomWindowWidth / 2), zoomY + zoomCrosshairMargin, zoomX + (zoomWindowWidth / 2),
+                zoomY + zoomWindowWidth
+                    - zoomCrosshairMargin);
+            g2d.drawLine(zoomX + zoomCrosshairMargin, zoomY + (zoomWindowWidth / 2), zoomX + zoomWindowWidth
+                - zoomCrosshairMargin, zoomY
                 + (zoomWindowWidth / 2));
-            
-            
+
             g2d.setStroke(new BasicStroke(1.35f));
         }
     }
@@ -377,9 +396,10 @@ public class Overlay extends JPanel implements MouseListener, MouseMotionListene
         else
             zoomY = (mouseY + zoomMargin);
     }
+
     private Rectangle getZoomRectangle()
     {
-        return  new Rectangle(mouseX - (zoomDimension / 2), mouseY - (zoomDimension / 2), zoomDimension, zoomDimension);
+        return new Rectangle(mouseX - (zoomDimension / 2), mouseY - (zoomDimension / 2), zoomDimension, zoomDimension);
     }
 
     private BufferedImage getSubimage()
@@ -387,7 +407,8 @@ public class Overlay extends JPanel implements MouseListener, MouseMotionListene
         Rectangle select = selection.getBounds();
         if (select.width > 0 && select.height > 0)
         {
-            return screenshot.getSubimage(select.x + (screenOffset/2), select.y + (screenOffset/2), select.width, select.height);
+            return screenshot.getSubimage(select.x + (screenOffset / 2), select.y + (screenOffset / 2), select.width,
+                select.height);
         } else
         {
             return null;
@@ -396,7 +417,8 @@ public class Overlay extends JPanel implements MouseListener, MouseMotionListene
 
     private BufferedImage getSubimage(Rectangle rect)
     {
-        return screenshot.getSubimage(rect.x + (screenOffset/2), rect.y + (screenOffset/2), rect.width, rect.height);
+        return screenshot
+            .getSubimage(rect.x + (screenOffset / 2), rect.y + (screenOffset / 2), rect.width, rect.height);
     }
 
     public void setMode(int mode)
@@ -436,7 +458,7 @@ public class Overlay extends JPanel implements MouseListener, MouseMotionListene
             parent.setOpacity(op);
             parent.repaint();
         }
-        else if(e.getButton() == RIGHT_MOUSE_BUTTON)
+        else if (e.getButton() == RIGHT_MOUSE_BUTTON)
         {
             zoomEnabled = !zoomEnabled;
         }
@@ -482,20 +504,20 @@ public class Overlay extends JPanel implements MouseListener, MouseMotionListene
         int notches = e.getWheelRotation();
         if (notches < 0)
         {
-            if(!zoomEnabled)
+            if (!zoomEnabled)
             {
                 if (parent.getOpacity() - .05f >= .005f)
                     parent.setOpacity(parent.getOpacity() - .05f);
             }
             else
             {
-                if((zoomDimension-zoomFactor) >= zoomFactor)
+                if ((zoomDimension - zoomFactor) >= zoomFactor)
                     zoomDimension -= zoomFactor;
             }
         }
         else
         {
-            if(!zoomEnabled)
+            if (!zoomEnabled)
             {
                 if (parent.getOpacity() + .05f <= 1f)
                     parent.setOpacity(parent.getOpacity() + .05f);
@@ -504,14 +526,16 @@ public class Overlay extends JPanel implements MouseListener, MouseMotionListene
             }
             else
             {
-                if((zoomDimension+zoomFactor) <= zoomDimensionMax)
+                if ((zoomDimension + zoomFactor) <= zoomWindowWidth)
                     zoomDimension += zoomFactor;
             }
         }
 
     }
+
     public void dispose()
     {
+        selections.clear();
         screenshot = null;
         selectionImage = null;
         background = null;
