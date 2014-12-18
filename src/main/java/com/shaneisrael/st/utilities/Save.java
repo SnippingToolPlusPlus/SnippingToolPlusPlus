@@ -6,6 +6,7 @@ import java.io.File;
 import javax.imageio.ImageIO;
 
 import com.shaneisrael.st.SnippingToolPlusPlus;
+import com.shaneisrael.st.notification.NotificationManager;
 import com.shaneisrael.st.notification.STNotificationType;
 import com.shaneisrael.st.prefs.Preferences;
 
@@ -37,7 +38,7 @@ public class Save
         {
             e.printStackTrace();
         }
-        SnippingToolPlusPlus.showNotification("saved", STNotificationType.SUCCESS);
+        NotificationManager.getInstance().showNotification("saved", STNotificationType.SUCCESS);
     }
 
     public void saveUpload(BufferedImage img)

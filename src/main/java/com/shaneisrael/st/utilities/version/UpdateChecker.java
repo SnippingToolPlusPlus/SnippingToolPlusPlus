@@ -6,6 +6,7 @@ import java.net.URI;
 import java.net.URISyntaxException;
 
 import com.shaneisrael.st.SnippingToolPlusPlus;
+import com.shaneisrael.st.notification.NotificationManager;
 import com.shaneisrael.st.notification.STNotification;
 import com.shaneisrael.st.notification.STNotificationType;
 import com.shaneisrael.st.utilities.Browser;
@@ -88,7 +89,7 @@ public class UpdateChecker implements VersionResponseListener
 
             }
         });
-        updateNotification.setPauseTime(10000); //Wait 10 seconds
+        updateNotification.setPauseTime(90000); //Wait 1.5 mins
 
     }
 
@@ -100,7 +101,7 @@ public class UpdateChecker implements VersionResponseListener
 
         if (!Version.isDebug() && currentVersion.compareTo(latestVersion) < 0)
         {
-            SnippingToolPlusPlus.showNotification(updateNotification);
+            NotificationManager.getInstance().showNotification(updateNotification);
         } else
         {
             System.out.println("You are running the latest version.");

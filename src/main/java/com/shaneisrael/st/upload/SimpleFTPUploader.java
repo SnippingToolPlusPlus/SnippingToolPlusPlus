@@ -12,6 +12,7 @@ import java.util.Date;
 import javax.swing.JOptionPane;
 
 import com.shaneisrael.st.SnippingToolPlusPlus;
+import com.shaneisrael.st.notification.NotificationManager;
 import com.shaneisrael.st.notification.STNotificationType;
 import com.shaneisrael.st.prefs.Preferences;
 import com.sun.jmx.snmp.Timestamp;
@@ -63,7 +64,7 @@ public class SimpleFTPUploader implements Runnable
         String ftpUrl = "ftp://%s:%s@%s/%s;type=i";
         ftpUrl = String.format(ftpUrl, user, pass, host, uploadPath + filename + ".png");
 
-        SnippingToolPlusPlus.showNotification("uploading-ftp", STNotificationType.INFO);
+        NotificationManager.getInstance().showNotification("uploading-ftp", STNotificationType.INFO);
         try
         {
             URL url = new URL(ftpUrl);
@@ -81,10 +82,10 @@ public class SimpleFTPUploader implements Runnable
             inputStream.close();
             outputStream.close();
             
-            SnippingToolPlusPlus.showNotification("upload-ftp-done", STNotificationType.SUCCESS);
+            NotificationManager.getInstance().showNotification("upload-ftp-done", STNotificationType.SUCCESS);
         } catch (IOException ex)
         {
-            SnippingToolPlusPlus.showNotification("uploading-ftp-failed", STNotificationType.ERROR);
+            NotificationManager.getInstance().showNotification("uploading-ftp-failed", STNotificationType.ERROR);
             JOptionPane.showMessageDialog(null, ex.getMessage(), "FTP Error!", JOptionPane.ERROR_MESSAGE);
             ex.printStackTrace();
         }

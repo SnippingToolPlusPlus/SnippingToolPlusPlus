@@ -10,6 +10,7 @@ import java.awt.image.BufferedImage;
 import java.io.IOException;
 
 import com.shaneisrael.st.SnippingToolPlusPlus;
+import com.shaneisrael.st.notification.NotificationManager;
 import com.shaneisrael.st.notification.STNotificationType;
 
 public abstract class ClipboardUtilities implements ClipboardOwner
@@ -77,7 +78,7 @@ public abstract class ClipboardUtilities implements ClipboardOwner
             }
         }, null);
         
-        SnippingToolPlusPlus.showNotification("copied", STNotificationType.SUCCESS);
+        NotificationManager.getInstance().showNotification("copied", STNotificationType.SUCCESS);
     }
 
     /**
@@ -96,7 +97,7 @@ public abstract class ClipboardUtilities implements ClipboardOwner
 
         if (img == null)
         {
-            SnippingToolPlusPlus.showNotification("upload-failed", STNotificationType.ERROR);
+            NotificationManager.getInstance().showNotification("upload-failed", STNotificationType.ERROR);
         } else
         {
             new Upload(img, false);

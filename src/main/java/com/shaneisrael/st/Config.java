@@ -19,6 +19,9 @@ public class Config
     public static final String TRAY_ICON_BASE_DIR = "/images/upload/";
     public static final String TRAY_ICON_STATIC = "/images/trayIcon.png";
     
+    //notifications
+    public static final String THEME_PATH = "/theme/cloudy";
+    
     //identifiers
     public static final int UPLOAD_SNIPPET_ID = 0;
     public static final int UPLOAD_SCREEN_ID = 1;

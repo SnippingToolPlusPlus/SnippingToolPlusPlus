@@ -28,6 +28,7 @@ import net.miginfocom.swing.MigLayout;
 
 import com.shaneisrael.st.SnippingToolPlusPlus;
 import com.shaneisrael.st.editor.Editor;
+import com.shaneisrael.st.notification.NotificationManager;
 import com.shaneisrael.st.notification.STNotificationType;
 import com.shaneisrael.st.overlay.Overlay;
 import com.shaneisrael.st.prefs.Preferences;
@@ -202,7 +203,7 @@ public class ImageViewer extends JFrame implements ListSelectionListener
             public void actionPerformed(ActionEvent e)
             {
                 ClipboardUtilities.setClipboardImage(getCurrentImage());
-                SnippingToolPlusPlus.showNotification("copied", STNotificationType.SUCCESS);
+                NotificationManager.getInstance().showNotification("copied", STNotificationType.SUCCESS);
             }
 
         });

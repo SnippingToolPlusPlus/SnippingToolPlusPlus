@@ -1,3 +1,24 @@
+/**
+ * 
+ *  Copyright (C) 2011-2014  Shane M. Israel
+ *
+ *  This program is free software; you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation; either version 3 of the License, or
+ *  (at your option) any later version.
+ *
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License along
+ *  with this program; if not, write to the Free Software Foundation, Inc.,
+ *  51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
+ *  
+ *  Contact the author at contact@snippingtoolpluspl.us
+ *  
+**/
 package com.shaneisrael.st;
 
 import java.awt.AWTException;
@@ -28,6 +49,7 @@ import com.melloware.jintellitype.JIntellitypeException;
 import com.shaneisrael.st.data.Locations;
 import com.shaneisrael.st.data.OperatingSystem;
 import com.shaneisrael.st.editor.Editor;
+import com.shaneisrael.st.notification.NotificationManager;
 import com.shaneisrael.st.notification.STNotification;
 import com.shaneisrael.st.notification.STNotificationQueue;
 import com.shaneisrael.st.notification.STNotificationType;
@@ -66,8 +88,6 @@ public class SnippingToolPlusPlus extends JFrame implements ActionListener, JInt
     private JMenuItem sSnippet;
     private JMenuItem uClipboardImg;
     private CaptureScreen capture = new CaptureScreen();
-    private static STNotificationQueue notificationQueue;
-    private static STNotification notification;
 
     private UpdateChecker updater;
     final String iconMac = "trayIconMac.png";
@@ -126,8 +146,6 @@ public class SnippingToolPlusPlus extends JFrame implements ActionListener, JInt
         {
         }
 
-        initializeNotifications();
-
         initializeTray();
 
         /*
@@ -148,12 +166,6 @@ public class SnippingToolPlusPlus extends JFrame implements ActionListener, JInt
         updater = new UpdateChecker();
         updater.checkForUpdates();
         
-    }
-
-    private void initializeNotifications()
-    {
-        STTheme.setThemePath("/theme/cloudy");
-        notificationQueue = new STNotificationQueue(17);
     }
 
     private void initializeHotkeys()
@@ -225,25 +237,6 @@ public class SnippingToolPlusPlus extends JFrame implements ActionListener, JInt
             
             overlay = new OverlayFrame();
         }
-    }
-
-    public static void showNotification(String title, STNotificationType type)
-    {
-        notification = new STNotification(title, type);
-        notification.setPauseTime(1500);
-        notificationQueue.add(notification);
-    }
-
-    public static void showNotification(String title, STNotificationType type, int pauseTime)
-    {
-        notification = new STNotification(title, type);
-        notification.setPauseTime(pauseTime);
-        notificationQueue.add(notification);
-    }
-
-    public static void showNotification(STNotification notification)
-    {
-        notificationQueue.add(notification);
     }
 
     private void initializeTray()
@@ -360,7 +353,7 @@ public class SnippingToolPlusPlus extends JFrame implements ActionListener, JInt
         try
         {
             tray.add(trayIcon);
-            showNotification("welcome", STNotificationType.SUCCESS, 3000);
+            NotificationManager.getInstance().showNotification("welcome", STNotificationType.SUCCESS, 3000);
         } catch (AWTException e)
         {
             System.out.println("TrayIcon could not be added.");
