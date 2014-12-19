@@ -34,7 +34,6 @@ public class ImgurUploader implements UploadListener
         
         tempFile = saveTemporarily(image);
         upload(tempFile, listener);
-        
         if(Preferences.getInstance().getFTPUploadAlways() && Preferences.getInstance().isFTPReady())
             new SimpleFTPUploader(tempFile);
     }

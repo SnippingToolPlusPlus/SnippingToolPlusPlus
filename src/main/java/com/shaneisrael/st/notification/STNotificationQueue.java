@@ -76,7 +76,6 @@ public class STNotificationQueue implements Runnable
             {
                 e.printStackTrace();
             }
-
         }
         running = false;
     }

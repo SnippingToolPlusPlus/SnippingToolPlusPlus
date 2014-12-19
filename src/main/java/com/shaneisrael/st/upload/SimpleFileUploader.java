@@ -72,6 +72,5 @@ public class SimpleFileUploader implements Runnable
                 e.printStackTrace();
             }
         }
-
     }
 }

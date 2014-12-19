@@ -23,7 +23,7 @@ public class Upload implements ImgurResponseListener
 {
     private static final AnimatedTrayIcon animatedIcon = AnimatedTrayIcon.getDefaultIcon();
 
-    private final BufferedImage image;
+    private BufferedImage image;
     private final boolean uploadToreddit;
     private final Save save;
 
@@ -47,7 +47,6 @@ public class Upload implements ImgurResponseListener
         ImgurUploader uploader = new ImgurUploader();
         uploader.upload(image, this);
     }
-
     private void doBeforeUpload()
     {
         if (OperatingSystem.isWindows())
@@ -72,6 +71,8 @@ public class Upload implements ImgurResponseListener
         {
             SnippingToolPlusPlus.trayIcon.setImage(new ImageIcon(this.getClass().getResource("/images/trayIconMac.png")).getImage());
         }
+        
+        image = null;
     }
 
     @Override
