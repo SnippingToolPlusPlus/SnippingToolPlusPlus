@@ -95,6 +95,8 @@ public class Overlay extends JPanel implements MouseListener, MouseMotionListene
     private Save save;
 
     private ArrayList<BufferedImage> selections;
+    private ArrayList<Rectangle> selectionRects;
+    private Rectangle selectionRect;
 
     public Overlay(OverlayFrame of)
     {
@@ -147,6 +149,9 @@ public class Overlay extends JPanel implements MouseListener, MouseMotionListene
             {
                 SoundNotifications.playShutter();
                 selections.add(selectionImage);
+                selectionRect = new Rectangle(startPoint);
+                selectionRect.add(endPoint);
+                selectionRects.add(selectionRect);
             }
         };
         Action escape = new AbstractAction()
@@ -166,7 +171,8 @@ public class Overlay extends JPanel implements MouseListener, MouseMotionListene
         this.getActionMap().put("add", add);
 
         selections = new ArrayList<BufferedImage>();
-
+        selectionRects = new ArrayList<Rectangle>();
+        
         setFocusable(true);
         requestFocus();
         setMouseCursor();
@@ -221,8 +227,8 @@ public class Overlay extends JPanel implements MouseListener, MouseMotionListene
         g2d.setStroke(new BasicStroke(1.35f));
 
         drawOverlay(g2d);
+        drawMultiSnippetShadows(g2d);
         drawSelection(g2d);
-
         if (selection.getWidth() > 0 && selection.getHeight() > 0)
         {
             drawInfo(g2d);
@@ -240,6 +246,15 @@ public class Overlay extends JPanel implements MouseListener, MouseMotionListene
 
         super.repaint();
 
+    }
+
+    private void drawMultiSnippetShadows(Graphics2D g2d2)
+    {
+        g2d.setColor(new Color(240,240,240,50));
+        for(Rectangle rect : selectionRects)
+        {
+            g2d.fill(rect);
+        }
     }
 
     private void drawInfo(Graphics2D g2d)
