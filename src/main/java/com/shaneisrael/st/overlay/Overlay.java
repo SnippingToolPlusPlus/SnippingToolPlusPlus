@@ -60,11 +60,7 @@ public class Overlay extends JPanel implements MouseListener, MouseMotionListene
     private Rectangle screenRectangle;
     private Point startPoint = new Point();
     private Point endPoint = new Point();
-
     private int mouseX, mouseY;
-    //used for multi snippet capture
-    private ArrayList<Point> startPointList = new ArrayList<Point>();
-    private ArrayList<Point> endPointList = new ArrayList<Point>();
 
     private Font infoFont = new Font("sansserif", Font.BOLD, 12);
     private BufferedImage selectionImage;
@@ -160,6 +156,8 @@ public class Overlay extends JPanel implements MouseListener, MouseMotionListene
             public void actionPerformed(ActionEvent e)
             {
                 // setOverlayVisible(false); //remove the overlay
+                selections.clear();
+                selectionRects.clear();
                 parent.disposeAll();
             }
         };
@@ -182,8 +180,6 @@ public class Overlay extends JPanel implements MouseListener, MouseMotionListene
     {
         startPoint = new Point(0, 0);
         endPoint = new Point(0, 0);
-        startPointList.clear();
-        endPointList.clear();
         capture = new CaptureScreen();
         bounds = new ScreenBounds();
         screenshot = getScreenShot();
@@ -250,9 +246,11 @@ public class Overlay extends JPanel implements MouseListener, MouseMotionListene
 
     private void drawMultiSnippetShadows(Graphics2D g2d2)
     {
-        g2d.setColor(new Color(240,240,240,50));
         for(Rectangle rect : selectionRects)
         {
+            g2d.setColor(new Color(0, 255, 0, 100));
+            g2d.draw(rect);
+            g2d.setColor(new Color(240,240,240,50));
             g2d.fill(rect);
         }
     }
@@ -496,7 +494,6 @@ public class Overlay extends JPanel implements MouseListener, MouseMotionListene
         {
             startPoint = new Point(mouseX, mouseY);
             endPoint = new Point(mouseX, mouseY);
-            startPointList.add(startPoint);
         }
     }
 
@@ -508,7 +505,6 @@ public class Overlay extends JPanel implements MouseListener, MouseMotionListene
             mouseX = e.getX();
             mouseY = e.getY();
             endPoint = new Point(mouseX, mouseY);
-            endPointList.add(endPoint);
         }
 
     }
