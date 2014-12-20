@@ -108,35 +108,39 @@ public class Overlay extends JPanel implements MouseListener, MouseMotionListene
             @Override
             public void actionPerformed(ActionEvent e)
             {
-                //create the multi-snippet image 
-                if (selections.isEmpty() == false)
+                if((startPoint.getX() != 0 && startPoint.getY() != 0) && (endPoint.getX() != 0 && endPoint.getY() != 0))
                 {
-                    selectionImage = ImageUtilities.createMultiSnippet(selections);
+                    //create the multi-snippet image 
+                    System.out.println("entered");
+                    if (selections.isEmpty() == false)
+                    {
+                        selectionImage = ImageUtilities.createMultiSnippet(selections);
+                    }
+    
+                    if (Preferences.getInstance().isEditorEnabled())
+                    {
+                        // send the snippet to the editor
+                        Editor.getInstance().initialize(selectionImage, mode);
+                    } else
+                    {
+                        // send the snippet directly to the upload/save queue
+                        if (mode == Overlay.UPLOAD)
+                        {
+                            new Upload(selectionImage, false);
+                        }
+                        else if (mode == Overlay.SAVE)
+                        {
+                            save = new Save();
+                            save.save(selectionImage);
+                        }
+                        else if (mode == Overlay.UPLOAD_FTP)
+                        {
+                            new SimpleFTPUploader(ImageUtilities.saveTemporarily(selectionImage));
+                        }
+    
+                    }
+                    parent.disposeAll(); // remove the overlay
                 }
-
-                if (Preferences.getInstance().isEditorEnabled())
-                {
-                    // send the snippet to the editor
-                    Editor.getInstance().initialize(selectionImage, mode);
-                } else
-                {
-                    // send the snippet directly to the upload/save queue
-                    if (mode == Overlay.UPLOAD)
-                    {
-                        new Upload(selectionImage, false);
-                    }
-                    else if (mode == Overlay.SAVE)
-                    {
-                        save = new Save();
-                        save.save(selectionImage);
-                    }
-                    else if (mode == Overlay.UPLOAD_FTP)
-                    {
-                        new SimpleFTPUploader(ImageUtilities.saveTemporarily(selectionImage));
-                    }
-
-                }
-                parent.disposeAll(); // remove the overlay
             }
         };
         Action add = new AbstractAction()
@@ -148,6 +152,8 @@ public class Overlay extends JPanel implements MouseListener, MouseMotionListene
                 selectionRect = new Rectangle(startPoint);
                 selectionRect.add(endPoint);
                 selectionRects.add(selectionRect);
+                startPoint = new Point(0, 0);
+                endPoint = new Point(0, 0);
             }
         };
         Action escape = new AbstractAction()

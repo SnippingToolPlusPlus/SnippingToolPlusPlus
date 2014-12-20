@@ -107,6 +107,7 @@ public class SnippingToolPlusPlus extends JFrame implements ActionListener, JInt
             System.out.println("Feel free to implement the feature and submit a patch though!");
             System.out.println("Source: https://github.com/SnippingToolPlusPlus/SnippingToolPlusPlus");
         }
+        
     }
 
     private static void processArguments(String[] args)
@@ -230,11 +231,8 @@ public class SnippingToolPlusPlus extends JFrame implements ActionListener, JInt
 
     private void displayOverlay()
     {
-        if (overlay == null || OverlayFrame.IsActive == false)
+        if (overlay == null || !OverlayFrame.IsActive)
         {
-            if(Editor.getInstance().isActive())
-                Editor.getInstance().dispose();
-            
             overlay = new OverlayFrame();
         }
     }

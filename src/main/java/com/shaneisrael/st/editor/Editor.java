@@ -98,6 +98,7 @@ public class Editor extends JFrame implements MouseMotionListener
      */
     public Editor()
     {
+        
         this.addWindowListener(new WindowListener()
         {
             @Override
@@ -128,7 +129,8 @@ public class Editor extends JFrame implements MouseMotionListener
             @Override
             public void windowClosed(WindowEvent arg0)
             {
-                editingPanel.disposeAll();
+                if(editingPanel != null)
+                    editingPanel.disposeAll();
                 System.gc();
             }
 
@@ -264,6 +266,7 @@ public class Editor extends JFrame implements MouseMotionListener
             }
 
         };
+        
         KeyboardFocusManager.getCurrentKeyboardFocusManager()
             .addKeyEventDispatcher(keyDispatcher);
 
