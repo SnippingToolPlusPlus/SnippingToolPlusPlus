@@ -108,15 +108,15 @@ public class Overlay extends JPanel implements MouseListener, MouseMotionListene
             @Override
             public void actionPerformed(ActionEvent e)
             {
-                if((startPoint.getX() != 0 && startPoint.getY() != 0) && (endPoint.getX() != 0 && endPoint.getY() != 0))
+                if (((startPoint.getX() != 0 && startPoint.getY() != 0)
+                    && (endPoint.getX() != 0 && endPoint.getY() != 0)) || !selections.isEmpty())
                 {
                     //create the multi-snippet image 
-                    System.out.println("entered");
                     if (selections.isEmpty() == false)
                     {
                         selectionImage = ImageUtilities.createMultiSnippet(selections);
                     }
-    
+
                     if (Preferences.getInstance().isEditorEnabled())
                     {
                         // send the snippet to the editor
@@ -137,7 +137,7 @@ public class Overlay extends JPanel implements MouseListener, MouseMotionListene
                         {
                             new SimpleFTPUploader(ImageUtilities.saveTemporarily(selectionImage));
                         }
-    
+
                     }
                     parent.disposeAll(); // remove the overlay
                 }
@@ -176,7 +176,7 @@ public class Overlay extends JPanel implements MouseListener, MouseMotionListene
 
         selections = new ArrayList<BufferedImage>();
         selectionRects = new ArrayList<Rectangle>();
-        
+
         setFocusable(true);
         requestFocus();
         setMouseCursor();
@@ -252,11 +252,11 @@ public class Overlay extends JPanel implements MouseListener, MouseMotionListene
 
     private void drawMultiSnippetShadows(Graphics2D g2d2)
     {
-        for(Rectangle rect : selectionRects)
+        for (Rectangle rect : selectionRects)
         {
             g2d.setColor(new Color(0, 255, 0, 100));
             g2d.draw(rect);
-            g2d.setColor(new Color(240,240,240,50));
+            g2d.setColor(new Color(240, 240, 240, 50));
             g2d.fill(rect);
         }
     }
