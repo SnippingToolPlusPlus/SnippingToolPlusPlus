@@ -2,10 +2,16 @@ package com.shaneisrael.st.utilities.version;
 
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.io.BufferedInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.net.URL;
 
-import com.shaneisrael.st.SnippingToolPlusPlus;
 import com.shaneisrael.st.notification.NotificationManager;
 import com.shaneisrael.st.notification.STNotification;
 import com.shaneisrael.st.notification.STNotificationType;
@@ -79,12 +85,14 @@ public class UpdateChecker implements VersionResponseListener
                 {
                     try
                     {
+                        
                         Browser.open(new URI("http://snippingtoolpluspl.us/"));
                     } catch (URISyntaxException e2)
                     {
                         System.out.println("Could not get latest version information.");
                     }
                 }
+                
                 updateNotification.dispose();
 
             }
