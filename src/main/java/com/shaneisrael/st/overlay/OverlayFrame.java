@@ -67,7 +67,6 @@ public class OverlayFrame extends JFrame
             public void windowClosed(WindowEvent arg0)
             {
                 isActive = false;
-                OverlayFrame.this.dispose();
             }
 
             @Override
