@@ -15,15 +15,13 @@ import com.shaneisrael.st.data.OperatingSystem;
 public class OverlayFrame extends JFrame
 {
     private static final long serialVersionUID = 4640312842620083014L;
-    public static boolean IsActive = false;
+    public static boolean isActive = false;
     private Overlay overlayPanel;
-    private OverlayFrame instance;
 
     public OverlayFrame()
     {
-        IsActive = true; // the overlay is currently opened.
-        instance = this;
-        instance.setUndecorated(true);
+        isActive = true; // the overlay is currently opened.
+        this.setUndecorated(true);
         if (OperatingSystem.isWindows())
         {
             getRootPane().setWindowDecorationStyle(JRootPane.NONE);
@@ -32,11 +30,11 @@ public class OverlayFrame extends JFrame
         {
             this.setBounds(getScreenSize());
         }
-        overlayPanel = new Overlay(instance);
-        instance.add(overlayPanel);
-        instance.setOpacity(1f);
-        instance.setVisible(true);
-        instance.addWindowListener(new WindowListener()
+        overlayPanel = new Overlay(this);
+        this.add(overlayPanel);
+        this.setOpacity(1f);
+        this.setVisible(true);
+        this.addWindowListener(new WindowListener()
         {
 
             @Override
@@ -68,11 +66,8 @@ public class OverlayFrame extends JFrame
             @Override
             public void windowClosed(WindowEvent arg0)
             {
-                IsActive = false;
-                overlayPanel.removeAll();
-                instance.removeAll();
-                instance.dispose();
-                System.gc();
+                isActive = false;
+                OverlayFrame.this.dispose();
             }
 
             @Override
@@ -106,11 +101,11 @@ public class OverlayFrame extends JFrame
     }
     public void disposeAll()
     {
-        IsActive = false;
+        isActive = false;
         overlayPanel.removeAll();
         overlayPanel.dispose();
-        instance.removeAll();
-        instance.dispose();
+        this.removeAll();
+        this.dispose();
         System.gc();
     }
 }

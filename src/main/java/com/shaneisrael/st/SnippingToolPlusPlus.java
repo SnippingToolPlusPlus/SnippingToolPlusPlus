@@ -231,7 +231,7 @@ public class SnippingToolPlusPlus extends JFrame implements ActionListener, JInt
 
     private void displayOverlay()
     {
-        if (overlay == null || !OverlayFrame.IsActive)
+        if (overlay == null || !OverlayFrame.isActive)
         {
             overlay = new OverlayFrame();
         }
