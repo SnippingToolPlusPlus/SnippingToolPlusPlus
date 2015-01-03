@@ -2,8 +2,8 @@
     "version_name": "Now with customizeable hotkeys!",
     "major": "6",
     "minor": "3",
-    "patch": "1",
-    "download": "http://snippingtoolpluspl.us/downloads/SnippingToolPlusPlus-6.3.1.zip",
+    "patch": "2",
+    "download": "http://snippingtoolpluspl.us/downloads/SnippingToolPlusPlus-6.3.2.zip",
     "reset_prefs": "true",
     "changes": {
         "added": [
