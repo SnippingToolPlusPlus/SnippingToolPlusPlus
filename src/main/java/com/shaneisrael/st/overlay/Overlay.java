@@ -108,8 +108,7 @@ public class Overlay extends JPanel implements MouseListener, MouseMotionListene
             @Override
             public void actionPerformed(ActionEvent e)
             {
-                if (((startPoint.getX() != 0 && startPoint.getY() != 0)
-                    && (endPoint.getX() != 0 && endPoint.getY() != 0)) || !selections.isEmpty())
+                if (selection.getWidth() > 0 && selection.getHeight() > 0 || !selections.isEmpty())
                 {
                     //create the multi-snippet image 
                     if (selections.isEmpty() == false)
@@ -254,9 +253,9 @@ public class Overlay extends JPanel implements MouseListener, MouseMotionListene
     {
         for (Rectangle rect : selectionRects)
         {
-            g2d.setColor(new Color(0, 255, 0, 100));
+            g2d.setColor(new Color(255, 255, 255, 100));
             g2d.draw(rect);
-            g2d.setColor(new Color(240, 240, 240, 50));
+            g2d.setColor(new Color(0, 0, 255, 25));
             g2d.fill(rect);
         }
     }
