@@ -108,8 +108,7 @@ public class Overlay extends JPanel implements MouseListener, MouseMotionListene
             @Override
             public void actionPerformed(ActionEvent e)
             {
-                if (((startPoint.getX() != 0 && startPoint.getY() != 0)
-                    && (endPoint.getX() != 0 && endPoint.getY() != 0)) || !selections.isEmpty())
+                if (null != selectionImage && selectionImage.getWidth() > 0 && selectionImage.getHeight() > 0)
                 {
                     //create the multi-snippet image 
                     if (selections.isEmpty() == false)
