@@ -1,5 +1,4 @@
 package com.shaneisrael.st.editor;
-
 import java.awt.AlphaComposite;
 import java.awt.BasicStroke;
 import java.awt.Color;
@@ -16,24 +15,19 @@ import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
+import java.util.Iterator;
+import java.util.Stack;
 
 import javax.swing.ImageIcon;
 import javax.swing.JPanel;
 
-import com.shaneisrael.st.SnippingToolPlusPlus;
-import com.shaneisrael.st.data.OperatingSystem;
-import com.shaneisrael.st.utilities.ClipboardUtilities;
-import com.shaneisrael.st.utilities.ImageUtilities;
 
 public class EditorPanel extends JPanel implements MouseMotionListener, MouseListener
 {
     private static final long serialVersionUID = -8925388346037613270L;
     private Image image;
     private BufferedImage editingLayer;
-    //laygerG2D is the transparent layer for rectangles and other shapes not lines
-    private Graphics2D editG2D, layerG2D, textLayerG2D;
-    //this is for adding the final edits to the main image before upload
-    private Graphics2D addG2D;
+    private Graphics2D editG2D;
     private Color fillColor = Color.red;
     private Color borderColor = Color.black;
     private String tool = "pencil";
@@ -41,13 +35,13 @@ public class EditorPanel extends JPanel implements MouseMotionListener, MouseLis
     private Rectangle2D selection;
     private int mx, my, lastX, lastY; // mouse position holders
     private Point clickPoint;
-    private Point textPoint = new Point(0, 0);
-    private Dimension editSize;
     private float stroke = 3f;
-    private Rectangle blurredSelection;
 
-    private Font textFont = new Font("verdana", Font.BOLD, 14);
-    private String drawText = "";
+    private Stack<DrawLayer> drawStack;
+    private Stack<DrawLayer> redoStack;
+    
+    private int dlMinX, dlMinY, dlMaxX, dlMaxY;
+    private int drawWidth, drawHeight;
 
     /*
      * Dashed Stroke
@@ -59,53 +53,33 @@ public class EditorPanel extends JPanel implements MouseMotionListener, MouseLis
     private float dashPhase = 5f;
     private BasicStroke dashed_stroke = new BasicStroke(dashed_strokeThickness, BasicStroke.CAP_BUTT,
             BasicStroke.JOIN_MITER, miterLimit, dashPattern, dashPhase);
+    
+    Editor editor;
 
-    /*
-     * 
-     * TODO: Update how drawing text works. First, draw out a box, this box
-     * will be the bounds of where you can draw text. use this code int chars =
-     * g.getFontMetrics().stringWidth(text); to get the string length in pixels
-     * so that you know when your at the edge of the box and have to create a
-     * new line.
-     */
-
-    /*
-     * TODO: When submitting, empty null text is leaving a red rectangle on the
-     * image usually at the upper left area.
-     */
 
     public EditorPanel(BufferedImage img, Editor e)
     {
+        editor = e;
         image = img;
 
-        addG2D = ((BufferedImage) image).createGraphics();
-        addG2D.setStroke(new BasicStroke(stroke));
-        addG2D.setColor(fillColor);
-        editSize = new Dimension(img.getWidth(), img.getHeight());
-        editG2D = ((BufferedImage) image).createGraphics();
-        editingLayer = new BufferedImage(img.getWidth(), img.getHeight(), BufferedImage.TYPE_INT_ARGB);
-        layerG2D = editingLayer.createGraphics();
-        layerG2D.setBackground(new Color(0, 0, 0, 0)); // set layer transparent
-        layerG2D.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_IN, 0.0f));
-        layerG2D = editingLayer.createGraphics();
-        layerG2D.setColor(fillColor);
-
-        textLayerG2D = editingLayer.createGraphics();
-        textLayerG2D.setBackground(new Color(0, 0, 0, 0)); // set layer transparent
-        textLayerG2D.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_IN, 0.0f));
-        textLayerG2D = editingLayer.createGraphics();
-        textLayerG2D.setColor(fillColor);
+        drawWidth = img.getWidth();
+        drawHeight = img.getHeight();
+        //add 20 to adjust for the stroke width of 10 and the shadows on some shapes.
+        editingLayer = new BufferedImage(img.getWidth() + 20, img.getHeight() + 20, BufferedImage.TYPE_INT_ARGB);
+        editG2D = ((BufferedImage) editingLayer).createGraphics();
+        editG2D.setClip(0, 0, drawWidth, drawHeight);
+        editG2D.setBackground(new Color(0,0,0,0));
 
         selection = new Rectangle2D.Double();
 
+        drawStack = new Stack<DrawLayer>();
+        redoStack = new Stack<DrawLayer>();
+        
         this.addMouseMotionListener(this);
         this.addMouseListener(this);
         this.setFocusable(true);
         this.setPreferredSize(new Dimension(img.getWidth(), img.getHeight()));
 
-        if(OperatingSystem.isWindows()) {
-            setMouseCursor();
-        }
     }
 
     public void setMouseCursor()
@@ -123,28 +97,40 @@ public class EditorPanel extends JPanel implements MouseMotionListener, MouseLis
         super.paintComponent(g);
         Graphics2D g2d = (Graphics2D) g;
 
-        g2d.drawImage(image, 0, 0, null); // Draw the snippet image first
-        drawEditingLayer(g2d); // draw the transparent image on top
-
-        if (tool.equals("text") && textPoint != null)
-            draw();
-        this.repaint();
+        g2d.drawImage(image, 0, 0, null); // Draw the original image first
+        g2d.drawImage(editingLayer, 0, 0, null); // Draw the edit layer next
+        
+        Iterator<DrawLayer> iter = drawStack.iterator();
+        while(iter.hasNext())
+        {
+            DrawLayer dl = iter.next();
+            g2d.drawImage(dl.getImage(), dl.getLocation().x, dl.getLocation().y, null);
+        }
+        
+        super.repaint();
         g2d.dispose();
     }
-
-    private void drawEditingLayer(Graphics2D g2d)
+    public void clearEditingLayer()
     {
-        /*
-         * This is the transparent layer that all the editing
-         * "squares, lines, drawing, etc" is drawn on. It sits on top of the
-         * actual snippet image
-         */
-        g2d.drawImage(editingLayer, 0, 0, null);
+        editG2D.dispose();
+        editingLayer = new BufferedImage(image.getWidth(null) + 20, image.getHeight(null) + 20, BufferedImage.TYPE_INT_ARGB);
+        editG2D = ((BufferedImage) editingLayer).createGraphics();
+        editG2D.setClip(0, 0, drawWidth, drawHeight);
+        editG2D.setBackground(new Color(0,0,0,0));
     }
-
     public BufferedImage getImage()
-    {
-        return (BufferedImage) image;
+    {   
+        BufferedImage finalLayer = new BufferedImage(image.getWidth(null), image.getHeight(null), BufferedImage.TYPE_INT_ARGB);
+        editG2D = finalLayer.createGraphics();
+        editG2D.drawImage(image, 0, 0, null);
+        Iterator<DrawLayer> iter = drawStack.iterator();
+        while(iter.hasNext())
+        {
+            DrawLayer dl = iter.next();
+            editG2D.drawImage(dl.getImage(), dl.getLocation().x, dl.getLocation().y, null);
+        }
+        editG2D.dispose();
+        return finalLayer;
     }
 
     public void setColor(Color color)
@@ -169,67 +155,94 @@ public class EditorPanel extends JPanel implements MouseMotionListener, MouseLis
 
     public void setTool(String tool)
     {
-        // If there is text on the screen, and the tool is changed. We want that text added to the final image.
-        if (!drawText.equals(""))
-        {
-            forceDrawText();
-        }
         this.tool = tool;
     }
 
-    @Override
-    public void mouseDragged(MouseEvent me)
+    public void draw()
     {
-        lastX = mx;
-        lastY = my;
-        mx = me.getX();
-        my = me.getY();
-
-        draw(); // get selected tool and draw
-
-        this.repaint();
-    }
-
-    private void draw()
-    {
-        if (tool.equals("pencil"))
+        if(!tool.equals("pencil"))
         {
-            drawPenLine(mx, my, lastX, lastY);
-        } else if (tool.equals("line"))
-        {
-            layerG2D.clearRect(0, 0, editSize.width, editSize.height);
-            layerG2D.setBackground(new Color(0, 0, 0, 0));
-            drawLine(layerG2D);
-        } else if (tool.equals("rectangle"))
-        {
-            layerG2D.clearRect(0, 0, editSize.width, editSize.height);
-            layerG2D.setBackground(new Color(0, 0, 0, 0));
-            drawRectangle(layerG2D);
-        } else if (tool.equals("filled rectangle"))
-        {
-            layerG2D.clearRect(0, 0, editSize.width, editSize.height);
-            layerG2D.setBackground(new Color(0, 0, 0, 0));
-            drawFilledRectangle(layerG2D);
-        } else if (tool.equals("bordered rectangle"))
-        {
-            layerG2D.clearRect(0, 0, editSize.width, editSize.height);
-            layerG2D.setBackground(new Color(0, 0, 0, 0));
-            drawBorderedRectangle(layerG2D);
-        } else if (tool.equals("text"))
-        {
-            layerG2D.clearRect(0, 0, editSize.width, editSize.height);
-            layerG2D.setBackground(new Color(0, 0, 0, 0));
-            drawText(layerG2D);
-        } else if (tool.equals("blur"))
-        {
-            layerG2D.clearRect(0, 0, editSize.width, editSize.height);
-            layerG2D.setBackground(new Color(0, 0, 0, 0));
-            createBlurSelection(layerG2D);
-            createBlur(layerG2D);
+            editG2D.clearRect(0, 0, editingLayer.getWidth(), editingLayer.getHeight());
+            editG2D.setBackground(new Color(0, 0, 0, 0));
         }
-
+        else
+            drawPenLine(mx, my, lastX, lastY);
+        
+        if(tool.equals("line"))
+        {
+            drawLine(editG2D);
+        }
+        else if(tool.equals("rectangle"))
+        {
+            if(editor.fill())
+            {
+                if(editor.shadow())
+                    drawBorderedRectangle(editG2D);
+                else
+                    drawFilledRectangle(editG2D);
+            }
+            else
+                drawRectangle(editG2D);
+        }
+        else if(tool.equals("roundRectangle"))
+        {
+            if(editor.fill())
+                drawFilledRoundRectangle(editG2D);
+            else
+                drawRoundRectangle(editG2D);
+        }
+        else if(tool.equals("ellipse"))
+        {
+            if(editor.fill())
+                drawFilledEllipse(editG2D);
+            else
+                drawEllipse(editG2D);
+        }
     }
+    public void undo()
+    {
+        if(!drawStack.isEmpty())
+        {
+            editor.enableRedo();
+            redoStack.push(drawStack.pop());
+            if(drawStack.isEmpty())
+                editor.disableUndo();
+        }
+    }
+    public void redo()
+    {
+        if(!redoStack.isEmpty())
+        {
+            editor.enableUndo();
+            drawStack.push(redoStack.pop());
+            if(redoStack.isEmpty())
+                editor.disableRedo();
+        }
+    }
+    private void addNewLayerToStack()
+    {
+        int width = dlMaxX - dlMinX;
+        int height = dlMaxY - dlMinY;
+        
+        
+        redoStack.clear();
+        editor.disableRedo();
+        
 
+        try
+        {
+            drawStack.add(new DrawLayer((BufferedImage)editingLayer.getSubimage((int)(dlMinX-stroke), (int)(dlMinY-stroke), width + 20, height + 20), new Point((int)(dlMinX-stroke),(int)(dlMinY-stroke))));
+        }
+        catch(java.awt.image.RasterFormatException ex)
+        {
+
+            System.out.println(dlMinY+height);
+        }
+        
+        if(!drawStack.isEmpty())
+            editor.enableUndo();
+        clearEditingLayer();
+    }
     public Rectangle draggedRect()
     {
         if (mx < 0)
@@ -248,27 +261,6 @@ public class EditorPanel extends JPanel implements MouseMotionListener, MouseLis
         return selection.getBounds();
     }
 
-    public void forceDrawText()
-    {
-        drawText(addG2D);
-        drawText = "";
-    }
-
-    private void drawText(Graphics2D g)
-    {
-        // draws to layerG2D
-        g.setColor(fillColor);
-        g.setFont(textFont);
-        drawString(g, drawText, textPoint.x, textPoint.y);
-    }
-
-    private void drawString(Graphics g, String text, int x, int y)
-    {
-        for (String line : text.split("\n"))
-        {
-            g.drawString(line, x, y += 8);
-        }
-    }
 
     private void drawPenLine(int mx2, int my2, int lastX2, int lastY2)
     {
@@ -283,68 +275,46 @@ public class EditorPanel extends JPanel implements MouseMotionListener, MouseLis
         g.setStroke(new BasicStroke(stroke));
         g.drawLine(clickPoint.x, clickPoint.y, mx, my);
     }
-
+    private void drawEllipse(Graphics2D g)
+    {
+        g.setColor(fillColor);
+        g.setStroke(new BasicStroke(stroke));
+        Rectangle rect = draggedRect();
+        g.drawOval(rect.x, rect.y, rect.width, rect.height);
+    }
+    private void drawFilledEllipse(Graphics2D g)
+    {
+        g.setColor(fillColor);
+        g.setStroke(new BasicStroke(stroke));
+        Rectangle rect = draggedRect();
+        g.fillOval(rect.x, rect.y, rect.width, rect.height);
+    }
     private void drawRectangle(Graphics2D g)
     {
         g.setColor(fillColor);
         g.setStroke(new BasicStroke(stroke));
         g.draw(draggedRect());
     }
-
+    private void drawRoundRectangle(Graphics2D g)
+    {
+        g.setColor(fillColor);
+        g.setStroke(new BasicStroke(stroke));
+        Rectangle rect = draggedRect();
+        g.drawRoundRect(rect.x, rect.y, rect.width, rect.height, rect.height / 2, rect.height / 2);
+    }
+    private void drawFilledRoundRectangle(Graphics2D g)
+    {
+        g.setColor(fillColor);
+        g.setStroke(new BasicStroke(stroke));
+        Rectangle rect = draggedRect();
+        g.fillRoundRect(rect.x, rect.y, rect.width, rect.height, rect.height / 2, rect.height / 2);
+    }
     private void drawFilledRectangle(Graphics2D g)
     {
         g.setColor(fillColor);
         g.setStroke(new BasicStroke(stroke));
         g.fill(draggedRect());
     }
-
-    private void createBlurSelection(Graphics2D g)
-    {
-        // this variable is set so that later in the addEditToImage method, it can retrieve the subimage at that location and blur it then add it.
-        blurredSelection = draggedRect();
-        g.setStroke(dashed_stroke);
-        g.setColor(new Color(0, 0, 0, 200));
-        g.draw(blurredSelection);
-    }
-
-    private void createBlur(Graphics2D g)
-    {
-
-        blurredSelection = draggedRect();
-        Image blur = getSubImage(blurredSelection);
-        blur = ImageUtilities.simpleBlur(blur);
-        g.drawImage(blur, blurredSelection.x, blurredSelection.y, null);
-    }
-
-    private BufferedImage getSubImage(Rectangle selection)
-    {
-        BufferedImage img = (BufferedImage) image;
-        int height = selection.height;
-        int width = selection.width;
-        int x = selection.x;
-        int y = selection.y;
-
-        if ((selection.y + selection.height) > img.getHeight())
-        {
-            height = img.getHeight() - selection.y;
-        }
-        if ((selection.x + selection.width) > img.getWidth())
-        {
-            width = img.getWidth() - selection.x;
-        }
-        if (y < 0)
-        {
-            height += y;
-            y = 0;
-        }
-        if (x < 0)
-        {
-            width += x;
-            x = 0;
-        }
-        return img.getSubimage(x, y, width, height);
-    }
-
     private void drawBorderedRectangle(Graphics2D g)
     {
         g.setStroke(new BasicStroke(stroke));
@@ -369,7 +339,6 @@ public class EditorPanel extends JPanel implements MouseMotionListener, MouseLis
                 stroke_correction--;
             }
         }
-
         g.fillRect((int) (draggedRect().getX() + draggedRect().getWidth()) + (int) (stroke_correction / 2),
                 (int) draggedRect().getY() + stroke_correction, stroke_correction, (int) draggedRect().getHeight()
                         - (int) (stroke_correction / 2));
@@ -390,36 +359,32 @@ public class EditorPanel extends JPanel implements MouseMotionListener, MouseLis
 
         g.setColor(fillColor);
     }
-
-    public void addEditToImage()
+    @Override
+    public void mouseDragged(MouseEvent me)
     {
-        addG2D.setColor(fillColor);
-        // Skips pencil tool because the pencil is added directly
-
-        if (tool.equals("rectangle"))
-        {
-            drawRectangle(addG2D);
-        } else if (tool.equals("line"))
-        {
-            drawLine(addG2D);
-        } else if (tool.equals("filled rectangle"))
-        {
-            drawFilledRectangle(addG2D);
-        } else if (tool.equals("bordered rectangle"))
-        {
-            drawBorderedRectangle(addG2D);
-        } else if (tool.equals("blur"))
-        {
-            createBlur(addG2D); // create the blur from the selection
-        } else if (tool.equals("text"))
-        {
-            if (!(drawText.isEmpty()))
-            {
-                drawText = drawText.trim();
-                drawText(addG2D);
-            }
-            drawText = "";
-        }
+        lastX = mx;
+        lastY = my;
+        mx = me.getX();
+        my = me.getY();
+        
+        if(mx < 0)
+            dlMinX = 0;
+        else if(mx < dlMinX)
+            dlMinX = mx;
+        if(mx > drawWidth)
+            dlMaxX = drawWidth;
+        else if(mx > dlMaxX)
+            dlMaxX = mx;
+        if(my < 0)
+            dlMinY = 0;
+        else if(my < dlMinY)
+            dlMinY = my;
+        if(my > drawHeight)
+            dlMaxY = drawHeight;
+        else if(my > dlMaxY)
+            dlMaxY = my;
+        
+        draw(); // get selected tool and draw
     }
 
     @Override
@@ -432,12 +397,6 @@ public class EditorPanel extends JPanel implements MouseMotionListener, MouseLis
     @Override
     public void mouseClicked(MouseEvent e)
     {
-        if (e.getButton() == MouseEvent.BUTTON1)
-        {
-            textPoint = new Point(e.getPoint().x, e.getPoint().y);
-            if (drawText.length() > 0)
-                addEditToImage();
-        }
     }
 
     @Override
@@ -454,49 +413,16 @@ public class EditorPanel extends JPanel implements MouseMotionListener, MouseLis
     public void mousePressed(MouseEvent me)
     {
         clickPoint = new Point(mx, my);
+        dlMinX = mx;
+        dlMaxX = mx;
+        dlMinY = my;
+        dlMaxY = my;
     }
 
     @Override
     public void mouseReleased(MouseEvent arg0)
     {
-        if (!tool.equals("pencil") && !tool.equals("text"))
-        {
-            layerG2D.clearRect(0, 0, editSize.width, editSize.height);
-        }
-        addEditToImage();
-    }
-
-    public void setDrawText(String text)
-    {
-        drawText = text;
-    }
-
-    public String getText()
-    {
-        return drawText;
-    }
-
-    public void backspaceDrawText()
-    {
-        String currentChar, nextChar, enter;
-        System.out.println(drawText);
-        if (drawText.length() > 0)
-        {
-            if (drawText.length() > 1)
-            {
-                currentChar = drawText.substring(drawText.length() - 1, drawText.length());
-                nextChar = drawText.substring(drawText.length() - 2, drawText.length() - 1);
-                enter = nextChar + currentChar;
-                if (enter.equals("\n"))
-                    drawText = drawText.substring(0, drawText.length() - 2);
-                else
-                    drawText = drawText.substring(0, drawText.length() - 1);
-
-                System.out.println(drawText.substring(0, drawText.length() - 1));
-
-            } else
-                drawText = drawText.substring(0, drawText.length() - 1);
-        }
+        addNewLayerToStack();
     }
 
     public String getTool()
@@ -507,21 +433,21 @@ public class EditorPanel extends JPanel implements MouseMotionListener, MouseLis
     public void setStroke(float stroke)
     {
         this.stroke = stroke;
-
     }
 
     public void copyImageToClipboard()
     {
-        ClipboardUtilities.setClipboardImage(getImage());
     }
     public void disposeAll()
     {
-        image = null;
-        editingLayer = null;
-        
-        editG2D.dispose();
-        layerG2D.dispose();
-        textLayerG2D.dispose();
-        addG2D.dispose();
+    }
+
+    public void reset()
+    {
+        drawStack.clear();
+        redoStack.clear();
+        editor.disableRedo();
+        editor.disableUndo();
+        clearEditingLayer();
     }
 }

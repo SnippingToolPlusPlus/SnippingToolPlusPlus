@@ -1,28 +1,21 @@
 package com.shaneisrael.st.editor;
-
+import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.Dimension;
+import java.awt.EventQueue;
 import java.awt.Font;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
-import java.awt.Insets;
+import java.awt.GridLayout;
 import java.awt.KeyEventDispatcher;
 import java.awt.KeyboardFocusManager;
-import java.awt.Rectangle;
-import java.awt.SystemColor;
 import java.awt.Toolkit;
+import java.awt.Window.Type;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.awt.event.MouseMotionListener;
-import java.awt.event.WindowEvent;
-import java.awt.event.WindowListener;
 import java.awt.image.BufferedImage;
 import java.util.Hashtable;
 
-import javax.swing.BorderFactory;
 import javax.swing.ButtonGroup;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -31,20 +24,14 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JLayeredPane;
 import javax.swing.JPanel;
-import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
-import javax.swing.JSeparator;
 import javax.swing.JSlider;
 import javax.swing.JToggleButton;
-import javax.swing.ScrollPaneConstants;
-import javax.swing.SwingConstants;
 import javax.swing.UIManager;
-import javax.swing.WindowConstants;
 import javax.swing.border.EmptyBorder;
+import javax.swing.border.EtchedBorder;
 import javax.swing.border.LineBorder;
 import javax.swing.border.TitledBorder;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
 
 import net.miginfocom.swing.MigLayout;
 
@@ -53,267 +40,194 @@ import com.shaneisrael.st.upload.SimpleFTPUploader;
 import com.shaneisrael.st.utilities.ImageUtilities;
 import com.shaneisrael.st.utilities.Save;
 import com.shaneisrael.st.utilities.Upload;
+import com.sun.java.swing.plaf.windows.WindowsLookAndFeel;
 
-/*
- * =====KNOWN BUGS=====
- * 
- * Using the hotkey to submit does the submission multiple times
- * 
- */
+import javax.swing.JCheckBox;
 
-public class Editor extends JFrame implements MouseMotionListener
+public class Editor
 {
 
-    private static final long serialVersionUID = -3724445600454013870L;
+    private JPanel editorPanel;
+    private JButton btnUndo, btnRedo, btnReset;
+    private JCheckBox chckbxShadow, chckbxFilled;
+    JFrame frmEditor;
     private Color fillColor;
     private Color borderColor;
     private JColorChooser colorChooser;
-    private EditorPanel editingPanel;
-    private Dimension imageDimension;
-    private JRadioButton rdbtnUpload;
-    private JRadioButton rdbtnSave;
-    private JRadioButton rdbtnUploadFTP;
     private JSlider opacitySlider;
     private JSlider strokeSlider;
+    private JLayeredPane layeredPane;
 
-    private Upload upload;
-    private JButton btnSubmit;
-    private JToggleButton textToggleButton;
-
-    private Save save;
+    private ButtonGroup toolGroup;
+    private BufferedImage image;
     private int mode;
-
-    private KeyboardFocusManager manager;
+    private Save save;
+    private Upload upload;
+    
     private KeyEventDispatcher keyDispatcher;
-
     private static Editor instance = null;
-
-    private boolean keySubmitted = false;
-    private boolean keyCopied = false;
-    private boolean keyExited = false;
 
     /**
      * Create the application.
-     * 
      */
     public Editor()
     {
         
-        this.addWindowListener(new WindowListener()
-        {
-            @Override
-            public void windowOpened(WindowEvent arg0)
-            {
-            }
 
-            @Override
-            public void windowIconified(WindowEvent arg0)
-            {
-            }
-
-            @Override
-            public void windowDeiconified(WindowEvent arg0)
-            {
-            }
-
-            @Override
-            public void windowDeactivated(WindowEvent arg0)
-            {
-            }
-
-            @Override
-            public void windowClosing(WindowEvent arg0)
-            {
-            }
-
-            @Override
-            public void windowClosed(WindowEvent arg0)
-            {
-                if(editingPanel != null)
-                    editingPanel.disposeAll();
-                System.gc();
-            }
-
-            @Override
-            public void windowActivated(WindowEvent arg0)
-            {
-            }
-        });
-
-        setIconImage(Toolkit.getDefaultToolkit().getImage(
-            Editor.class.getResource("/images/icons/utilities.png")));
 
     }
+    private BufferedImage getEditedImage()
+    {
+        return ((EditorPanel)editorPanel).getImage();
+    }
 
+    public void submit()
+    {
+
+        if (mode == Overlay.SAVE)
+        {
+            save = new Save();
+            save.save(getEditedImage());
+        } else if (mode == Overlay.UPLOAD)
+        {
+            upload = new Upload(getEditedImage(), false);
+        } else if (mode == Overlay.UPLOAD_FTP)
+        {
+            new SimpleFTPUploader(
+                ImageUtilities.saveTemporarily(getEditedImage()));
+        }
+
+        exit();
+    }
+    public void exit()
+    {
+        KeyboardFocusManager.getCurrentKeyboardFocusManager()
+            .removeKeyEventDispatcher(keyDispatcher);
+        keyDispatcher = null;
+        instance.dispose();
+    }
+    public static Editor getInstance()
+    {
+        if (instance == null)
+        {
+            instance = new Editor();
+        } else
+        {
+            //instance.dispose();
+            instance = new Editor();
+        }
+        return instance;
+
+    }
+    public void dispose()
+    {
+        frmEditor.dispose();
+    }
     /**
      * Initialize the contents of the frame.
      */
+    /**
+     * @wbp.parser.entryPoint
+     */
+
     public void initialize(BufferedImage img, int m)
     {
-        /*
-         * this is a much simpler way to handle the key events on the entire
-         * frame without losing focus.
-         */
-
+        this.image = img;
+        this.mode = m;
+        
+        frmEditor = new JFrame();
+        frmEditor.setType(Type.UTILITY);
+        frmEditor.setTitle("Editor");
+        frmEditor.setBounds(100, 100, 1280, 720);
+        frmEditor.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frmEditor.setIconImage(Toolkit.getDefaultToolkit().getImage(
+            Editor.class.getResource("/images/icons/utilities.png")));
+        frmEditor.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         keyDispatcher = new KeyEventDispatcher()
         {
 
             @Override
             public boolean dispatchKeyEvent(KeyEvent e)
             {
-                // int key = e.getKeyCode();
-
-                if (e.getID() == KeyEvent.KEY_PRESSED)
+                if (e.isControlDown())
                 {
-                    if (e.isControlDown())
+                    if(e.getID() == KeyEvent.KEY_RELEASED)
                     {
                         switch (e.getKeyCode()) {
-                        case KeyEvent.VK_C:
-                            if (!keyCopied)
-                            {
-                                keyCopied = true;
-                                editingPanel.copyImageToClipboard();
-                            }
+                        case KeyEvent.VK_Z:
+                            ((EditorPanel) editorPanel).undo();
+                            break;
+                        case KeyEvent.VK_Y:
+                            ((EditorPanel) editorPanel).redo();
+                            break;
                         }
-                    }
-                    if (e.isShiftDown())
-                    {
-                        switch (e.getKeyCode()) {
-                        case KeyEvent.VK_ENTER:
-                            if (!keySubmitted)
-                            {
-                                keySubmitted = true;
-                                btnSubmit.doClick();
-                            }
-                        }
-                    } else
-                    {
-                        switch (e.getKeyCode()) {
-                        case KeyEvent.VK_BACK_SPACE:
-                            editingPanel.backspaceDrawText();
-                        case KeyEvent.VK_ESCAPE:
-                            if (!keyExited)
-                            {
-                                keyExited = true;
-                                exit();
-                            }
-
-                        }
-                    }
-                } else if (e.getID() == KeyEvent.KEY_RELEASED)
-                {
-                    keySubmitted = false;
-                    keyCopied = false;
-                    keyExited = false;
-
-                    switch (e.getKeyCode())
-                    {
-                    case KeyEvent.VK_F10:
-                        submitToReddit();
                     }
                 }
-
-                //				if (e.getID() == KeyEvent.KEY_PRESSED) {
-                //					if (key == KeyEvent.VK_BACK_SPACE) {
-                //						editingPanel.backspaceDrawText();
-                //					}
-                //				} else if (e.getID() == KeyEvent.KEY_RELEASED) {
-                //					if (e.isShiftDown())
-                //						if (key == KeyEvent.VK_ENTER) {
-                //							btnSubmit.doClick();
-                //
-                //							try {
-                //								Thread.sleep(500);
-                //							} catch (InterruptedException ie) {
-                //								ie.printStackTrace();
-                //							}
-                //						}
-                //					if (e.isControlDown()) {
-                //						if (key == KeyEvent.VK_C) {
-                //							editingPanel.copyImageToClipboard();
-                //
-                //							try {
-                //								Thread.sleep(500);
-                //							} catch (InterruptedException ie) {
-                //								ie.printStackTrace();
-                //							}
-                //						}
-                //					}
-                //
-                //					if (key == KeyEvent.VK_ESCAPE) {
-                //						exit();
-                //
-                //					} else if (key == KeyEvent.VK_F10) {
-                //						submitToReddit();
-                //
-                //					} else {
-                //						if (!(key == KeyEvent.VK_CAPS_LOCK
-                //								|| key == KeyEvent.VK_SHIFT
-                //								|| key == KeyEvent.VK_TAB || key == KeyEvent.VK_BACK_SPACE))
-                //							editingPanel.setDrawText(editingPanel.getText()
-                //									+ e.getKeyChar());
-                //						if (e.getKeyCode() == KeyEvent.VK_ENTER
-                //								&& editingPanel.getTool().equals("text")) {
-                //							editingPanel.setDrawText(editingPanel.getText()
-                //									+ "\n");
-                //						}
-                //					}
-                //
-                //				} else if (e.getID() == KeyEvent.KEY_TYPED) {
-                //
-                //				}
+                else if (e.isShiftDown())
+                {
+                    if(e.getID() == KeyEvent.KEY_RELEASED)
+                    {
+                        switch(e.getKeyCode())
+                        {
+                        case KeyEvent.VK_ENTER:
+                            submit();
+                            break;
+                            
+                        }
+                    }
+                }
+                else
+                {
+                    if(e.getID() == KeyEvent.KEY_RELEASED)
+                    {
+                        switch(e.getKeyCode())
+                        {
+                        case KeyEvent.VK_ESCAPE:
+                            exit();
+                            break;
+                        }
+                    }
+                }
                 return false;
             }
 
         };
-        
+
         KeyboardFocusManager.getCurrentKeyboardFocusManager()
             .addKeyEventDispatcher(keyDispatcher);
+        
+        toolGroup = new ButtonGroup();
 
-        // manager = KeyboardFocusManager
-        // .getCurrentKeyboardFocusManager();
-        // manager.addKeyEventDispatcher(new KeyDispatcher());
+        JPanel panel = new JPanel();
+        frmEditor.getContentPane().add(panel, BorderLayout.CENTER);
+        panel.setLayout(new MigLayout("", "[823.00,grow]", "[82.00][425.00,grow]"));
 
-        fillColor = Color.red;
-        colorChooser = new JColorChooser();
-        editingPanel = new EditorPanel(img, this);
-        editingPanel.setBackground(new Color(0, 0, 0, 0));
-        // get the height of the screen capture for the scrollpane
-        imageDimension = new Dimension(img.getWidth(), img.getHeight());
-        this.addMouseMotionListener(this);
-        this.mode = m;
+        JPanel toolPanel = new JPanel();
+        toolPanel.setBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null));
+        toolPanel.setBackground(Color.WHITE);
+        toolPanel.setForeground(Color.BLACK);
+        panel.add(toolPanel, "cell 0 0,grow");
+        toolPanel.setLayout(new MigLayout("", "[110.00,leading][][][][51.00][120.00][][][][][52.00][][][][][][]",
+            "[66.00,grow]"));
 
-        colorChooser = new JColorChooser(Color.red);
-        ButtonGroup uploadGroup = new ButtonGroup();
-        ButtonGroup toolGroup = new ButtonGroup();
+        opacitySlider = new JSlider();
+        opacitySlider.setBackground(Color.WHITE);
+        opacitySlider.setMinorTickSpacing(5);
 
-        JScrollPane imageScrollPane = new JScrollPane();
-        imageScrollPane
-            .setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
-        imageScrollPane
-            .setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS);
-        imageScrollPane.setViewportView(editingPanel);
-        imageScrollPane.setPreferredSize(imageDimension);
-        imageScrollPane.getVerticalScrollBar().setUnitIncrement(16);
-        imageScrollPane.getHorizontalScrollBar().setUnitIncrement(16);
-        getContentPane().setLayout(
-            new MigLayout("", "[55px][4px][1px][4px][538px,grow]",
-                "[67px][4px][1px][4px][321px,grow]"));
+        toolPanel.add(opacitySlider, "cell 1 0");
 
-        JPanel panel_3 = new JPanel();
-        panel_3.setBackground(UIManager.getColor("Button.disabledForeground"));
-        getContentPane().add(panel_3, "cell 0 0,grow");
-        panel_3.setLayout(null);
-
-        final JLayeredPane layeredPane = new JLayeredPane();
-        layeredPane.setBounds(0, 0, 55, 67);
-        layeredPane.setToolTipText("Color Selection");
-        layeredPane.setForeground(Color.WHITE);
-        layeredPane.setBackground(SystemColor.textInactiveText);
-        panel_3.add(layeredPane);
+        strokeSlider = new JSlider();
+        strokeSlider.setPaintTicks(true);
+        strokeSlider.setPaintLabels(true);
+        strokeSlider.setBackground(Color.WHITE);
+        toolPanel.add(strokeSlider, "cell 2 0");
 
         final ColorSelectionPanel fillColorPanel = new ColorSelectionPanel();
         final ColorSelectionPanel borderColorPanel = new ColorSelectionPanel();
+
+        layeredPane = new JLayeredPane();
+        layeredPane.setBackground(Color.LIGHT_GRAY);
+        toolPanel.add(layeredPane, "cell 0 0,grow");
         layeredPane.setLayer(fillColorPanel, 1);
         fillColorPanel.setToolTipText("Fill color");
         fillColorPanel.setBorder(new LineBorder(UIManager
@@ -335,7 +249,7 @@ public class Editor extends JFrame implements MouseMotionListener
                         c.getBlue(), c.getAlpha());
                     if (c.getTransparency() != 1.0)
                         opacitySlider.setValue((int) (c.getTransparency() * 10));
-                    editingPanel.setColor(fillColor);
+                    ((EditorPanel) editorPanel).setColor(fillColor);
                     fillColorPanel.setColor(new Color(c.getRed(), c.getGreen(),
                         c.getBlue(), getOpacitySliderValue()));
                 } catch (Exception ex)
@@ -365,8 +279,7 @@ public class Editor extends JFrame implements MouseMotionListener
                         .getBlue(), c.getAlpha());
                     if (c.getTransparency() != 1.0)
                         opacitySlider.setValue((int) (c.getTransparency() * 10));
-                    System.out.println("c.get: " + c.getTransparency());
-                    editingPanel.setBorderColor(borderColor);
+                    ((EditorPanel) editorPanel).setBorderColor(borderColor);
                     borderColorPanel.setColor(new Color(c.getRed(), c
                         .getGreen(), c.getBlue(), getOpacitySliderValue()));
                 } catch (Exception ex)
@@ -376,274 +289,21 @@ public class Editor extends JFrame implements MouseMotionListener
         });
         layeredPane.add(borderColorPanel);
 
-        JSeparator separator_2 = new JSeparator();
-        separator_2.setOrientation(SwingConstants.VERTICAL);
-        getContentPane().add(separator_2, "cell 2 0 1 5,grow");
-
-        JSeparator separator_1 = new JSeparator();
-        getContentPane().add(separator_1, "cell 0 2 5 1,grow");
-
-        JPanel panel_1 = new JPanel();
-        getContentPane().add(panel_1, "cell 0 4,grow");
-        GridBagLayout gbl_panel_1 = new GridBagLayout();
-        gbl_panel_1.columnWidths = new int[] { 10, 0 };
-        gbl_panel_1.rowHeights = new int[] { 34, 0, 35, 34, 0, 34, 0, 0, 0, 0 };
-        gbl_panel_1.columnWeights = new double[] { 1.0, Double.MIN_VALUE };
-        gbl_panel_1.rowWeights = new double[] { 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
-                0.0, 0.0, 1.0, Double.MIN_VALUE };
-        panel_1.setLayout(gbl_panel_1);
-
-        final JToggleButton pencilToggleButton = new JToggleButton("", true);
-        pencilToggleButton.setToolTipText("Pencil ");
-        pencilToggleButton.addChangeListener(new ChangeListener()
-        {
-            @Override
-            public void stateChanged(ChangeEvent arg0)
-            {
-                if (pencilToggleButton.isSelected())
-                    editingPanel.setTool("pencil");
-                pencilToggleButton.setFocusable(false);
-            }
-        });
-        pencilToggleButton.setSelectedIcon(new ImageIcon(Editor.class
-            .getResource("/images/icons/buttons/pencil_selected.png")));
-        GridBagConstraints gbc_pencilToggleButton = new GridBagConstraints();
-        gbc_pencilToggleButton.fill = GridBagConstraints.BOTH;
-        gbc_pencilToggleButton.insets = new Insets(0, 0, 5, 0);
-        gbc_pencilToggleButton.gridx = 0;
-        gbc_pencilToggleButton.gridy = 0;
-        panel_1.add(pencilToggleButton, gbc_pencilToggleButton);
-        pencilToggleButton.setIcon(new ImageIcon(Editor.class
-            .getResource("/images/icons/buttons/pencil.png")));
-        pencilToggleButton.setContentAreaFilled(false);
-        pencilToggleButton.setBorder(BorderFactory.createEmptyBorder());
-        toolGroup.add(pencilToggleButton);
-
-        final JToggleButton rectToggleButton = new JToggleButton("");
-        rectToggleButton.setToolTipText("Rectangle wire frame");
-        rectToggleButton.addChangeListener(new ChangeListener()
-        {
-            @Override
-            public void stateChanged(ChangeEvent e)
-            {
-                if (rectToggleButton.isSelected())
-                    editingPanel.setTool("rectangle");
-
-                rectToggleButton.setFocusable(false);
-            }
-        });
-
-        final JToggleButton lineToggleButton = new JToggleButton("");
-        lineToggleButton.setSelectedIcon(new ImageIcon(Editor.class
-            .getResource("/images/icons/buttons/line_selected.png")));
-        lineToggleButton.setIcon(new ImageIcon(Editor.class
-            .getResource("/images/icons/buttons/line.png")));
-        lineToggleButton.setToolTipText("Draws a line");
-        lineToggleButton.setContentAreaFilled(false);
-        toolGroup.add(lineToggleButton);
-        lineToggleButton.addChangeListener(new ChangeListener()
-        {
-
-            @Override
-            public void stateChanged(ChangeEvent e)
-            {
-                if (lineToggleButton.isSelected())
-                    editingPanel.setTool("line");
-                lineToggleButton.setFocusable(false);
-
-            }
-        });
-        GridBagConstraints gbc_lineToggleButton = new GridBagConstraints();
-        gbc_lineToggleButton.insets = new Insets(0, 0, 5, 0);
-        gbc_lineToggleButton.gridx = 0;
-        gbc_lineToggleButton.gridy = 1;
-        panel_1.add(lineToggleButton, gbc_lineToggleButton);
-        rectToggleButton.setSelectedIcon(new ImageIcon(Editor.class
-            .getResource("/images/icons/buttons/rect_selected.png")));
-        rectToggleButton.setIcon(new ImageIcon(Editor.class
-            .getResource("/images/icons/buttons/rect.png")));
-        rectToggleButton.setContentAreaFilled(false);
-        GridBagConstraints gbc_rectToggleButton = new GridBagConstraints();
-        gbc_rectToggleButton.fill = GridBagConstraints.BOTH;
-        gbc_rectToggleButton.insets = new Insets(0, 0, 5, 0);
-        gbc_rectToggleButton.gridx = 0;
-        gbc_rectToggleButton.gridy = 2;
-        panel_1.add(rectToggleButton, gbc_rectToggleButton);
-        toolGroup.add(rectToggleButton);
-
-        final JToggleButton filledToggleButton = new JToggleButton("");
-        filledToggleButton.setToolTipText("Filled rectangle");
-        filledToggleButton.addChangeListener(new ChangeListener()
-        {
-            @Override
-            public void stateChanged(ChangeEvent e)
-            {
-                if (filledToggleButton.isSelected())
-                    editingPanel.setTool("filled rectangle");
-                filledToggleButton.setFocusable(false);
-            }
-        });
-        filledToggleButton.setSelectedIcon(new ImageIcon(Editor.class
-            .getResource("/images/icons/buttons/filled_selected.png")));
-        filledToggleButton.setContentAreaFilled(false);
-        filledToggleButton.setIcon(new ImageIcon(Editor.class
-            .getResource("/images/icons/buttons/filled.png")));
-        GridBagConstraints gbc_filledToggleButton = new GridBagConstraints();
-        gbc_filledToggleButton.fill = GridBagConstraints.BOTH;
-        gbc_filledToggleButton.insets = new Insets(0, 0, 5, 0);
-        gbc_filledToggleButton.gridx = 0;
-        gbc_filledToggleButton.gridy = 3;
-        panel_1.add(filledToggleButton, gbc_filledToggleButton);
-        toolGroup.add(filledToggleButton);
-
-        textToggleButton = new JToggleButton("");
-        textToggleButton.addActionListener(new ActionListener()
-        {
-            @Override
-            public void actionPerformed(ActionEvent arg0)
-            {
-                // textToolTip.showBalloon("[Left Click] ",
-                // "Left click to submit text entry, and start again.", null);
-            }
-        });
-        textToggleButton
-            .setToolTipText("Left click on the image > Start typing");
-        textToggleButton.addChangeListener(new ChangeListener()
-        {
-            @Override
-            public void stateChanged(ChangeEvent e)
-            {
-                if (textToggleButton.isSelected())
-                {
-                    editingPanel.setTool("text");
-                }
-                textToggleButton.setFocusable(false);
-            }
-        });
-
-        final JToggleButton bRectToggleButton = new JToggleButton("");
-        bRectToggleButton.setToolTipText("Bordered rectangle");
-        bRectToggleButton.addChangeListener(new ChangeListener()
-        {
-            @Override
-            public void stateChanged(ChangeEvent e)
-            {
-                if (bRectToggleButton.isSelected())
-                    editingPanel.setTool("bordered rectangle");
-
-                bRectToggleButton.setFocusable(false);
-            }
-        });
-        bRectToggleButton.setSelectedIcon(new ImageIcon(Editor.class
-            .getResource("/images/icons/buttons/b_rect_selected.png")));
-        bRectToggleButton.setContentAreaFilled(false);
-        bRectToggleButton.setIcon(new ImageIcon(Editor.class
-            .getResource("/images/icons/buttons/b_rect.png")));
-        GridBagConstraints gbc_bRectToggleButton = new GridBagConstraints();
-        gbc_bRectToggleButton.fill = GridBagConstraints.BOTH;
-        gbc_bRectToggleButton.insets = new Insets(0, 0, 5, 0);
-        gbc_bRectToggleButton.gridx = 0;
-        gbc_bRectToggleButton.gridy = 4;
-        panel_1.add(bRectToggleButton, gbc_bRectToggleButton);
-        toolGroup.add(bRectToggleButton);
-
-        JToggleButton blurToggleButton = new JToggleButton("");
-        blurToggleButton.setToolTipText("Blur Tool");
-        blurToggleButton.setSelectedIcon(new ImageIcon(Editor.class
-            .getResource("/images/icons/buttons/blur_selected.png")));
-        blurToggleButton.setIcon(new ImageIcon(Editor.class
-            .getResource("/images/icons/buttons/blur.png")));
-        blurToggleButton.setContentAreaFilled(false);
-        blurToggleButton.setFocusable(false);
-        blurToggleButton.addChangeListener(new ChangeListener()
-        {
-            @Override
-            public void stateChanged(ChangeEvent arg0)
-            {
-                editingPanel.setTool("blur");
-
-            }
-        });
-        GridBagConstraints gbc_blurToggleButton = new GridBagConstraints();
-        gbc_blurToggleButton.insets = new Insets(0, 0, 5, 0);
-        gbc_blurToggleButton.gridx = 0;
-        gbc_blurToggleButton.gridy = 5;
-        panel_1.add(blurToggleButton, gbc_blurToggleButton);
-        toolGroup.add(blurToggleButton);
-
-        textToggleButton.setContentAreaFilled(false);
-        textToggleButton.setSelectedIcon(new ImageIcon(Editor.class
-            .getResource("/images/icons/buttons/text_selected.png")));
-        textToggleButton.setIcon(new ImageIcon(Editor.class
-            .getResource("/images/icons/buttons/text.png")));
-        GridBagConstraints gbc_tglbtnTexttogglebutton = new GridBagConstraints();
-        gbc_tglbtnTexttogglebutton.fill = GridBagConstraints.BOTH;
-        gbc_tglbtnTexttogglebutton.insets = new Insets(0, 0, 5, 0);
-        gbc_tglbtnTexttogglebutton.gridx = 0;
-        gbc_tglbtnTexttogglebutton.gridy = 6;
-        panel_1.add(textToggleButton, gbc_tglbtnTexttogglebutton);
-        toolGroup.add(textToggleButton);
-
-        JSeparator separator_3 = new JSeparator();
-        GridBagConstraints gbc_separator_3 = new GridBagConstraints();
-        gbc_separator_3.insets = new Insets(0, 0, 5, 0);
-        gbc_separator_3.fill = GridBagConstraints.BOTH;
-        gbc_separator_3.gridx = 0;
-        gbc_separator_3.gridy = 7;
-        panel_1.add(separator_3, gbc_separator_3);
-
-        this.getContentPane().add(imageScrollPane,
-            "cell 4 4,alignx left,aligny top");
-
-        JPanel northPanel = new JPanel();
-        this.getContentPane()
-            .add(northPanel, "cell 4 0,alignx left,aligny top");
-
-        JPanel panel_2 = new JPanel();
-        panel_2.setBorder(new TitledBorder(null, "Snippet Information",
-            TitledBorder.LEFT, TitledBorder.TOP, null, null));
-        // northPanel.add(panel_2);
-        panel_2.setLayout(new MigLayout("", "[55.00][66.00]", "[45.00][]"));
-
-        JLabel lblWidth = new JLabel("Width: " + imageDimension.getWidth());
-        panel_2.add(lblWidth, "cell 0 0");
-
-        JLabel lblHeight = new JLabel("Height: " + imageDimension.getHeight());
-        panel_2.add(lblHeight, "cell 1 0");
-
-        JSeparator separator = new JSeparator();
-        panel_2.add(separator, "cell 0 1 2 1,grow");
-        GridBagLayout gbl_northPanel = new GridBagLayout();
-        gbl_northPanel.columnWidths = new int[] { 161, 183, 64, 65, 0, 0 };
-        gbl_northPanel.rowHeights = new int[] { 37, 0 };
-        gbl_northPanel.columnWeights = new double[] { 0.0, 0.0, 0.0, 0.0, 0.0,
-                Double.MIN_VALUE };
-        gbl_northPanel.rowWeights = new double[] { 0.0, Double.MIN_VALUE };
-        northPanel.setLayout(gbl_northPanel);
-        opacitySlider = new JSlider();
-        opacitySlider.setMinorTickSpacing(5);
-        GridBagConstraints gbc_opacitySlider = new GridBagConstraints();
-        gbc_opacitySlider.fill = GridBagConstraints.HORIZONTAL;
-        gbc_opacitySlider.anchor = GridBagConstraints.NORTH;
-        gbc_opacitySlider.insets = new Insets(0, 0, 0, 5);
-        gbc_opacitySlider.gridx = 0;
-        gbc_opacitySlider.gridy = 0;
-        northPanel.add(opacitySlider, gbc_opacitySlider);
         opacitySlider.addMouseListener(new MouseAdapter()
         {
             @Override
             public void mouseReleased(MouseEvent e)
             {
-                if (layeredPane.getLayer(fillColorPanel) == 1)
+                if (JLayeredPane.getLayer(fillColorPanel) == 1)
                 {
-                    editingPanel.setTransparency(getOpacitySliderValue());
+                    ((EditorPanel) editorPanel).setTransparency(getOpacitySliderValue());
                     fillColorPanel.setColor(new Color(fillColorPanel.getColor()
                         .getRed(), fillColorPanel.getColor().getGreen(),
                         fillColorPanel.getColor().getBlue(),
                         getOpacitySliderValue()));
-                } else if (layeredPane.getLayer(borderColorPanel) == 1)
+                } else if (JLayeredPane.getLayer(borderColorPanel) == 1)
                 {
-                    editingPanel.setBorderTransparency(getOpacitySliderValue());
+                    ((EditorPanel) editorPanel).setBorderTransparency(getOpacitySliderValue());
                     borderColorPanel.setColor(new Color(borderColorPanel
                         .getColor().getRed(), borderColorPanel.getColor()
                         .getGreen(), borderColorPanel.getColor().getBlue(),
@@ -654,9 +314,8 @@ public class Editor extends JFrame implements MouseMotionListener
         opacitySlider.setFont(new Font("Tahoma", Font.PLAIN, 11));
         opacitySlider.setPaintTicks(true);
         opacitySlider.setPaintLabels(true);
-        opacitySlider.setBorder(new TitledBorder(new EmptyBorder(0, 0, 0, 0),
-            "Opacity Level", TitledBorder.TRAILING, TitledBorder.BELOW_TOP,
-            null, null));
+        opacitySlider.setBorder(new TitledBorder(new EmptyBorder(0, 0, 0, 0), "Opacity Level", TitledBorder.TRAILING,
+            TitledBorder.BOTTOM, null, null));
         opacitySlider.setToolTipText("Opacity level");
         opacitySlider.setMajorTickSpacing(25);
         opacitySlider.setValue(255);
@@ -682,15 +341,12 @@ public class Editor extends JFrame implements MouseMotionListener
         labelTable2.put(new Integer(80), new JLabel("8"));
         labelTable2.put(new Integer(90), new JLabel("9"));
         labelTable2.put(new Integer(100), new JLabel("10"));
-        strokeSlider = new JSlider();
-        strokeSlider.setBorder(new TitledBorder(new EmptyBorder(0, 0, 0, 0),
-            "Stroke Size", TitledBorder.TRAILING, TitledBorder.BELOW_TOP,
-            null, null));
-        strokeSlider.setPaintLabels(true);
+
+        strokeSlider.setBorder(new TitledBorder(new EmptyBorder(0, 0, 0, 0), "Stroke Size", TitledBorder.TRAILING,
+            TitledBorder.BOTTOM, null, null));
         strokeSlider.setMinorTickSpacing(5);
         strokeSlider.setToolTipText("Stroke Width");
         strokeSlider.setMajorTickSpacing(10);
-        strokeSlider.setPaintTicks(true);
         strokeSlider.setValue(30);
         strokeSlider.setLabelTable(labelTable2);
         strokeSlider.addMouseListener(new MouseAdapter()
@@ -698,131 +354,252 @@ public class Editor extends JFrame implements MouseMotionListener
             @Override
             public void mouseReleased(MouseEvent e)
             {
-                editingPanel.setStroke(getStrokeSliderValue());
+                ((EditorPanel)editorPanel).setStroke(getStrokeSliderValue());
             }
         });
-        GridBagConstraints gbc_strokeSlider = new GridBagConstraints();
-        gbc_strokeSlider.fill = GridBagConstraints.BOTH;
-        gbc_strokeSlider.insets = new Insets(0, 0, 0, 5);
-        gbc_strokeSlider.gridx = 1;
-        gbc_strokeSlider.gridy = 0;
-        northPanel.add(strokeSlider, gbc_strokeSlider);
 
-        JPanel panel = new JPanel();
-        GridBagConstraints gbc_panel = new GridBagConstraints();
-        gbc_panel.insets = new Insets(0, 0, 0, 5);
-        gbc_panel.fill = GridBagConstraints.BOTH;
-        gbc_panel.gridx = 2;
-        gbc_panel.gridy = 0;
-        northPanel.add(panel, gbc_panel);
-        GridBagLayout gbl_panel = new GridBagLayout();
-        gbl_panel.columnWidths = new int[] { 0, 0 };
-        gbl_panel.rowHeights = new int[] { 0, 0, 0 };
-        gbl_panel.columnWeights = new double[] { 1.0, Double.MIN_VALUE };
-        gbl_panel.rowWeights = new double[] { 0.0, 0.0, Double.MIN_VALUE };
-        panel.setLayout(gbl_panel);
+        JToggleButton btnSelect = new JToggleButton("");
+        btnSelect.setIcon(new ImageIcon(Editor.class.getResource("/images/icons/buttons/select.png")));
+        btnSelect.setBackground(Color.WHITE);
+        btnSelect.setBorderPainted(false);
+        btnSelect.setFocusPainted(false);
+        btnSelect.setOpaque(false);
+        //btnSelect.setContentAreaFilled(false);
+        toolGroup.add(btnSelect);
+        toolPanel.add(btnSelect, "cell 3 0");
 
-        rdbtnUpload = new JRadioButton("Upload");
-        GridBagConstraints gbc_rdbtnUpload = new GridBagConstraints();
-        gbc_rdbtnUpload.fill = GridBagConstraints.HORIZONTAL;
-        gbc_rdbtnUpload.insets = new Insets(0, 0, 5, 0);
-        gbc_rdbtnUpload.gridx = 0;
-        gbc_rdbtnUpload.gridy = 0;
-        panel.add(rdbtnUpload, gbc_rdbtnUpload);
-        rdbtnUpload.addChangeListener(new ChangeListener()
+        JToggleButton pencilButton = new JToggleButton("");
+        pencilButton.setBackground(Color.white);
+        pencilButton.setFocusPainted(false);
+        pencilButton.setSelected(true);
+        toolGroup.add(pencilButton);
+        pencilButton.addActionListener(new ActionListener()
         {
+
             @Override
-            public void stateChanged(ChangeEvent e)
+            public void actionPerformed(ActionEvent e)
             {
-                if (rdbtnUpload.isSelected())
-                    mode = Overlay.UPLOAD;
+                ((EditorPanel) editorPanel).setTool("pencil");
             }
         });
-        uploadGroup.add(rdbtnUpload);
+        pencilButton.setIcon(new ImageIcon(Editor.class.getResource("/images/icons/buttons/pencil.png")));
+        toolPanel.add(pencilButton, "cell 4 0");
 
-        rdbtnUploadFTP = new JRadioButton("FTP Upload");
-        GridBagConstraints gbc_rdbtnUploadFTP = new GridBagConstraints();
-        gbc_rdbtnUploadFTP.fill = GridBagConstraints.HORIZONTAL;
-        gbc_rdbtnUploadFTP.gridx = 0;
-        gbc_rdbtnUploadFTP.gridy = 1;
-        panel.add(rdbtnUploadFTP, gbc_rdbtnUploadFTP);
-        rdbtnUploadFTP.addChangeListener(new ChangeListener()
+        JPanel shapePanel = new JPanel();
+        shapePanel.setBackground(Color.WHITE);
+        shapePanel.setBorder(new TitledBorder(null, "Shapes", TitledBorder.TRAILING, TitledBorder.BOTTOM, null, null));
+        toolPanel.add(shapePanel, "cell 5 0");
+        shapePanel.setLayout(new GridLayout(0, 2, 0, 0));
+
+        JToggleButton lineButton = new JToggleButton();
+        lineButton.addActionListener(new ActionListener()
         {
+
             @Override
-            public void stateChanged(ChangeEvent e)
+            public void actionPerformed(ActionEvent e)
             {
-                if (rdbtnUploadFTP.isSelected())
-                    mode = Overlay.UPLOAD_FTP;
+                ((EditorPanel) editorPanel).setTool("line");
             }
         });
-        uploadGroup.add(rdbtnUploadFTP);
+        lineButton.setIcon(new ImageIcon(Editor.class.getResource("/images/icons/buttons/line.png")));
+        lineButton.setBackground(Color.white);
+        lineButton.setFocusPainted(false);
+        toolGroup.add(lineButton);
+        shapePanel.add(lineButton);
 
-        rdbtnSave = new JRadioButton("Save");
-        GridBagConstraints gbc_rdbtnSave = new GridBagConstraints();
-        gbc_rdbtnSave.fill = GridBagConstraints.HORIZONTAL;
-        gbc_rdbtnSave.gridx = 0;
-        gbc_rdbtnSave.gridy = 2;
-        panel.add(rdbtnSave, gbc_rdbtnSave);
-        rdbtnSave.addChangeListener(new ChangeListener()
+        JToggleButton rectangleButton = new JToggleButton("");
+        rectangleButton.addActionListener(new ActionListener()
         {
+
             @Override
-            public void stateChanged(ChangeEvent e)
+            public void actionPerformed(ActionEvent e)
             {
-                if (rdbtnSave.isSelected())
-                    mode = Overlay.SAVE;
+                ((EditorPanel) editorPanel).setTool("rectangle");
             }
         });
-        uploadGroup.add(rdbtnSave);
+        rectangleButton.setIcon(new ImageIcon(Editor.class.getResource("/images/icons/buttons/rectangle.png")));
+        rectangleButton.setBackground(Color.white);
+        rectangleButton.setFocusPainted(false);
+        toolGroup.add(rectangleButton);
+        shapePanel.add(rectangleButton);
 
-        btnSubmit = new JButton("Submit");
-        GridBagConstraints gbc_btnSubmit = new GridBagConstraints();
-        gbc_btnSubmit.insets = new Insets(0, 0, 0, 5);
-        gbc_btnSubmit.anchor = GridBagConstraints.WEST;
-        gbc_btnSubmit.gridx = 3;
-        gbc_btnSubmit.gridy = 0;
-        northPanel.add(btnSubmit, gbc_btnSubmit);
-        btnSubmit.setToolTipText("Hotkey: SHIFT + ENTER");
+        JToggleButton roundRectButton = new JToggleButton("");
+        roundRectButton.addActionListener(new ActionListener()
+        {
+
+            @Override
+            public void actionPerformed(ActionEvent e)
+            {
+                ((EditorPanel) editorPanel).setTool("roundRectangle");
+            }
+        });
+        roundRectButton.setIcon(new ImageIcon(Editor.class.getResource("/images/icons/buttons/round_rectangle.png")));
+        roundRectButton.setBackground(Color.white);
+        roundRectButton.setFocusPainted(false);
+        toolGroup.add(roundRectButton);
+        shapePanel.add(roundRectButton);
+
+        JToggleButton ellipseButton = new JToggleButton("");
+        ellipseButton.addActionListener(new ActionListener()
+        {
+
+            @Override
+            public void actionPerformed(ActionEvent e)
+            {
+                ((EditorPanel) editorPanel).setTool("ellipse");
+            }
+        });
+        ellipseButton.setIcon(new ImageIcon(Editor.class.getResource("/images/icons/buttons/ellipse.png")));
+        ellipseButton.setBackground(Color.white);
+        ellipseButton.setFocusPainted(false);
+        toolGroup.add(ellipseButton);
+        shapePanel.add(ellipseButton);
+
+        chckbxFilled = new JCheckBox("Filled");
+        chckbxFilled.setBackground(Color.WHITE);
+        chckbxFilled.setFocusPainted(false);
+        toolPanel.add(chckbxFilled, "flowy,cell 6 0,growx");
+
+        JPanel editingToolsPanel = new JPanel();
+        editingToolsPanel.setBorder(new TitledBorder(UIManager.getBorder("TitledBorder.border"), "Tools",
+            TitledBorder.TRAILING, TitledBorder.BOTTOM, null, null));
+        editingToolsPanel.setBackground(Color.WHITE);
+        toolPanel.add(editingToolsPanel, "cell 7 0,grow");
+        editingToolsPanel.setLayout(new GridLayout(0, 2, 0, 0));
+
+        JButton textToolBtn = new JButton("T");
+        textToolBtn.setFont(new Font("Georgia", Font.BOLD, 16));
+        textToolBtn.setToolTipText("Write text");
+        textToolBtn.setFocusPainted(false);
+        toolGroup.add(textToolBtn);
+        editingToolsPanel.add(textToolBtn);
+
+        JButton toggleButton_7 = new JButton("1");
+        toggleButton_7.setFocusPainted(false);
+        toolGroup.add(toggleButton_7);
+        editingToolsPanel.add(toggleButton_7);
+
+        JButton toggleButton_8 = new JButton("2");
+        toggleButton_8.setFocusPainted(false);
+        toolGroup.add(toggleButton_8);
+        editingToolsPanel.add(toggleButton_8);
+
+        JButton blurToolBtn = new JButton("3");
+        blurToolBtn.setFocusPainted(false);
+        toolGroup.add(blurToolBtn);
+        editingToolsPanel.add(blurToolBtn);
+
+        JPanel panel_1 = new JPanel();
+        panel_1.setBackground(Color.WHITE);
+        toolPanel.add(panel_1, "cell 8 0,grow");
+        panel_1.setLayout(new MigLayout("", "[61px]", "[][]"));
+
+        btnUndo = new JButton("");
+        btnUndo.setIcon(new ImageIcon(Editor.class.getResource("/images/icons/buttons/undo.png")));
+        btnUndo.setFocusPainted(false);
+        btnUndo.setEnabled(false);
+        btnUndo.addActionListener(new ActionListener()
+        {
+
+            @Override
+            public void actionPerformed(ActionEvent e)
+            {
+                ((EditorPanel) editorPanel).undo();
+
+            }
+        });
+        //btnUndo.setBackground(Color.WHITE);
+        panel_1.add(btnUndo, "cell 0 0,growx,aligny top");
+
+        btnRedo = new JButton("");
+        btnRedo.setIcon(new ImageIcon(Editor.class.getResource("/images/icons/buttons/redo.png")));
+        btnRedo.setFocusPainted(false);
+        btnRedo.setEnabled(false);
+        btnRedo.addActionListener(new ActionListener()
+        {
+
+            @Override
+            public void actionPerformed(ActionEvent e)
+            {
+                ((EditorPanel) editorPanel).redo();
+
+            }
+        });
+        //btnRedo.setBackground(Color.WHITE);
+        panel_1.add(btnRedo, "cell 0 1,growx,aligny bottom");
+
+        btnReset = new JButton("Reset");
+        btnReset.addActionListener(new ActionListener()
+        {
+
+            @Override
+            public void actionPerformed(ActionEvent e)
+            {
+                ((EditorPanel) editorPanel).reset();
+            }
+        });
+        toolPanel.add(btnReset, "cell 9 0,growy");
+
+        JButton btnSubmit = new JButton("Submit");
         btnSubmit.addActionListener(new ActionListener()
         {
+            
             @Override
-            public void actionPerformed(ActionEvent arg0)
+            public void actionPerformed(ActionEvent e)
             {
                 submit();
             }
         });
+        toolPanel.add(btnSubmit, "cell 10 0,growy");
 
-        this.setTitle("Editor");
-        this.setLocation(100, 100);
-        /*
-         * Set the editor dimensions
-         */
-        this.setMinimumSize(new Dimension(600, 350));
-        if (imageDimension.width > 1024 || imageDimension.height > 576)
-        {
-            imageScrollPane.setMaximumSize(imageDimension);
-            this.setSize(1024, 600);
-        } else if (imageDimension.width < 1024 || imageDimension.height < 576)
+        chckbxShadow = new JCheckBox("Shadow");
+        chckbxShadow.setFocusPainted(false);
+        chckbxShadow.setBackground(Color.WHITE);
+        chckbxShadow.setEnabled(false);
+        toolPanel.add(chckbxShadow, "cell 6 0");
+        chckbxFilled.addActionListener(new ActionListener()
         {
 
-            imageScrollPane.setMaximumSize(imageDimension);
-            this.setSize(imageDimension);
-        }
-        this.setResizable(true);
-        this.setMaximizedBounds(new Rectangle(imageDimension));
-        this.setVisible(true);
-        this.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
-        this.repaint();
+            @Override
+            public void actionPerformed(ActionEvent arg0)
+            {
+                // TODO Auto-generated method stub
+                if (chckbxFilled.isSelected())
+                {
+                    chckbxShadow.setEnabled(true);
+                }
+                else
+                {
+                    chckbxShadow.setSelected(false);
+                    chckbxShadow.setEnabled(false);
+                }
 
-        if (mode == Overlay.SAVE)
+            }
+        });
+
+        JScrollPane scrollPane = new JScrollPane();
+        panel.add(scrollPane, "cell 0 1,grow");
+
+        editorPanel = new EditorPanel(image, this);
+        editorPanel.setBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null));
+        editorPanel.setBackground(Color.WHITE);
+        scrollPane.setViewportView(editorPanel);
+        editorPanel.setLayout(new GridLayout(2, 3, 0, 0));
+        
+        EventQueue.invokeLater(new Runnable()
         {
-            rdbtnSave.setSelected(true);
-        } else if (mode == Overlay.UPLOAD)
-        {
-            rdbtnUpload.setSelected(true);
-        } else if (mode == Overlay.UPLOAD_FTP)
-        {
-            rdbtnUploadFTP.setSelected(true);
-        }
+            public void run()
+            {
+                try
+                {
+                    UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+                    frmEditor.setVisible(true);
+                } catch (Exception e)
+                {
+                    e.printStackTrace();
+                }
+            }
+        });
 
     }
 
@@ -838,75 +615,34 @@ public class Editor extends JFrame implements MouseMotionListener
         return value;
     }
 
-    @Override
-    public void mouseDragged(MouseEvent e)
+    public void disableRedo()
     {
+        btnRedo.setEnabled(false);
     }
 
-    @Override
-    public void mouseMoved(MouseEvent e)
+    public void enableRedo()
     {
-
+        btnRedo.setEnabled(true);
     }
 
-    private BufferedImage getEditedImage()
+    public void disableUndo()
     {
-        return editingPanel.getImage();
+        btnUndo.setEnabled(false);
     }
 
-    public void submit()
+    public void enableUndo()
     {
-        if (!editingPanel.getText().equals(""))
-        {
-            editingPanel.forceDrawText();
-        }
-
-        if (mode == Overlay.SAVE)
-        {
-            save = new Save();
-            save.save(getEditedImage());
-        } else if (mode == Overlay.UPLOAD)
-        {
-            upload = new Upload(getEditedImage(), false);
-        } else if (mode == Overlay.UPLOAD_FTP)
-        {
-            new SimpleFTPUploader(
-                ImageUtilities.saveTemporarily(getEditedImage()));
-        }
-
-        exit();
+        btnUndo.setEnabled(true);
     }
 
-    public void submitToReddit()
+    public boolean fill()
     {
-        if (!editingPanel.getText().equals(""))
-        {
-            editingPanel.forceDrawText();
-        }
-
-        upload = new Upload(getEditedImage(), true);
+        return chckbxFilled.isSelected();
     }
 
-    public void exit()
+    public boolean shadow()
     {
-        KeyboardFocusManager.getCurrentKeyboardFocusManager()
-            .removeKeyEventDispatcher(keyDispatcher);
-        keyDispatcher = null;
-        instance.dispose();
-    }
-
-    public static Editor getInstance()
-    {
-        if (instance == null)
-        {
-            instance = new Editor();
-        } else
-        {
-            instance.dispose();
-            instance = new Editor();
-        }
-        return instance;
-
+        return chckbxShadow.isSelected();
     }
 
 }
