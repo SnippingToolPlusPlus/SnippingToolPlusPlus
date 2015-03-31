@@ -172,6 +172,11 @@ public class EditorPanel extends JPanel implements MouseMotionListener, MouseLis
     public void setTool(String tool)
     {
         clearTransparentLayer();
+        if(editor.inSelectionMode())
+            editor.enableTools(true);
+        else
+            editor.enableTools(false);
+        
         this.tool = tool;
     }
 

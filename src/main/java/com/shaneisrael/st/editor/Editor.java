@@ -48,7 +48,8 @@ public class Editor
 {
 
     private JPanel editorPanel;
-    private JButton btnUndo, btnRedo, btnReset;
+    private JButton btnUndo, btnRedo, btnReset, textToolBtn, blurToolBtn, toggleButton_8, toggleButton_9;
+    private JToggleButton btnSelect;
     private JCheckBox chckbxShadow, chckbxFilled;
     JFrame frmEditor;
     private Color fillColor;
@@ -359,7 +360,7 @@ public class Editor
             }
         });
 
-        JToggleButton btnSelect = new JToggleButton("");
+        btnSelect = new JToggleButton("");
         btnSelect.setIcon(new ImageIcon(Editor.class.getResource("/images/icons/buttons/select.png")));
         btnSelect.setBackground(Color.WHITE);
         btnSelect.setBorderPainted(false);
@@ -477,16 +478,16 @@ public class Editor
         toolPanel.add(editingToolsPanel, "cell 7 0,grow");
         editingToolsPanel.setLayout(new GridLayout(0, 2, 0, 0));
 
-        JButton textToolBtn = new JButton("T");
+        textToolBtn = new JButton("T");
         textToolBtn.setFont(new Font("Georgia", Font.BOLD, 16));
         textToolBtn.setToolTipText("Write text");
         textToolBtn.setFocusPainted(false);
         toolGroup.add(textToolBtn);
         editingToolsPanel.add(textToolBtn);
 
-        JButton blurButton = new JButton("");
-        blurButton.setIcon(new ImageIcon(Editor.class.getResource("/images/icons/buttons/blur.png")));
-        blurButton.addActionListener(new ActionListener()
+        blurToolBtn = new JButton("");
+        blurToolBtn.setIcon(new ImageIcon(Editor.class.getResource("/images/icons/buttons/blur.png")));
+        blurToolBtn.addActionListener(new ActionListener()
         {
             
             @Override
@@ -495,19 +496,19 @@ public class Editor
                 ((EditorPanel) editorPanel).blurSelection();
             }
         });
-        blurButton.setFocusPainted(false);
-        toolGroup.add(blurButton);
-        editingToolsPanel.add(blurButton);
+        blurToolBtn.setFocusPainted(false);
+        toolGroup.add(blurToolBtn);
+        editingToolsPanel.add(blurToolBtn);
 
-        JButton toggleButton_8 = new JButton("2");
+        toggleButton_8 = new JButton("2");
         toggleButton_8.setFocusPainted(false);
         toolGroup.add(toggleButton_8);
         editingToolsPanel.add(toggleButton_8);
 
-        JButton blurToolBtn = new JButton("3");
-        blurToolBtn.setFocusPainted(false);
-        toolGroup.add(blurToolBtn);
-        editingToolsPanel.add(blurToolBtn);
+        toggleButton_9 = new JButton("3");
+        toggleButton_9.setFocusPainted(false);
+        toolGroup.add(toggleButton_9);
+        editingToolsPanel.add(toggleButton_9);
 
         JPanel panel_1 = new JPanel();
         panel_1.setBackground(Color.WHITE);
@@ -606,6 +607,7 @@ public class Editor
         scrollPane.setViewportView(editorPanel);
         editorPanel.setLayout(new GridLayout(2, 3, 0, 0));
         
+        enableTools(false);
         EventQueue.invokeLater(new Runnable()
         {
             public void run()
@@ -644,7 +646,13 @@ public class Editor
     {
         btnRedo.setEnabled(true);
     }
-
+    public void enableTools(boolean enable)
+    {
+        blurToolBtn.setEnabled(enable);
+        textToolBtn.setEnabled(enable);
+        toggleButton_8.setEnabled(enable);
+        toggleButton_9.setEnabled(enable);
+    }
     public void disableUndo()
     {
         btnUndo.setEnabled(false);
@@ -663,6 +671,10 @@ public class Editor
     public boolean shadow()
     {
         return chckbxShadow.isSelected();
+    }
+    public boolean inSelectionMode()
+    {
+        return btnSelect.isSelected();
     }
 
 }
