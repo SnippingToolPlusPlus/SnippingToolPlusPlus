@@ -60,7 +60,7 @@ public class ImageUtilities
 
         BufferedImageOp op = new ConvolveOp(kernel);
 
-        for (int i = 0; i < 4; i++)
+        for (int i = 0; i < 2; i++)
         {
             image = op.filter((BufferedImage) image, null);
         }

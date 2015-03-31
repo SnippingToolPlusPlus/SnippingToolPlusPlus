@@ -104,6 +104,7 @@ public class Editor
         KeyboardFocusManager.getCurrentKeyboardFocusManager()
             .removeKeyEventDispatcher(keyDispatcher);
         keyDispatcher = null;
+        ((EditorPanel) editorPanel).dispose();
         instance.dispose();
     }
     public static Editor getInstance()
@@ -364,6 +365,15 @@ public class Editor
         btnSelect.setBorderPainted(false);
         btnSelect.setFocusPainted(false);
         btnSelect.setOpaque(false);
+        btnSelect.addActionListener(new ActionListener()
+        {
+            
+            @Override
+            public void actionPerformed(ActionEvent e)
+            {
+                ((EditorPanel) editorPanel).setTool("select");
+            }
+        });
         //btnSelect.setContentAreaFilled(false);
         toolGroup.add(btnSelect);
         toolPanel.add(btnSelect, "cell 3 0");
@@ -474,10 +484,20 @@ public class Editor
         toolGroup.add(textToolBtn);
         editingToolsPanel.add(textToolBtn);
 
-        JButton toggleButton_7 = new JButton("1");
-        toggleButton_7.setFocusPainted(false);
-        toolGroup.add(toggleButton_7);
-        editingToolsPanel.add(toggleButton_7);
+        JButton blurButton = new JButton("");
+        blurButton.setIcon(new ImageIcon(Editor.class.getResource("/images/icons/buttons/blur.png")));
+        blurButton.addActionListener(new ActionListener()
+        {
+            
+            @Override
+            public void actionPerformed(ActionEvent e)
+            {
+                ((EditorPanel) editorPanel).blurSelection();
+            }
+        });
+        blurButton.setFocusPainted(false);
+        toolGroup.add(blurButton);
+        editingToolsPanel.add(blurButton);
 
         JButton toggleButton_8 = new JButton("2");
         toggleButton_8.setFocusPainted(false);
