@@ -37,7 +37,6 @@ public class EditorPanel extends JPanel implements MouseMotionListener, MouseLis
     private Color borderColor = Color.black;
     private String tool = "pencil";
     private String text = "";
-    private int textLines = 1;
 
     private Rectangle2D selection;
     private int mx, my, lastX, lastY; // mouse position holders
@@ -461,20 +460,31 @@ public class EditorPanel extends JPanel implements MouseMotionListener, MouseLis
         FontMetrics fm1 = g.getFontMetrics();
         g.setFont(f);
         g.setColor(fillColor);
-        if((fm1.stringWidth(text) / textLines) > selection.getWidth() - nSize)
+        String lines[] = text.split("\n");
+        
+        if(lines.length == 0 && (fm1.stringWidth(text)) > selection.getWidth() - nSize)
         {
-            String split[] = text.split(" ");
-            text = "";
-            for(int i = 0; i < split.length-2; i++)
-                text += split[i] + " ";
-            addWriteText('\n');
-            text += split[split.length-1];
-            textLines++;
+            lineWrapText();
+        }
+        else
+        {
+            if(fm1.stringWidth(lines[lines.length - 1]) > selection.getWidth() - nSize)
+                lineWrapText();
         }
         int y = (int)(selection.getY());
         for (String line : text.split("\n"))
             g.drawString(line, (int)selection.getX(), y += g.getFontMetrics().getHeight());
     }
+    private void lineWrapText()
+    {
+        String split[] = text.split(" ");
+        text = "";
+        for(int i = 0; i < split.length-1; i++)
+            text += split[i] + " ";
+        addWriteText('\n');
+        text += split[split.length-1];
+    }
+
     public void blurSelection()
     {
         if(tool.equals("select"))
