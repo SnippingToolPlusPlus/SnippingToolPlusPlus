@@ -463,7 +463,12 @@ public class EditorPanel extends JPanel implements MouseMotionListener, MouseLis
         g.setColor(fillColor);
         if((fm1.stringWidth(text) / textLines) > selection.getWidth() - nSize)
         {
+            String split[] = text.split(" ");
+            text = "";
+            for(int i = 0; i < split.length-2; i++)
+                text += split[i] + " ";
             addWriteText('\n');
+            text += split[split.length-1];
             textLines++;
         }
         int y = (int)(selection.getY());

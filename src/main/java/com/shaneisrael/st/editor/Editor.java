@@ -118,7 +118,7 @@ public class Editor
             instance = new Editor();
         } else
         {
-            //instance.dispose();
+            instance.dispose();
             instance = new Editor();
         }
         return instance;
