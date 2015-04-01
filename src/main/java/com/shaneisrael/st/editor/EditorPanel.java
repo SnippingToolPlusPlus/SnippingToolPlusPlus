@@ -5,6 +5,7 @@ import java.awt.Color;
 import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.Font;
+import java.awt.FontMetrics;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Image;
@@ -35,6 +36,8 @@ public class EditorPanel extends JPanel implements MouseMotionListener, MouseLis
     private Color fillColor = Color.red;
     private Color borderColor = Color.black;
     private String tool = "pencil";
+    private String text = "";
+    private int textLines = 1;
 
     private Rectangle2D selection;
     private int mx, my, lastX, lastY; // mouse position holders
@@ -112,9 +115,20 @@ public class EditorPanel extends JPanel implements MouseMotionListener, MouseLis
             DrawLayer dl = iter.next();
             g2d.drawImage(dl.getImage(), dl.getLocation().x, dl.getLocation().y, null);
         }
+       
         
-        g2d.drawImage(editingLayer, 0, 0, null); // Draw the edit layer next
-        g2d.drawImage(clearLayer, 0, 0, null);
+        if(tool.equals("text"))
+        {
+            g2d.drawImage(clearLayer, 0, 0, null);
+            g2d.drawImage(editingLayer, 0, 0, null); // Draw the edit layer next
+            drawText(editG2D);
+        }
+        else
+        {
+            g2d.drawImage(editingLayer, 0, 0, null); // Draw the edit layer next
+            g2d.drawImage(clearLayer, 0, 0, null);
+            drawText(editG2D);
+        }
         
         super.repaint();
         g2d.dispose();
@@ -169,20 +183,30 @@ public class EditorPanel extends JPanel implements MouseMotionListener, MouseLis
         borderColor = new Color(borderColor.getRed(), borderColor.getGreen(), borderColor.getBlue(), level);
     }
 
-    public void setTool(String tool)
+    public void setTool(String t)
     {
-        clearTransparentLayer();
-        if(editor.inSelectionMode())
-            editor.enableTools(true);
-        else
-            editor.enableTools(false);
+        if(!t.equals("text") && !t.equals("none"))
+        {
+            clearTransparentLayer();
+            if(editor.inSelectionMode())
+                editor.enableTools(true);
+            else
+                editor.enableTools(false);
+        }
         
-        this.tool = tool;
+        if(this.tool.equals("text") && text.length() > 0)
+        {
+            submitText();
+        }
+        
+        this.tool = t;
     }
 
     public void draw()
     {   
-        clearG2D.clearRect(0, 0, clearLayer.getWidth(), clearLayer.getHeight());
+        if(!tool.equals("text") && !tool.equals("none"))
+            clearG2D.clearRect(0, 0, clearLayer.getWidth(), clearLayer.getHeight());
+        
         if(!tool.equals("pencil"))
         {
             editG2D.clearRect(0, 0, editingLayer.getWidth(), editingLayer.getHeight());
@@ -260,7 +284,8 @@ public class EditorPanel extends JPanel implements MouseMotionListener, MouseLis
     
             try
             {
-                drawStack.add(new DrawLayer((BufferedImage)editingLayer.getSubimage((int)(dlMinX-stroke), (int)(dlMinY-stroke), width + 20, height + 20), new Point((int)(dlMinX-stroke),(int)(dlMinY-stroke))));
+                drawStack.add(new DrawLayer((BufferedImage)editingLayer.getSubimage((int)(dlMinX-stroke), (int)(dlMinY-stroke), width + 20, height + 20), 
+                    new Point((int)(dlMinX-stroke),(int)(dlMinY-stroke))));
             }
             catch(java.awt.image.RasterFormatException ex)
             {
@@ -273,22 +298,43 @@ public class EditorPanel extends JPanel implements MouseMotionListener, MouseLis
             clearEditingLayer();
         }
     }
+    private void addSelectionToStack()
+    {
+        redoStack.clear();
+        editor.disableRedo();
+        
+
+        try
+        {
+            drawStack.add(new DrawLayer((BufferedImage)editingLayer.getSubimage((int)selection.getX(), (int)selection.getY(), (int)selection.getWidth(), (int)selection.getHeight()), 
+                new Point((int)selection.getX(),(int)selection.getY())));
+        }
+        catch(java.awt.image.RasterFormatException ex)
+        {
+
+        }
+        
+        if(!drawStack.isEmpty())
+            editor.enableUndo();
+        clearEditingLayer();
+    }
     public Rectangle draggedRect()
     {
 
-        if (mx < 0)
-        {
-            selection.setFrameFromDiagonal(clickPoint, new Point(0, my));
-        } else if (my < 0)
-        {
-            selection.setFrameFromDiagonal(clickPoint, new Point(mx, 0));
-        } else if (my < 0 && mx < 0)
-        {
-            selection.setFrameFromDiagonal(clickPoint, new Point(0, 0));
-        } else
-        {
-            selection.setFrameFromDiagonal(clickPoint, new Point(mx, my));
-        }
+        if(!tool.equals("none") && !tool.equals("text"))
+            if (mx < 0)
+            {
+                selection.setFrameFromDiagonal(clickPoint, new Point(0, my));
+            } else if (my < 0)
+            {
+                selection.setFrameFromDiagonal(clickPoint, new Point(mx, 0));
+            } else if (my < 0 && mx < 0)
+            {
+                selection.setFrameFromDiagonal(clickPoint, new Point(0, 0));
+            } else
+            {
+                selection.setFrameFromDiagonal(clickPoint, new Point(mx, my));
+            }
         return selection.getBounds();
     }
 
@@ -406,6 +452,24 @@ public class EditorPanel extends JPanel implements MouseMotionListener, MouseLis
 
     }
     
+    public void drawText(Graphics2D g)
+    {
+        int nStyle = Font.PLAIN;
+        int nSize = 24;
+        Font f = new Font("Georgia", nStyle, nSize);
+        g.setFont(f);
+        FontMetrics fm1 = g.getFontMetrics();
+        g.setFont(f);
+        g.setColor(fillColor);
+        if((fm1.stringWidth(text) / textLines) > selection.getWidth() - nSize)
+        {
+            addWriteText('\n');
+            textLines++;
+        }
+        int y = (int)(selection.getY());
+        for (String line : text.split("\n"))
+            g.drawString(line, (int)selection.getX(), y += g.getFontMetrics().getHeight());
+    }
     public void blurSelection()
     {
         if(tool.equals("select"))
@@ -503,6 +567,35 @@ public class EditorPanel extends JPanel implements MouseMotionListener, MouseLis
         addNewLayerToStack();
     }
 
+    public void addWriteText(char character)
+    {
+        editG2D.clearRect(0, 0, editingLayer.getWidth(), editingLayer.getHeight());
+        editG2D.setBackground(new Color(0, 0, 0, 0));
+        this.text += character;
+    }
+    public void backspaceWriteText()
+    {
+        if(text.length() > 0)
+        {
+            editG2D.clearRect(0, 0, editingLayer.getWidth(), editingLayer.getHeight());
+            editG2D.setBackground(new Color(0, 0, 0, 0));
+            if(text.length() >= 2 && text.substring(text.length()-2, text.length()).equals("\n"))
+            {
+                text = text.substring(0, text.length()-2);
+                textLines--;
+            }
+            else
+                text = text.substring(0, text.length()-1);
+        }
+    }
+    public void submitText()
+    {
+        addSelectionToStack();
+        text = "";
+        textLines = 1;
+        setTool("select");
+        clearTransparentLayer();
+    }
     public String getTool()
     {
         return tool;

@@ -18,6 +18,7 @@ import java.util.Hashtable;
 
 import javax.swing.ButtonGroup;
 import javax.swing.ImageIcon;
+import javax.swing.InputMap;
 import javax.swing.JButton;
 import javax.swing.JColorChooser;
 import javax.swing.JFrame;
@@ -27,6 +28,7 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSlider;
 import javax.swing.JToggleButton;
+import javax.swing.KeyStroke;
 import javax.swing.UIManager;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.EtchedBorder;
@@ -48,7 +50,8 @@ public class Editor
 {
 
     private JPanel editorPanel;
-    private JButton btnUndo, btnRedo, btnReset, textToolBtn, blurToolBtn, toggleButton_8, toggleButton_9;
+    private JButton btnUndo, btnRedo, btnReset, blurToolBtn, textToolBtn, toggleButton_8, toggleButton_9;
+
     private JToggleButton btnSelect;
     private JCheckBox chckbxShadow, chckbxFilled;
     JFrame frmEditor;
@@ -145,6 +148,8 @@ public class Editor
         frmEditor.setIconImage(Toolkit.getDefaultToolkit().getImage(
             Editor.class.getResource("/images/icons/utilities.png")));
         frmEditor.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        
+        
         keyDispatcher = new KeyEventDispatcher()
         {
 
@@ -153,7 +158,7 @@ public class Editor
             {
                 if (e.isControlDown())
                 {
-                    if(e.getID() == KeyEvent.KEY_RELEASED)
+                    if(e.getID() == KeyEvent.KEY_PRESSED)
                     {
                         switch (e.getKeyCode()) {
                         case KeyEvent.VK_Z:
@@ -167,6 +172,21 @@ public class Editor
                 }
                 else if (e.isShiftDown())
                 {
+                    if(e.getID() == KeyEvent.KEY_TYPED)
+                    {
+                        if(((EditorPanel) editorPanel).getTool().equals("text") && inSelectionMode())
+                        {
+                            if(e.getKeyChar() == KeyEvent.VK_BACK_SPACE)
+                                ((EditorPanel) editorPanel).backspaceWriteText();
+                            else if(e.getKeyChar() == KeyEvent.VK_SPACE)
+                                ((EditorPanel) editorPanel).addWriteText(' ');
+                            else if(e.getKeyChar() == KeyEvent.VK_ENTER)
+                                ((EditorPanel) editorPanel).submitText();
+                            else
+                                ((EditorPanel) editorPanel).addWriteText(((char)e.getKeyChar()));
+
+                        }
+                    }
                     if(e.getID() == KeyEvent.KEY_RELEASED)
                     {
                         switch(e.getKeyCode())
@@ -180,6 +200,21 @@ public class Editor
                 }
                 else
                 {
+                    if(e.getID() == KeyEvent.KEY_TYPED)
+                    {
+                        if(((EditorPanel) editorPanel).getTool().equals("text") && inSelectionMode())
+                        {
+                            if(e.getKeyChar() == KeyEvent.VK_BACK_SPACE)
+                                ((EditorPanel) editorPanel).backspaceWriteText();
+                            else if(e.getKeyChar() == KeyEvent.VK_SPACE)
+                                ((EditorPanel) editorPanel).addWriteText(' ');
+                            else if(e.getKeyChar() == KeyEvent.VK_ENTER)
+                                ((EditorPanel) editorPanel).submitText();
+                            else
+                                ((EditorPanel) editorPanel).addWriteText(((char)e.getKeyChar()));
+
+                        }
+                    }
                     if(e.getID() == KeyEvent.KEY_RELEASED)
                     {
                         switch(e.getKeyCode())
@@ -482,7 +517,22 @@ public class Editor
         textToolBtn.setFont(new Font("Georgia", Font.BOLD, 16));
         textToolBtn.setToolTipText("Write text");
         textToolBtn.setFocusPainted(false);
-        toolGroup.add(textToolBtn);
+        textToolBtn.setFocusable(false);
+        textToolBtn.addActionListener(new ActionListener()
+        {
+            
+            @Override
+            public void actionPerformed(ActionEvent e)
+            {
+                if(!((EditorPanel) editorPanel).getTool().equals("text"))
+                    ((EditorPanel) editorPanel).setTool("text");
+                else
+                    ((EditorPanel) editorPanel).setTool("none");
+                
+                System.out.println("pressed");
+                
+            }
+        });
         editingToolsPanel.add(textToolBtn);
 
         blurToolBtn = new JButton("");
@@ -608,6 +658,17 @@ public class Editor
         editorPanel.setLayout(new GridLayout(2, 3, 0, 0));
         
         enableTools(false);
+        InputMap[] im = { 
+            (InputMap)UIManager.get("Button.focusInputMap"),
+            (InputMap)UIManager.get("ToggleButton.focusInputMap"),
+            (InputMap)UIManager.get("Slider.focusInputMap"),
+            (InputMap)UIManager.get("RadioButton.focusInputMap"),
+            (InputMap)UIManager.get("TextArea.focusInputMap"),
+            (InputMap)UIManager.get("TextField.focusInputMap")
+        };
+        for(int i = 0; i < im.length; i++)
+            im[i].put(KeyStroke.getKeyStroke(KeyEvent.VK_SPACE, 0), "none");
+        
         EventQueue.invokeLater(new Runnable()
         {
             public void run()
@@ -652,6 +713,11 @@ public class Editor
         textToolBtn.setEnabled(enable);
         toggleButton_8.setEnabled(enable);
         toggleButton_9.setEnabled(enable);
+        
+        if(enable == false)
+        {
+            textToolBtn.setSelected(false);
+        }
     }
     public void disableUndo()
     {
@@ -662,7 +728,6 @@ public class Editor
     {
         btnUndo.setEnabled(true);
     }
-
     public boolean fill()
     {
         return chckbxFilled.isSelected();
