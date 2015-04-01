@@ -1,6 +1,7 @@
 package com.shaneisrael.st.editor;
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.EventQueue;
 import java.awt.Font;
 import java.awt.GridLayout;
@@ -141,10 +142,10 @@ public class Editor
         this.mode = m;
         
         frmEditor = new JFrame();
-        frmEditor.setType(Type.UTILITY);
+        frmEditor.setType(Type.NORMAL);
         frmEditor.setTitle("Editor");
-        frmEditor.setBounds(100, 100, 1280, 720);
-        frmEditor.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frmEditor.setSize(1260, 300);
+        frmEditor.setMinimumSize(new Dimension(1260, 300));
         frmEditor.setIconImage(Toolkit.getDefaultToolkit().getImage(
             Editor.class.getResource("/images/icons/utilities.png")));
         frmEditor.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -359,9 +360,7 @@ public class Editor
         // Create the label table
         Hashtable<Integer, JLabel> labelTable = new Hashtable<>();
         labelTable.put(new Integer(0), new JLabel("0%"));
-        labelTable.put(new Integer(25), new JLabel("25%"));
         labelTable.put(new Integer(50), new JLabel("50%"));
-        labelTable.put(new Integer(75), new JLabel("75%"));
         labelTable.put(new Integer(100), new JLabel("100%"));
         opacitySlider.setLabelTable(labelTable);
 

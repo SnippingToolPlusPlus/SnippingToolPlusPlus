@@ -126,7 +126,7 @@ public class EditorPanel extends JPanel implements MouseMotionListener, MouseLis
         {
             g2d.drawImage(editingLayer, 0, 0, null); // Draw the edit layer next
             g2d.drawImage(clearLayer, 0, 0, null);
-            drawText(editG2D);
+            //drawText(editG2D);
         }
         
         super.repaint();
@@ -460,17 +460,22 @@ public class EditorPanel extends JPanel implements MouseMotionListener, MouseLis
         FontMetrics fm1 = g.getFontMetrics();
         g.setFont(f);
         g.setColor(fillColor);
+        g.setClip(selection);
         String lines[] = text.split("\n");
+        g.clearRect((int)selection.getX(), (int)selection.getY(), (int)selection.getWidth(), (int)selection.getHeight());
         
-        if(lines.length == 0 && (fm1.stringWidth(text)) > selection.getWidth() - nSize)
+        if(lines.length-1 >= 0)
         {
-            lineWrapText();
+            if(fm1.stringWidth(lines[lines.length - 1]) > selection.getWidth() - nSize/2)
+                if(lines.length * g.getFontMetrics().getHeight() > selection.getHeight() - g.getFontMetrics().getHeight())
+                {
+                    if(text.length() > 0)
+                        text = text.substring(0, text.length()-1);
+                }
+                else
+                    lineWrapText();
         }
-        else
-        {
-            if(fm1.stringWidth(lines[lines.length - 1]) > selection.getWidth() - nSize)
-                lineWrapText();
-        }
+        
         int y = (int)(selection.getY());
         for (String line : text.split("\n"))
             g.drawString(line, (int)selection.getX(), y += g.getFontMetrics().getHeight());
@@ -584,21 +589,14 @@ public class EditorPanel extends JPanel implements MouseMotionListener, MouseLis
 
     public void addWriteText(char character)
     {
-        editG2D.clearRect(0, 0, editingLayer.getWidth(), editingLayer.getHeight());
-        editG2D.setBackground(new Color(0, 0, 0, 0));
         this.text += character;
     }
     public void backspaceWriteText()
     {
         if(text.length() > 0)
         {
-            editG2D.clearRect(0, 0, editingLayer.getWidth(), editingLayer.getHeight());
-            editG2D.setBackground(new Color(0, 0, 0, 0));
             if(text.length() >= 2 && text.substring(text.length()-2, text.length()).equals("\n"))
-            {
                 text = text.substring(0, text.length()-2);
-                textLines--;
-            }
             else
                 text = text.substring(0, text.length()-1);
         }
@@ -607,7 +605,6 @@ public class EditorPanel extends JPanel implements MouseMotionListener, MouseLis
     {
         addSelectionToStack();
         text = "";
-        textLines = 1;
         setTool("select");
         clearTransparentLayer();
     }
