@@ -1,4 +1,5 @@
 package com.shaneisrael.st.editor;
+
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
@@ -25,6 +26,7 @@ import javax.swing.JColorChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JLayeredPane;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSlider;
@@ -46,13 +48,21 @@ import com.shaneisrael.st.utilities.Upload;
 import com.sun.java.swing.plaf.windows.WindowsLookAndFeel;
 
 import javax.swing.JCheckBox;
+import javax.swing.JMenuBar;
+import javax.swing.JPopupMenu;
+
+import java.awt.Component;
+
+import javax.swing.JMenuItem;
+import javax.swing.JRadioButtonMenuItem;
+import javax.swing.JMenu;
 
 public class Editor
 {
 
     private JPanel editorPanel;
-    private JButton btnUndo, btnRedo, btnReset, blurToolBtn, textToolBtn, toggleButton_8, toggleButton_9;
-
+    private JButton btnReset, blurToolBtn, textToolBtn, toggleButton_8, toggleButton_9;
+    private JMenuItem mntmRedo, mntmUndo;
     private JToggleButton btnSelect;
     private JCheckBox chckbxShadow, chckbxFilled;
     JFrame frmEditor;
@@ -68,22 +78,27 @@ public class Editor
     private int mode;
     private Save save;
     private Upload upload;
-    
+
     private KeyEventDispatcher keyDispatcher;
     private static Editor instance = null;
+    private JMenuBar menuBar;
+    private JPopupMenu popupMenu;
+    private JRadioButtonMenuItem rdbtnmntmPlain;
+    private JRadioButtonMenuItem rdbtnmntmBold;
+    private JRadioButtonMenuItem rdbtnmntmItalic;
+    private final ButtonGroup buttonGroup = new ButtonGroup();
 
     /**
      * Create the application.
      */
     public Editor()
     {
-        
-
 
     }
+
     private BufferedImage getEditedImage()
     {
-        return ((EditorPanel)editorPanel).getImage();
+        return ((EditorPanel) editorPanel).getImage();
     }
 
     public void submit()
@@ -104,6 +119,7 @@ public class Editor
 
         exit();
     }
+
     public void exit()
     {
         KeyboardFocusManager.getCurrentKeyboardFocusManager()
@@ -112,6 +128,7 @@ public class Editor
         ((EditorPanel) editorPanel).dispose();
         instance.dispose();
     }
+
     public static Editor getInstance()
     {
         if (instance == null)
@@ -125,10 +142,12 @@ public class Editor
         return instance;
 
     }
+
     public void dispose()
     {
         frmEditor.dispose();
     }
+
     /**
      * Initialize the contents of the frame.
      */
@@ -140,17 +159,16 @@ public class Editor
     {
         this.image = img;
         this.mode = m;
-        
+
         frmEditor = new JFrame();
         frmEditor.setType(Type.NORMAL);
         frmEditor.setTitle("Editor");
-        frmEditor.setSize(1260, 300);
+        frmEditor.setSize(image.getWidth(), image.getHeight());
         frmEditor.setMinimumSize(new Dimension(1260, 300));
         frmEditor.setIconImage(Toolkit.getDefaultToolkit().getImage(
             Editor.class.getResource("/images/icons/utilities.png")));
         frmEditor.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        
-        
+
         keyDispatcher = new KeyEventDispatcher()
         {
 
@@ -159,7 +177,7 @@ public class Editor
             {
                 if (e.isControlDown())
                 {
-                    if(e.getID() == KeyEvent.KEY_PRESSED)
+                    if (e.getID() == KeyEvent.KEY_PRESSED)
                     {
                         switch (e.getKeyCode()) {
                         case KeyEvent.VK_Z:
@@ -173,52 +191,52 @@ public class Editor
                 }
                 else if (e.isShiftDown())
                 {
-                    if(e.getID() == KeyEvent.KEY_TYPED)
+                    if (e.getID() == KeyEvent.KEY_TYPED)
                     {
-                        if(((EditorPanel) editorPanel).getTool().equals("text") && inSelectionMode())
+                        if (((EditorPanel) editorPanel).getTool().equals("text") && inSelectionMode())
                         {
-                            if(e.getKeyChar() == KeyEvent.VK_BACK_SPACE)
+                            if (e.getKeyChar() == KeyEvent.VK_BACK_SPACE)
                                 ((EditorPanel) editorPanel).backspaceWriteText();
-                            else if(e.getKeyChar() == KeyEvent.VK_SPACE)
+                            else if (e.getKeyChar() == KeyEvent.VK_SPACE)
                                 ((EditorPanel) editorPanel).addWriteText(' ');
-                            else if(e.getKeyChar() == KeyEvent.VK_ENTER)
+                            else if (e.getKeyChar() == KeyEvent.VK_ENTER)
                                 ((EditorPanel) editorPanel).submitText();
                             else
-                                ((EditorPanel) editorPanel).addWriteText(((char)e.getKeyChar()));
+                                ((EditorPanel) editorPanel).addWriteText(((char) e.getKeyChar()));
 
                         }
                     }
-                    if(e.getID() == KeyEvent.KEY_RELEASED)
+                    if (e.getID() == KeyEvent.KEY_RELEASED)
                     {
-                        switch(e.getKeyCode())
+                        switch (e.getKeyCode())
                         {
                         case KeyEvent.VK_ENTER:
                             submit();
                             break;
-                            
+
                         }
                     }
                 }
                 else
                 {
-                    if(e.getID() == KeyEvent.KEY_TYPED)
+                    if (e.getID() == KeyEvent.KEY_TYPED)
                     {
-                        if(((EditorPanel) editorPanel).getTool().equals("text") && inSelectionMode())
+                        if (((EditorPanel) editorPanel).getTool().equals("text") && inSelectionMode())
                         {
-                            if(e.getKeyChar() == KeyEvent.VK_BACK_SPACE)
+                            if (e.getKeyChar() == KeyEvent.VK_BACK_SPACE)
                                 ((EditorPanel) editorPanel).backspaceWriteText();
-                            else if(e.getKeyChar() == KeyEvent.VK_SPACE)
+                            else if (e.getKeyChar() == KeyEvent.VK_SPACE)
                                 ((EditorPanel) editorPanel).addWriteText(' ');
-                            else if(e.getKeyChar() == KeyEvent.VK_ENTER)
+                            else if (e.getKeyChar() == KeyEvent.VK_ENTER)
                                 ((EditorPanel) editorPanel).submitText();
                             else
-                                ((EditorPanel) editorPanel).addWriteText(((char)e.getKeyChar()));
+                                ((EditorPanel) editorPanel).addWriteText(((char) e.getKeyChar()));
 
                         }
                     }
-                    if(e.getID() == KeyEvent.KEY_RELEASED)
+                    if (e.getID() == KeyEvent.KEY_RELEASED)
                     {
-                        switch(e.getKeyCode())
+                        switch (e.getKeyCode())
                         {
                         case KeyEvent.VK_ESCAPE:
                             exit();
@@ -233,7 +251,7 @@ public class Editor
 
         KeyboardFocusManager.getCurrentKeyboardFocusManager()
             .addKeyEventDispatcher(keyDispatcher);
-        
+
         toolGroup = new ButtonGroup();
 
         JPanel panel = new JPanel();
@@ -390,7 +408,7 @@ public class Editor
             @Override
             public void mouseReleased(MouseEvent e)
             {
-                ((EditorPanel)editorPanel).setStroke(getStrokeSliderValue());
+                ((EditorPanel) editorPanel).setStroke(getStrokeSliderValue());
             }
         });
 
@@ -402,7 +420,7 @@ public class Editor
         btnSelect.setOpaque(false);
         btnSelect.addActionListener(new ActionListener()
         {
-            
+
             @Override
             public void actionPerformed(ActionEvent e)
             {
@@ -519,17 +537,17 @@ public class Editor
         textToolBtn.setFocusable(false);
         textToolBtn.addActionListener(new ActionListener()
         {
-            
+
             @Override
             public void actionPerformed(ActionEvent e)
             {
-                if(!((EditorPanel) editorPanel).getTool().equals("text"))
+                if (!((EditorPanel) editorPanel).getTool().equals("text"))
                     ((EditorPanel) editorPanel).setTool("text");
                 else
                     ((EditorPanel) editorPanel).setTool("none");
-                
+
                 System.out.println("pressed");
-                
+
             }
         });
         editingToolsPanel.add(textToolBtn);
@@ -538,7 +556,7 @@ public class Editor
         blurToolBtn.setIcon(new ImageIcon(Editor.class.getResource("/images/icons/buttons/blur.png")));
         blurToolBtn.addActionListener(new ActionListener()
         {
-            
+
             @Override
             public void actionPerformed(ActionEvent e)
             {
@@ -559,45 +577,6 @@ public class Editor
         toolGroup.add(toggleButton_9);
         editingToolsPanel.add(toggleButton_9);
 
-        JPanel panel_1 = new JPanel();
-        panel_1.setBackground(Color.WHITE);
-        toolPanel.add(panel_1, "cell 8 0,grow");
-        panel_1.setLayout(new MigLayout("", "[61px]", "[][]"));
-
-        btnUndo = new JButton("");
-        btnUndo.setIcon(new ImageIcon(Editor.class.getResource("/images/icons/buttons/undo.png")));
-        btnUndo.setFocusPainted(false);
-        btnUndo.setEnabled(false);
-        btnUndo.addActionListener(new ActionListener()
-        {
-
-            @Override
-            public void actionPerformed(ActionEvent e)
-            {
-                ((EditorPanel) editorPanel).undo();
-
-            }
-        });
-        //btnUndo.setBackground(Color.WHITE);
-        panel_1.add(btnUndo, "cell 0 0,growx,aligny top");
-
-        btnRedo = new JButton("");
-        btnRedo.setIcon(new ImageIcon(Editor.class.getResource("/images/icons/buttons/redo.png")));
-        btnRedo.setFocusPainted(false);
-        btnRedo.setEnabled(false);
-        btnRedo.addActionListener(new ActionListener()
-        {
-
-            @Override
-            public void actionPerformed(ActionEvent e)
-            {
-                ((EditorPanel) editorPanel).redo();
-
-            }
-        });
-        //btnRedo.setBackground(Color.WHITE);
-        panel_1.add(btnRedo, "cell 0 1,growx,aligny bottom");
-
         btnReset = new JButton("Reset");
         btnReset.addActionListener(new ActionListener()
         {
@@ -613,7 +592,7 @@ public class Editor
         JButton btnSubmit = new JButton("Submit");
         btnSubmit.addActionListener(new ActionListener()
         {
-            
+
             @Override
             public void actionPerformed(ActionEvent e)
             {
@@ -654,20 +633,106 @@ public class Editor
         editorPanel.setBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null));
         editorPanel.setBackground(Color.WHITE);
         scrollPane.setViewportView(editorPanel);
+
+        popupMenu = new JPopupMenu();
+        addPopup(editorPanel, popupMenu);
+
+        rdbtnmntmPlain = new JRadioButtonMenuItem("Plain");
+        rdbtnmntmPlain.addActionListener(new ActionListener()
+        {
+            public void actionPerformed(ActionEvent e)
+            {
+                ((EditorPanel) editorPanel).setFontType(Font.PLAIN);
+            }
+        });
+        buttonGroup.add(rdbtnmntmPlain);
+        popupMenu.add(rdbtnmntmPlain);
+
+        rdbtnmntmBold = new JRadioButtonMenuItem("Bold");
+        rdbtnmntmBold.addActionListener(new ActionListener()
+        {
+            public void actionPerformed(ActionEvent e)
+            {
+                ((EditorPanel) editorPanel).setFontType(Font.BOLD);
+            }
+        });
+        buttonGroup.add(rdbtnmntmBold);
+        popupMenu.add(rdbtnmntmBold);
+
+        rdbtnmntmItalic = new JRadioButtonMenuItem("Italic");
+        rdbtnmntmItalic.addActionListener(new ActionListener()
+        {
+            public void actionPerformed(ActionEvent e)
+            {
+                ((EditorPanel) editorPanel).setFontType(Font.ITALIC);
+            }
+        });
+        buttonGroup.add(rdbtnmntmItalic);
+        popupMenu.add(rdbtnmntmItalic);
         editorPanel.setLayout(new GridLayout(2, 3, 0, 0));
-        
+
+        menuBar = new JMenuBar();
+        frmEditor.setJMenuBar(menuBar);
+
+        JMenu mnFont = new JMenu("Font");
+        menuBar.add(mnFont);
+
+        JMenuItem mntmFontSize = new JMenuItem("Font Size");
+        mntmFontSize.addActionListener(new ActionListener()
+        {
+            public void actionPerformed(ActionEvent e)
+            {
+                int size;
+                try
+                {
+                    size = Integer.parseInt(JOptionPane.showInputDialog("Desired font size?"));
+                }
+                catch (NumberFormatException ex)
+                {
+                    size = 16;
+                }
+                ((EditorPanel) editorPanel).setFontSize(size);
+            }
+        });
+        mnFont.add(mntmFontSize);
+
+        JMenu mnEdit = new JMenu("Edit");
+        menuBar.add(mnEdit);
+
+        mntmUndo = new JMenuItem("Undo [ctrl+z]");
+        mntmUndo.addActionListener(new ActionListener()
+        {
+            public void actionPerformed(ActionEvent e)
+            {
+                ((EditorPanel) editorPanel).undo();
+            }
+        });
+        mntmUndo.setIcon(new ImageIcon(Editor.class.getResource("/images/icons/buttons/undo.png")));
+        mnEdit.add(mntmUndo);
+
+        mntmRedo = new JMenuItem("Redo [ctrl+y]");
+        mntmRedo.addActionListener(new ActionListener()
+        {
+            public void actionPerformed(ActionEvent e)
+            {
+                ((EditorPanel) editorPanel).redo();
+            }
+        });
+        mntmRedo.setIcon(new ImageIcon(Editor.class.getResource("/images/icons/buttons/redo.png")));
+        mnEdit.add(mntmRedo);
+
         enableTools(false);
-        InputMap[] im = { 
-            (InputMap)UIManager.get("Button.focusInputMap"),
-            (InputMap)UIManager.get("ToggleButton.focusInputMap"),
-            (InputMap)UIManager.get("Slider.focusInputMap"),
-            (InputMap)UIManager.get("RadioButton.focusInputMap"),
-            (InputMap)UIManager.get("TextArea.focusInputMap"),
-            (InputMap)UIManager.get("TextField.focusInputMap")
+        InputMap[] im = {
+                (InputMap) UIManager.get("Button.focusInputMap"),
+                (InputMap) UIManager.get("ToggleButton.focusInputMap"),
+                (InputMap) UIManager.get("Slider.focusInputMap"),
+                (InputMap) UIManager.get("RadioButton.focusInputMap"),
+                (InputMap) UIManager.get("TextArea.focusInputMap"),
+                (InputMap) UIManager.get("TextField.focusInputMap")
         };
-        for(int i = 0; i < im.length; i++)
+        for (int i = 0; i < im.length; i++)
             im[i].put(KeyStroke.getKeyStroke(KeyEvent.VK_SPACE, 0), "none");
-        
+
         EventQueue.invokeLater(new Runnable()
         {
             public void run()
@@ -699,34 +764,37 @@ public class Editor
 
     public void disableRedo()
     {
-        btnRedo.setEnabled(false);
+        mntmRedo.setEnabled(false);
     }
 
     public void enableRedo()
     {
-        btnRedo.setEnabled(true);
+        mntmRedo.setEnabled(true);
     }
+
     public void enableTools(boolean enable)
     {
         blurToolBtn.setEnabled(enable);
         textToolBtn.setEnabled(enable);
         toggleButton_8.setEnabled(enable);
         toggleButton_9.setEnabled(enable);
-        
-        if(enable == false)
+
+        if (enable == false)
         {
             textToolBtn.setSelected(false);
         }
     }
+
     public void disableUndo()
     {
-        btnUndo.setEnabled(false);
+        mntmUndo.setEnabled(false);
     }
 
     public void enableUndo()
     {
-        btnUndo.setEnabled(true);
+        mntmUndo.setEnabled(true);
     }
+
     public boolean fill()
     {
         return chckbxFilled.isSelected();
@@ -736,9 +804,36 @@ public class Editor
     {
         return chckbxShadow.isSelected();
     }
+
     public boolean inSelectionMode()
     {
         return btnSelect.isSelected();
     }
 
+    private static void addPopup(Component component, final JPopupMenu popup)
+    {
+        component.addMouseListener(new MouseAdapter()
+        {
+            public void mousePressed(MouseEvent e)
+            {
+                if (e.isPopupTrigger())
+                {
+                    showMenu(e);
+                }
+            }
+
+            public void mouseReleased(MouseEvent e)
+            {
+                if (e.isPopupTrigger())
+                {
+                    showMenu(e);
+                }
+            }
+
+            private void showMenu(MouseEvent e)
+            {
+                popup.show(e.getComponent(), e.getX(), e.getY());
+            }
+        });
+    }
 }
