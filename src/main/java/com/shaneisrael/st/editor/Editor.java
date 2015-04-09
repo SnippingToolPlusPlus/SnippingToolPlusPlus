@@ -41,6 +41,7 @@ import javax.swing.border.TitledBorder;
 import net.miginfocom.swing.MigLayout;
 
 import com.shaneisrael.st.overlay.Overlay;
+import com.shaneisrael.st.stppus.StppUploader;
 import com.shaneisrael.st.upload.SimpleFTPUploader;
 import com.shaneisrael.st.utilities.ImageUtilities;
 import com.shaneisrael.st.utilities.Save;
@@ -110,7 +111,9 @@ public class Editor
             save.save(getEditedImage());
         } else if (mode == Overlay.UPLOAD)
         {
-            upload = new Upload(getEditedImage(), false);
+            StppUploader uploader = new StppUploader(getEditedImage());
+            uploader.upload();
+            //upload = new Upload(getEditedImage(), false);
         } else if (mode == Overlay.UPLOAD_FTP)
         {
             new SimpleFTPUploader(
