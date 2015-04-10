@@ -25,8 +25,6 @@ public class ProgressBarDialog extends JFrame
         this.max = max;
         this.title = title;
         
-        System.out.println("Max: "+max +" Title: "+title);
-        
         initialize();
     }
     public ProgressBarDialog()

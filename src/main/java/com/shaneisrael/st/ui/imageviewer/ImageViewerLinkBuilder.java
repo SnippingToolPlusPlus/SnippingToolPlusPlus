@@ -267,17 +267,29 @@ public class ImageViewerLinkBuilder
         {
             BufferedImage img = null;
             URL url = null;
-            String[] split = uplink.split("/");
+            String linkTitle = "";
+            
+            if(uplink2.contains("imgur"))
+            {
+	            String[] split = uplink2.split("/");
+	            linkTitle = split[3];
+
+            }
+            else //stppl.us
+            {
+            	String[] split = uplink2.split("/i/");
+            	linkTitle = split[1];
+            }
             try
             {
-                url = new URL(uplink);
+                url = new URL(uplink2);
                 img = ImageIO.read(url);
             } catch (IOException e)
             {
                 // TODO Auto-generated catch block
                 e.printStackTrace();
             }
-            File imageFile = new File(Preferences.getInstance().getCaptureDirectoryRoot() + "/TempHistory/" + split[3]);
+            File imageFile = new File(Preferences.getInstance().getCaptureDirectoryRoot() + "/TempHistory/" + linkTitle);
             imageFile.deleteOnExit();
 
             try

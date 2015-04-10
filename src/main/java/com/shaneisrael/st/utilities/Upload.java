@@ -45,7 +45,7 @@ public class Upload implements ImgurResponseListener
 
     private void upload()
     {
-        doBeforeUpload();
+
         int provider = Preferences.getInstance().getPrimaryProvider();
         if(provider == Provider.STPP)
         {
@@ -54,6 +54,7 @@ public class Upload implements ImgurResponseListener
         }
         else
         {
+            doBeforeUpload();
         	ImgurUploader uploader = new ImgurUploader();
         	uploader.upload(image, this);
         }

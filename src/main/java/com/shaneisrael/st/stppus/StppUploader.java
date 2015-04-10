@@ -88,6 +88,7 @@ public class StppUploader implements Runnable
     @Override
     public void run()
     {
+    	doBeforeUpload();
         try
         {
             ByteArrayOutputStream baos = new ByteArrayOutputStream();

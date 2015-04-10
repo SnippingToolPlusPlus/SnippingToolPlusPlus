@@ -273,7 +273,10 @@ public class ImageViewer extends JFrame implements ListSelectionListener
             {
                 if (currentModel.hasImgurInfo())
                 {
-                    Browser.open(currentModel.getDeleteLink());
+                	if(currentModel.getDeleteLink().equals(""))
+                		JOptionPane.showMessageDialog(null,"The image provider of the selected image\ndoes not provide a deletion hash.", "Cannot Delete!", JOptionPane.INFORMATION_MESSAGE);
+                	else
+                		Browser.open(currentModel.getDeleteLink());
                 } else
                 {
                     try
