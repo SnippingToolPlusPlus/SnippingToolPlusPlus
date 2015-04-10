@@ -344,6 +344,17 @@ public class Preferences
     }
     
     /**
+     * 
+     * @param provider
+     * 		The desired image hosting provider. Refer to Provider
+     * 
+     */
+	public void setPrimaryProvider(int provider) {
+		preferences.setPrimaryProvider(provider);
+		save();
+	}
+    
+    /**
      * @return the ftp host url
      */
     public String getFTPHost()
@@ -443,6 +454,14 @@ public class Preferences
     {
         return preferences.getSecondHotkeyMods();
     }
+    
+    /**
+     * 
+     * @return the primary image hosting provider
+     */
+	public int getPrimaryProvider() {
+		return preferences.getPrimaryProvider();
+	}
     
     /**
      * @return

@@ -110,8 +110,6 @@ public class Editor
             save.save(getEditedImage());
         } else if (mode == Overlay.UPLOAD)
         {
-//            StppUploader uploader = new StppUploader(getEditedImage());
-//            uploader.upload();
             upload = new Upload(getEditedImage(), false);
         } else if (mode == Overlay.UPLOAD_FTP)
         {

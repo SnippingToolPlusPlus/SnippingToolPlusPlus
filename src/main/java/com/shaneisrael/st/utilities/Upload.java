@@ -17,6 +17,8 @@ import com.shaneisrael.st.imgur.ImgurUploader;
 import com.shaneisrael.st.notification.NotificationManager;
 import com.shaneisrael.st.notification.STNotificationType;
 import com.shaneisrael.st.prefs.Preferences;
+import com.shaneisrael.st.prefs.Provider;
+import com.shaneisrael.st.stppus.StppUploader;
 import com.shaneisrael.st.utilities.database.DBStats;
 
 public class Upload implements ImgurResponseListener
@@ -44,8 +46,17 @@ public class Upload implements ImgurResponseListener
     private void upload()
     {
         doBeforeUpload();
-        ImgurUploader uploader = new ImgurUploader();
-        uploader.upload(image, this);
+        int provider = Preferences.getInstance().getPrimaryProvider();
+        if(provider == Provider.STPP)
+        {
+        	StppUploader uploader = new StppUploader(image);
+        	uploader.upload();
+        }
+        else
+        {
+        	ImgurUploader uploader = new ImgurUploader();
+        	uploader.upload(image, this);
+        }
     }
     private void doBeforeUpload()
     {

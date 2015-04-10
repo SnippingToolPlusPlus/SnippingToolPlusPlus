@@ -15,7 +15,10 @@ public final class PreferenceData
     EditorPreferences editor;
 
     @SerializedName("upload_quality")
-    public float uploadQuality = 1f;
+    float uploadQuality = 1f;
+    
+    @SerializedName("primary_provider")
+    int provider = Provider.STPP;
     
     /** Begin FTP Data **/
     
@@ -254,12 +257,21 @@ public final class PreferenceData
     }
     
     /**
+     * 
+     * @param provider
+     */
+	void setPrimaryProvider(int provider) {
+		this.provider = provider;
+	}
+    
+    /**
      * @return the enabled
      */
     boolean isEditorEnabled()
     {
         return getEditor().enabled;
     }
+    
     
     /**
      * @return the quality setting of uploads
@@ -379,8 +391,17 @@ public final class PreferenceData
     
     /**
      * 
+     * @return the primary image hosting provider
+     */
+	public int getPrimaryProvider() 
+	{
+		return provider;
+	}
+    
+    /**
+     * 
      * @return
-     *          is useage statistics disabled
+     *          is usage statistics disabled
      */
     boolean isTrackingDisabled()
     {
@@ -402,4 +423,6 @@ public final class PreferenceData
         Gson gson = new Gson();
         return gson.toJson(this);
     }
+
+
 }
