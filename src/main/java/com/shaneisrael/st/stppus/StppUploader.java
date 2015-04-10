@@ -17,8 +17,10 @@ import com.shaneisrael.st.SnippingToolPlusPlus;
 import com.shaneisrael.st.data.OperatingSystem;
 import com.shaneisrael.st.notification.NotificationManager;
 import com.shaneisrael.st.notification.STNotificationType;
+import com.shaneisrael.st.prefs.Preferences;
 import com.shaneisrael.st.utilities.AnimatedTrayIcon;
 import com.shaneisrael.st.utilities.ClipboardUtilities;
+import com.shaneisrael.st.utilities.ImageUtilities;
 import com.shaneisrael.st.utilities.SoundNotifications;
 import com.shaneisrael.st.utilities.database.DBStats;
 import com.sun.org.apache.xml.internal.security.utils.Base64;
@@ -36,11 +38,13 @@ public class StppUploader implements Runnable
     public StppUploader(BufferedImage image)
     {
         this.image = image;
+        float quality = Preferences.getInstance().getUploadQuality();
+        if(quality < 1f)
+            this.image = ImageUtilities.compressImage(image, quality);
     }
 
     public void upload()
     {
-        doBeforeUpload();
         uploadAsync();
     }
 

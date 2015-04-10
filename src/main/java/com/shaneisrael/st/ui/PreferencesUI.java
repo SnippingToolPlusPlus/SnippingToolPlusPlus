@@ -109,6 +109,7 @@ public class PreferencesUI
     private JComboBox<String> ftpModBox2;
     private JComboBox<String> ftpScreenModBox1;
     private JComboBox<String> ftpScreenModBox2;
+    private JComboBox<String> providerBox;
 
     /** END HOTKEY FIELDS **/
 
@@ -138,7 +139,9 @@ public class PreferencesUI
         keyField1.setText(Preferences.getInstance().getUniqueKey1());
         keyField2.setText(Preferences.getInstance().getUniqueKey2());
         chckbxDontTrackUseage.setSelected(Preferences.getInstance().isTrackingDisabled());
-
+        providerBox.setSelectedIndex(Preferences.getInstance().getPrimaryProvider());
+        
+        
         hotkeyCodes = Preferences.getInstance().getHotkeyCodes();
         hotkeyMods1 = Preferences.getInstance().getFirstHotkeyMods();
         hotkeyMods2 = Preferences.getInstance().getSecondHotkeyMods();
@@ -271,7 +274,7 @@ public class PreferencesUI
 
         JPanel tab2 = new JPanel();
         tabbedPane.addTab("Snippet", null, tab2, null);
-        tab2.setLayout(new MigLayout("", "[123.00]", "[][][][24.00][]"));
+        tab2.setLayout(new MigLayout("", "[123.00,grow]", "[][][][24.00][][39.00][]"));
 
         chckbxEnableEditor = new JCheckBox("Enable Editor");
         chckbxEnableEditor.setSelected(true);
@@ -296,6 +299,15 @@ public class PreferencesUI
         qualitySlider.setPaintTicks(true);
         qualitySlider.setMajorTickSpacing(25);
         tab2.add(qualitySlider, "cell 0 4");
+        
+        JLabel lblPrimaryImageHost = new JLabel("Primary Image Host");
+        lblPrimaryImageHost.setToolTipText("Reduces file size decreasing the time it takes to upload.");
+        lblPrimaryImageHost.setFont(new Font("Tahoma", Font.BOLD, 16));
+        tab2.add(lblPrimaryImageHost, "cell 0 5");
+        
+        providerBox = new JComboBox();
+        providerBox.setModel(new DefaultComboBoxModel(new String[] {"Stppl.us", "Imgur.com"}));
+        tab2.add(providerBox, "cell 0 6,alignx left");
 
         JPanel tab4 = new JPanel();
         tabbedPane.addTab("FTP", null, tab4, null);
@@ -1218,6 +1230,7 @@ public class PreferencesUI
                 Preferences.getInstance().setHotkeyCodes(hotkeyCodes);
                 Preferences.getInstance().setFirstHotkeyMods(hotkeyMods1);
                 Preferences.getInstance().setSecondHotkeyMods(hotkeyMods2);
+                Preferences.getInstance().setPrimaryProvider(providerBox.getSelectedIndex());
                 
                 hotkeys = new Hotkeys();
                 hotkeys.registerHotkeys();
