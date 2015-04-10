@@ -2,6 +2,7 @@ package com.shaneisrael.st.editor;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.EventQueue;
 import java.awt.Font;
@@ -22,12 +23,18 @@ import javax.swing.ButtonGroup;
 import javax.swing.ImageIcon;
 import javax.swing.InputMap;
 import javax.swing.JButton;
+import javax.swing.JCheckBox;
 import javax.swing.JColorChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JLayeredPane;
+import javax.swing.JMenu;
+import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JPopupMenu;
+import javax.swing.JRadioButtonMenuItem;
 import javax.swing.JScrollPane;
 import javax.swing.JSlider;
 import javax.swing.JToggleButton;
@@ -42,20 +49,10 @@ import javax.swing.border.TitledBorder;
 import net.miginfocom.swing.MigLayout;
 
 import com.shaneisrael.st.overlay.Overlay;
-import com.shaneisrael.st.stppus.StppUploader;
 import com.shaneisrael.st.upload.SimpleFTPUploader;
 import com.shaneisrael.st.utilities.ImageUtilities;
 import com.shaneisrael.st.utilities.Save;
 import com.shaneisrael.st.utilities.Upload;
-import javax.swing.JCheckBox;
-import javax.swing.JMenuBar;
-import javax.swing.JPopupMenu;
-
-import java.awt.Component;
-
-import javax.swing.JMenuItem;
-import javax.swing.JRadioButtonMenuItem;
-import javax.swing.JMenu;
 
 public class Editor
 {
