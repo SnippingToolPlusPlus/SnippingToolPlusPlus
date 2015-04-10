@@ -45,6 +45,7 @@ public class STNotificationQueue implements Runnable
         }
     }
 
+    @Override
     public void run()
     {
         while (!queue.isEmpty())

@@ -33,6 +33,7 @@ import javax.swing.JSlider;
 import javax.swing.JToggleButton;
 import javax.swing.KeyStroke;
 import javax.swing.UIManager;
+import javax.swing.WindowConstants;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.EtchedBorder;
 import javax.swing.border.LineBorder;
@@ -46,8 +47,6 @@ import com.shaneisrael.st.upload.SimpleFTPUploader;
 import com.shaneisrael.st.utilities.ImageUtilities;
 import com.shaneisrael.st.utilities.Save;
 import com.shaneisrael.st.utilities.Upload;
-import com.sun.java.swing.plaf.windows.WindowsLookAndFeel;
-
 import javax.swing.JCheckBox;
 import javax.swing.JMenuBar;
 import javax.swing.JPopupMenu;
@@ -111,9 +110,9 @@ public class Editor
             save.save(getEditedImage());
         } else if (mode == Overlay.UPLOAD)
         {
-            StppUploader uploader = new StppUploader(getEditedImage());
-            uploader.upload();
-            //upload = new Upload(getEditedImage(), false);
+//            StppUploader uploader = new StppUploader(getEditedImage());
+//            uploader.upload();
+            upload = new Upload(getEditedImage(), false);
         } else if (mode == Overlay.UPLOAD_FTP)
         {
             new SimpleFTPUploader(
@@ -170,7 +169,7 @@ public class Editor
         frmEditor.setMinimumSize(new Dimension(1260, 400));
         frmEditor.setIconImage(Toolkit.getDefaultToolkit().getImage(
             Editor.class.getResource("/images/icons/utilities.png")));
-        frmEditor.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        frmEditor.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 
         keyDispatcher = new KeyEventDispatcher()
         {
@@ -205,7 +204,7 @@ public class Editor
                             else if (e.getKeyChar() == KeyEvent.VK_ENTER)
                                 ((EditorPanel) editorPanel).submitText();
                             else
-                                ((EditorPanel) editorPanel).addWriteText(((char) e.getKeyChar()));
+                                ((EditorPanel) editorPanel).addWriteText((e.getKeyChar()));
 
                         }
                     }
@@ -233,7 +232,7 @@ public class Editor
                             else if (e.getKeyChar() == KeyEvent.VK_ENTER)
                                 ((EditorPanel) editorPanel).submitText();
                             else
-                                ((EditorPanel) editorPanel).addWriteText(((char) e.getKeyChar()));
+                                ((EditorPanel) editorPanel).addWriteText((e.getKeyChar()));
 
                         }
                     }
@@ -307,7 +306,7 @@ public class Editor
                     fillColor = new Color(c.getRed(), c.getGreen(),
                         c.getBlue(), c.getAlpha());
                     if (c.getTransparency() != 1.0)
-                        opacitySlider.setValue((int) (c.getTransparency() * 10));
+                        opacitySlider.setValue(c.getTransparency() * 10);
                     ((EditorPanel) editorPanel).setColor(fillColor);
                     fillColorPanel.setColor(new Color(c.getRed(), c.getGreen(),
                         c.getBlue(), getOpacitySliderValue()));
@@ -337,7 +336,7 @@ public class Editor
                     borderColor = new Color(c.getRed(), c.getGreen(), c
                         .getBlue(), c.getAlpha());
                     if (c.getTransparency() != 1.0)
-                        opacitySlider.setValue((int) (c.getTransparency() * 10));
+                        opacitySlider.setValue(c.getTransparency() * 10);
                     ((EditorPanel) editorPanel).setBorderColor(borderColor);
                     borderColorPanel.setColor(new Color(c.getRed(), c
                         .getGreen(), c.getBlue(), getOpacitySliderValue()));
@@ -643,6 +642,7 @@ public class Editor
         rdbtnmntmPlain = new JRadioButtonMenuItem("Plain");
         rdbtnmntmPlain.addActionListener(new ActionListener()
         {
+            @Override
             public void actionPerformed(ActionEvent e)
             {
                 ((EditorPanel) editorPanel).setFontType(Font.PLAIN);
@@ -654,6 +654,7 @@ public class Editor
         rdbtnmntmBold = new JRadioButtonMenuItem("Bold");
         rdbtnmntmBold.addActionListener(new ActionListener()
         {
+            @Override
             public void actionPerformed(ActionEvent e)
             {
                 ((EditorPanel) editorPanel).setFontType(Font.BOLD);
@@ -665,6 +666,7 @@ public class Editor
         rdbtnmntmItalic = new JRadioButtonMenuItem("Italic");
         rdbtnmntmItalic.addActionListener(new ActionListener()
         {
+            @Override
             public void actionPerformed(ActionEvent e)
             {
                 ((EditorPanel) editorPanel).setFontType(Font.ITALIC);
@@ -683,6 +685,7 @@ public class Editor
         JMenuItem mntmFontSize = new JMenuItem("Font Size");
         mntmFontSize.addActionListener(new ActionListener()
         {
+            @Override
             public void actionPerformed(ActionEvent e)
             {
                 int size;
@@ -705,6 +708,7 @@ public class Editor
         mntmUndo = new JMenuItem("Undo [ctrl+z]");
         mntmUndo.addActionListener(new ActionListener()
         {
+            @Override
             public void actionPerformed(ActionEvent e)
             {
                 ((EditorPanel) editorPanel).undo();
@@ -716,6 +720,7 @@ public class Editor
         mntmRedo = new JMenuItem("Redo [ctrl+y]");
         mntmRedo.addActionListener(new ActionListener()
         {
+            @Override
             public void actionPerformed(ActionEvent e)
             {
                 ((EditorPanel) editorPanel).redo();
@@ -738,6 +743,7 @@ public class Editor
 
         EventQueue.invokeLater(new Runnable()
         {
+            @Override
             public void run()
             {
                 try
@@ -817,6 +823,7 @@ public class Editor
     {
         component.addMouseListener(new MouseAdapter()
         {
+            @Override
             public void mousePressed(MouseEvent e)
             {
                 if (e.isPopupTrigger())
@@ -825,6 +832,7 @@ public class Editor
                 }
             }
 
+            @Override
             public void mouseReleased(MouseEvent e)
             {
                 if (e.isPopupTrigger())

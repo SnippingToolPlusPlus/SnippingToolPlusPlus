@@ -1,11 +1,10 @@
 package com.shaneisrael.st.ui;
 
 import java.awt.BorderLayout;
-import java.awt.EventQueue;
-
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.WindowConstants;
 import javax.swing.border.EmptyBorder;
 
 import net.miginfocom.swing.MigLayout;
@@ -76,6 +75,7 @@ public class RegisterKeysetUI extends JFrame
                 final JButton btnRegister = new JButton("Register");
                 btnRegister.addActionListener(new ActionListener()
                 {
+                    @Override
                     public void actionPerformed(ActionEvent arg0)
                     {
                         btnRegister.setEnabled(false);
@@ -118,6 +118,7 @@ public class RegisterKeysetUI extends JFrame
                 
                 JButton btnGenerateKey = new JButton("Generate Keyset");
                 btnGenerateKey.addActionListener(new ActionListener() {
+                    @Override
                     public void actionPerformed(ActionEvent arg0) {
                         textField.setText(SecureKeyGenerator.nextKey());
                         textField_1.setText(SecureKeyGenerator.nextKey());
@@ -128,7 +129,7 @@ public class RegisterKeysetUI extends JFrame
 
         this.setLocationRelativeTo(null);
         this.setResizable(false);
-        this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        this.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
         this.setVisible(true);
     }
     public final static class SecureKeyGenerator 

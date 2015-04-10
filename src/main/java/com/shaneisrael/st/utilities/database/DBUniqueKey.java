@@ -110,6 +110,7 @@ public class DBUniqueKey
         else
         {
             Thread t = new Thread(new Runnable(){
+                @Override
                 public void run(){
                     JOptionPane.showMessageDialog(null, "Your Key Set is invalid, please 'validate' your Key Set\n"
                         + "in the preferences!", "Invalid Key Set", JOptionPane.WARNING_MESSAGE);

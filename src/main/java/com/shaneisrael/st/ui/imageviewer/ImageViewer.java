@@ -21,12 +21,12 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
+import javax.swing.WindowConstants;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
 import net.miginfocom.swing.MigLayout;
 
-import com.shaneisrael.st.SnippingToolPlusPlus;
 import com.shaneisrael.st.editor.Editor;
 import com.shaneisrael.st.notification.NotificationManager;
 import com.shaneisrael.st.notification.STNotificationType;
@@ -64,13 +64,14 @@ public class ImageViewer extends JFrame implements ListSelectionListener
     {
         this.addWindowListener(new WindowAdapter() {
 
+            @Override
             public void windowClosing(WindowEvent evt) {
                 disposeAll();
             }
         });
         setSize(740, 508);
         setLocationRelativeTo(null);
-        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Snipping Tool++ Image Viewer");
         setIconImage(getIcon());
         setVisible(true);
@@ -105,6 +106,7 @@ public class ImageViewer extends JFrame implements ListSelectionListener
         final JRadioButton rdbtnLocal = new JRadioButton("Local");
         rdbtnLocal.addActionListener(new ActionListener()
         {
+            @Override
             public void actionPerformed(ActionEvent e)
             {
                 buildLocalList();
@@ -118,12 +120,14 @@ public class ImageViewer extends JFrame implements ListSelectionListener
         final JRadioButton rdbtnCloud = new JRadioButton("Cloud");
         rdbtnCloud.addActionListener(new ActionListener()
         {
+            @Override
             public void actionPerformed(ActionEvent arg0)
             {
                 if(!DBUniqueKey.isKeysetReserved())
                 {
                     Thread t = new Thread(new Runnable()
                     {
+                        @Override
                         public void run()
                         {
                             deleteHistoryDirectory();

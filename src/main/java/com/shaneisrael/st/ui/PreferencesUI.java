@@ -44,8 +44,6 @@ import javax.swing.WindowConstants;
 
 import net.miginfocom.swing.MigLayout;
 
-import com.melloware.jintellitype.JIntellitype;
-import com.melloware.jintellitype.JIntellitypeException;
 import com.shaneisrael.st.Config;
 import com.shaneisrael.st.data.Locations;
 import com.shaneisrael.st.prefs.Preferences;
@@ -185,7 +183,7 @@ public class PreferencesUI
         frmPreferences.getContentPane().setLayout(
             new MigLayout("", "[430.00px]", "[244.00px,grow,baseline][][20.00,grow]"));
 
-        JTabbedPane tabbedPane = new JTabbedPane(JTabbedPane.TOP);
+        JTabbedPane tabbedPane = new JTabbedPane(SwingConstants.TOP);
         frmPreferences.getContentPane().add(tabbedPane, "cell 0 0,growy");
 
         JPanel tab1 = new JPanel();
@@ -414,6 +412,7 @@ public class PreferencesUI
         JButton btnHelp = new JButton("Help");
         btnHelp.addActionListener(new ActionListener()
         {
+            @Override
             public void actionPerformed(ActionEvent arg0)
             {
                 JOptionPane.showMessageDialog(null, "<html>" +
@@ -453,6 +452,7 @@ public class PreferencesUI
         final JButton btnViewKeys = new JButton("show keys");
         btnViewKeys.addActionListener(new ActionListener()
         {
+            @Override
             public void actionPerformed(ActionEvent arg0)
             {
 
@@ -475,6 +475,7 @@ public class PreferencesUI
         JButton btnRegisterKeyset = new JButton("Register a Keyset");
         btnRegisterKeyset.addActionListener(new ActionListener()
         {
+            @Override
             public void actionPerformed(ActionEvent arg0)
             {
                 new RegisterKeysetUI();
@@ -484,6 +485,7 @@ public class PreferencesUI
         JButton btnSaveKeys = new JButton("Save");
         btnSaveKeys.addActionListener(new ActionListener()
         {
+            @Override
             public void actionPerformed(ActionEvent arg0)
             {
                 final JFileChooser fc = new JFileChooser();
@@ -516,6 +518,7 @@ public class PreferencesUI
         JButton btnValidate = new JButton("Validate");
         btnValidate.addActionListener(new ActionListener()
         {
+            @Override
             public void actionPerformed(ActionEvent arg0)
             {
                 String key1 = new String(keyField1.getPassword());
@@ -537,6 +540,7 @@ public class PreferencesUI
         JButton btnImport = new JButton("Import Keys");
         btnImport.addActionListener(new ActionListener()
         {
+            @Override
             public void actionPerformed(ActionEvent arg0)
             {
                 final JFileChooser fc = new JFileChooser();
@@ -580,6 +584,7 @@ public class PreferencesUI
         JButton btnUseDefault = new JButton("Use default keys");
         btnUseDefault.addActionListener(new ActionListener()
         {
+            @Override
             public void actionPerformed(ActionEvent arg0)
             {
                 keyField1.setText("");
@@ -642,6 +647,7 @@ public class PreferencesUI
         upModBox1 = new JComboBox();
         upModBox1.addItemListener(new ItemListener()
         {
+            @Override
             public void itemStateChanged(ItemEvent e)
             {
                 hotkeyMods1[Config.UPLOAD_SNIPPET_ID] = Hotkeys.getHotkeyMod(upModBox1.getSelectedIndex());
@@ -656,6 +662,7 @@ public class PreferencesUI
         upKeyField.setEditable(false);
         upKeyField.addKeyListener(new KeyAdapter()
         {
+            @Override
             public void keyPressed(KeyEvent e)
             {
                 String text = Hotkeys.getKeyCharacter(e.getKeyCode()).toUpperCase();
@@ -669,16 +676,19 @@ public class PreferencesUI
         });
         upKeyField.addMouseListener(new MouseAdapter()
         {
+            @Override
             public void mouseClicked(MouseEvent e)
             {
                 upKeyField.selectAll();
             }
 
+            @Override
             public void mouseEntered(MouseEvent e)
             {
                 upKeyField.setBackground(Color.green);
             }
 
+            @Override
             public void mouseExited(MouseEvent e)
             {
                 upKeyField.setBackground(Color.white);
@@ -694,6 +704,7 @@ public class PreferencesUI
         upScreenModBox1 = new JComboBox(Hotkeys.MODIFIER_KEYS);
         upScreenModBox1.addItemListener(new ItemListener()
         {
+            @Override
             public void itemStateChanged(ItemEvent e)
             {
                 hotkeyMods1[Config.UPLOAD_SCREEN_ID] = Hotkeys.getHotkeyMod(upScreenModBox1.getSelectedIndex());
@@ -707,6 +718,7 @@ public class PreferencesUI
         upScreenKeyField.setEditable(false);
         upScreenKeyField.addKeyListener(new KeyAdapter()
         {
+            @Override
             public void keyPressed(KeyEvent e)
             {
                 String text = Hotkeys.getKeyCharacter(e.getKeyCode()).toUpperCase();
@@ -720,16 +732,19 @@ public class PreferencesUI
         });
         upScreenKeyField.addMouseListener(new MouseAdapter()
         {
+            @Override
             public void mouseClicked(MouseEvent e)
             {
                 upScreenKeyField.selectAll();
             }
 
+            @Override
             public void mouseEntered(MouseEvent e)
             {
                 upScreenKeyField.setBackground(Color.green);
             }
 
+            @Override
             public void mouseExited(MouseEvent e)
             {
                 upScreenKeyField.setBackground(Color.white);
@@ -744,6 +759,7 @@ public class PreferencesUI
         upClipModBox1 = new JComboBox(Hotkeys.MODIFIER_KEYS);
         upClipModBox1.addItemListener(new ItemListener()
         {
+            @Override
             public void itemStateChanged(ItemEvent e)
             {
                 hotkeyMods1[Config.UPLOAD_CLIPBOARD_ID] = Hotkeys.getHotkeyMod(upClipModBox1.getSelectedIndex());
@@ -757,6 +773,7 @@ public class PreferencesUI
         upClipKeyField.setEditable(false);
         upClipKeyField.addKeyListener(new KeyAdapter()
         {
+            @Override
             public void keyPressed(KeyEvent e)
             {
                 String text = Hotkeys.getKeyCharacter(e.getKeyCode()).toUpperCase();
@@ -770,16 +787,19 @@ public class PreferencesUI
         });
         upClipKeyField.addMouseListener(new MouseAdapter()
         {
+            @Override
             public void mouseClicked(MouseEvent e)
             {
                 upClipKeyField.selectAll();
             }
 
+            @Override
             public void mouseEntered(MouseEvent e)
             {
                 upClipKeyField.setBackground(Color.green);
             }
 
+            @Override
             public void mouseExited(MouseEvent e)
             {
                 upClipKeyField.setBackground(Color.white);
@@ -794,6 +814,7 @@ public class PreferencesUI
         saveModBox1 = new JComboBox(Hotkeys.MODIFIER_KEYS);
         saveModBox1.addItemListener(new ItemListener()
         {
+            @Override
             public void itemStateChanged(ItemEvent e)
             {
                 hotkeyMods1[Config.SAVE_SNIPPET_ID] = Hotkeys.getHotkeyMod(saveModBox1.getSelectedIndex());
@@ -807,6 +828,7 @@ public class PreferencesUI
         saveKeyField.setEditable(false);
         saveKeyField.addKeyListener(new KeyAdapter()
         {
+            @Override
             public void keyPressed(KeyEvent e)
             {
                 String text = Hotkeys.getKeyCharacter(e.getKeyCode()).toUpperCase();
@@ -820,16 +842,19 @@ public class PreferencesUI
         });
         saveKeyField.addMouseListener(new MouseAdapter()
         {
+            @Override
             public void mouseClicked(MouseEvent e)
             {
                 saveKeyField.selectAll();
             }
 
+            @Override
             public void mouseEntered(MouseEvent e)
             {
                 saveKeyField.setBackground(Color.green);
             }
 
+            @Override
             public void mouseExited(MouseEvent e)
             {
                 saveKeyField.setBackground(Color.white);
@@ -846,6 +871,7 @@ public class PreferencesUI
         saveScreenModBox1 = new JComboBox(Hotkeys.MODIFIER_KEYS);
         saveScreenModBox1.addItemListener(new ItemListener()
         {
+            @Override
             public void itemStateChanged(ItemEvent e)
             {
                 hotkeyMods1[Config.SAVE_SCREEN_ID] = Hotkeys.getHotkeyMod(saveScreenModBox1.getSelectedIndex());
@@ -859,6 +885,7 @@ public class PreferencesUI
         saveScreenKeyField.setEditable(false);
         saveScreenKeyField.addKeyListener(new KeyAdapter()
         {
+            @Override
             public void keyPressed(KeyEvent e)
             {
                 String text = Hotkeys.getKeyCharacter(e.getKeyCode()).toUpperCase();
@@ -872,16 +899,19 @@ public class PreferencesUI
         });
         saveScreenKeyField.addMouseListener(new MouseAdapter()
         {
+            @Override
             public void mouseClicked(MouseEvent e)
             {
                 saveScreenKeyField.selectAll();
             }
 
+            @Override
             public void mouseEntered(MouseEvent e)
             {
                 saveScreenKeyField.setBackground(Color.green);
             }
 
+            @Override
             public void mouseExited(MouseEvent e)
             {
                 saveScreenKeyField.setBackground(Color.white);
@@ -895,6 +925,7 @@ public class PreferencesUI
         ftpModBox1 = new JComboBox(Hotkeys.MODIFIER_KEYS);
         ftpModBox1.addItemListener(new ItemListener()
         {
+            @Override
             public void itemStateChanged(ItemEvent e)
             {
                 hotkeyMods1[Config.FTP_UPLOAD_SNIPPET_ID] = Hotkeys.getHotkeyMod(ftpModBox1.getSelectedIndex());
@@ -908,6 +939,7 @@ public class PreferencesUI
         ftpKeyField.setEditable(false);
         ftpKeyField.addKeyListener(new KeyAdapter()
         {
+            @Override
             public void keyPressed(KeyEvent e)
             {
                 String text = Hotkeys.getKeyCharacter(e.getKeyCode()).toUpperCase();
@@ -921,16 +953,19 @@ public class PreferencesUI
         });
         ftpKeyField.addMouseListener(new MouseAdapter()
         {
+            @Override
             public void mouseClicked(MouseEvent e)
             {
                 ftpKeyField.selectAll();
             }
 
+            @Override
             public void mouseEntered(MouseEvent e)
             {
                 ftpKeyField.setBackground(Color.green);
             }
 
+            @Override
             public void mouseExited(MouseEvent e)
             {
                 ftpKeyField.setBackground(Color.white);
@@ -944,6 +979,7 @@ public class PreferencesUI
         ftpScreenModBox1 = new JComboBox(Hotkeys.MODIFIER_KEYS);
         ftpScreenModBox1.addItemListener(new ItemListener()
         {
+            @Override
             public void itemStateChanged(ItemEvent e)
             {
                 hotkeyMods1[Config.FTP_UPLOAD_SCREEN_ID] = Hotkeys.getHotkeyMod(ftpScreenModBox1.getSelectedIndex());
@@ -957,6 +993,7 @@ public class PreferencesUI
         ftpScreenKeyField.setEditable(false);
         ftpScreenKeyField.addKeyListener(new KeyAdapter()
         {
+            @Override
             public void keyPressed(KeyEvent e)
             {
                 String text = Hotkeys.getKeyCharacter(e.getKeyCode()).toUpperCase();
@@ -970,16 +1007,19 @@ public class PreferencesUI
         });
         ftpScreenKeyField.addMouseListener(new MouseAdapter()
         {
+            @Override
             public void mouseClicked(MouseEvent e)
             {
                 ftpScreenKeyField.selectAll();
             }
 
+            @Override
             public void mouseEntered(MouseEvent e)
             {
                 ftpScreenKeyField.setBackground(Color.green);
             }
 
+            @Override
             public void mouseExited(MouseEvent e)
             {
                 ftpScreenKeyField.setBackground(Color.white);
@@ -1036,6 +1076,7 @@ public class PreferencesUI
         upModBox2.setModel(new DefaultComboBoxModel(Hotkeys.MODIFIER_KEYS));
         upModBox2.addItemListener(new ItemListener()
         {
+            @Override
             public void itemStateChanged(ItemEvent e)
             {
                 hotkeyMods2[Config.UPLOAD_SNIPPET_ID] = Hotkeys.getHotkeyMod(upModBox2.getSelectedIndex());
@@ -1052,6 +1093,7 @@ public class PreferencesUI
         upScreenModBox2 = new JComboBox(Hotkeys.MODIFIER_KEYS);
         upScreenModBox2.addItemListener(new ItemListener()
         {
+            @Override
             public void itemStateChanged(ItemEvent e)
             {
                 hotkeyMods2[Config.UPLOAD_SCREEN_ID] = Hotkeys.getHotkeyMod(upScreenModBox2.getSelectedIndex());
@@ -1068,6 +1110,7 @@ public class PreferencesUI
         upClipModBox2 = new JComboBox(Hotkeys.MODIFIER_KEYS);
         upClipModBox2.addItemListener(new ItemListener()
         {
+            @Override
             public void itemStateChanged(ItemEvent e)
             {
                 hotkeyMods2[Config.UPLOAD_CLIPBOARD_ID] = Hotkeys.getHotkeyMod(upClipModBox2.getSelectedIndex());
@@ -1084,6 +1127,7 @@ public class PreferencesUI
         saveModBox2 = new JComboBox(Hotkeys.MODIFIER_KEYS);
         saveModBox2.addItemListener(new ItemListener()
         {
+            @Override
             public void itemStateChanged(ItemEvent e)
             {
                 hotkeyMods2[Config.SAVE_SNIPPET_ID] = Hotkeys.getHotkeyMod(saveModBox2.getSelectedIndex());
@@ -1100,6 +1144,7 @@ public class PreferencesUI
         saveScreenModBox2 = new JComboBox(Hotkeys.MODIFIER_KEYS);
         saveScreenModBox2.addItemListener(new ItemListener()
         {
+            @Override
             public void itemStateChanged(ItemEvent e)
             {
                 hotkeyMods2[Config.SAVE_SCREEN_ID] = Hotkeys.getHotkeyMod(saveScreenModBox2.getSelectedIndex());
@@ -1116,6 +1161,7 @@ public class PreferencesUI
         ftpModBox2 = new JComboBox(Hotkeys.MODIFIER_KEYS);
         ftpModBox2.addItemListener(new ItemListener()
         {
+            @Override
             public void itemStateChanged(ItemEvent e)
             {
                 hotkeyMods2[Config.FTP_UPLOAD_SNIPPET_ID] = Hotkeys.getHotkeyMod(ftpModBox2.getSelectedIndex());
@@ -1132,6 +1178,7 @@ public class PreferencesUI
         ftpScreenModBox2 = new JComboBox(Hotkeys.MODIFIER_KEYS);
         ftpScreenModBox2.addItemListener(new ItemListener()
         {
+            @Override
             public void itemStateChanged(ItemEvent e)
             {
                 hotkeyMods2[Config.FTP_UPLOAD_SCREEN_ID] = Hotkeys.getHotkeyMod(ftpScreenModBox2.getSelectedIndex());

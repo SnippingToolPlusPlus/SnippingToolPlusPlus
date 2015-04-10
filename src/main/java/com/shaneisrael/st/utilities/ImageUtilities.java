@@ -89,7 +89,7 @@ public class ImageUtilities
             OutputStream os =new FileOutputStream(compressedImageFile);
     
             Iterator<ImageWriter> writers = ImageIO.getImageWritersByFormatName("jpg");
-            ImageWriter writer = (ImageWriter) writers.next();
+            ImageWriter writer = writers.next();
     
             ImageOutputStream ios = ImageIO.createImageOutputStream(os);
             writer.setOutput(ios);

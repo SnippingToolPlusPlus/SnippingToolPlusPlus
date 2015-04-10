@@ -29,7 +29,6 @@ import javax.swing.ImageIcon;
 import javax.swing.JPanel;
 import javax.swing.KeyStroke;
 
-import com.shaneisrael.st.SnippingToolPlusPlus;
 import com.shaneisrael.st.editor.Editor;
 import com.shaneisrael.st.prefs.Preferences;
 import com.shaneisrael.st.upload.SimpleFTPUploader;
@@ -144,6 +143,7 @@ public class Overlay extends JPanel implements MouseListener, MouseMotionListene
         };
         Action add = new AbstractAction()
         {
+            @Override
             public void actionPerformed(ActionEvent e)
             {
                 SoundNotifications.playShutter();

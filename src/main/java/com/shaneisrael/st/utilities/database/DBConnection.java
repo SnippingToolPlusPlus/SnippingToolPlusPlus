@@ -3,8 +3,6 @@ package com.shaneisrael.st.utilities.database;
 import java.sql.Connection;
 import java.sql.DriverManager;
 
-import com.shaneisrael.st.Config;
-
 public class DBConnection
 {
     private static String user;

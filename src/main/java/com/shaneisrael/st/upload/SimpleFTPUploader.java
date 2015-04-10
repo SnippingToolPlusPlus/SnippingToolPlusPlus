@@ -11,11 +11,9 @@ import java.util.Date;
 
 import javax.swing.JOptionPane;
 
-import com.shaneisrael.st.SnippingToolPlusPlus;
 import com.shaneisrael.st.notification.NotificationManager;
 import com.shaneisrael.st.notification.STNotificationType;
 import com.shaneisrael.st.prefs.Preferences;
-import com.sun.jmx.snmp.Timestamp;
 
 /**TODO
  * 

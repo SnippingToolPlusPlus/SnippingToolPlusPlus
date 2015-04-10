@@ -1,7 +1,6 @@
 package com.shaneisrael.st.notification;
 
 import com.shaneisrael.st.Config;
-import com.shaneisrael.st.prefs.Preferences;
 
 public class NotificationManager
 {

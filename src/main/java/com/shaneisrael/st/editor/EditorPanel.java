@@ -1,6 +1,5 @@
 package com.shaneisrael.st.editor;
 
-import java.awt.AlphaComposite;
 import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Cursor;
@@ -25,8 +24,6 @@ import javax.swing.ImageIcon;
 import javax.swing.JPanel;
 
 import com.shaneisrael.st.utilities.ImageUtilities;
-
-import sun.java2d.loops.FillRect;
 
 public class EditorPanel extends JPanel implements MouseMotionListener,
     MouseListener
@@ -78,7 +75,7 @@ public class EditorPanel extends JPanel implements MouseMotionListener,
         // shapes.
         editingLayer = new BufferedImage(img.getWidth() + 20,
             img.getHeight() + 20, BufferedImage.TYPE_INT_ARGB);
-        editG2D = ((BufferedImage) editingLayer).createGraphics();
+        editG2D = editingLayer.createGraphics();
         editG2D.setClip(0, 0, drawWidth, drawHeight);
         editG2D.setBackground(new Color(0, 0, 0, 0));
         editG2D.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
@@ -87,7 +84,7 @@ public class EditorPanel extends JPanel implements MouseMotionListener,
             RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
         clearLayer = new BufferedImage(img.getWidth(), img.getHeight(),
             BufferedImage.TYPE_INT_ARGB);
-        clearG2D = ((BufferedImage) clearLayer).createGraphics();
+        clearG2D = clearLayer.createGraphics();
         clearG2D.setBackground(new Color(0, 0, 0, 0));
 
         selection = new Rectangle2D.Double(0, 0, drawWidth, drawHeight);
@@ -150,7 +147,7 @@ public class EditorPanel extends JPanel implements MouseMotionListener,
         editG2D.dispose();
         editingLayer = new BufferedImage(image.getWidth(null) + 20,
             image.getHeight(null) + 20, BufferedImage.TYPE_INT_ARGB);
-        editG2D = ((BufferedImage) editingLayer).createGraphics();
+        editG2D = editingLayer.createGraphics();
         editG2D.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
             RenderingHints.VALUE_ANTIALIAS_ON);
         editG2D.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING,
@@ -164,7 +161,7 @@ public class EditorPanel extends JPanel implements MouseMotionListener,
         clearG2D.dispose();
         clearLayer = new BufferedImage(drawWidth, drawHeight,
             BufferedImage.TYPE_INT_ARGB);
-        clearG2D = ((BufferedImage) clearLayer).createGraphics();
+        clearG2D = clearLayer.createGraphics();
         clearG2D.setBackground(new Color(0, 0, 0, 0));
     }
 
@@ -315,7 +312,7 @@ public class EditorPanel extends JPanel implements MouseMotionListener,
 
             try
             {
-                drawStack.add(new DrawLayer((BufferedImage) editingLayer
+                drawStack.add(new DrawLayer(editingLayer
                     .getSubimage((int) (dlMinX - stroke),
                         (int) (dlMinY - stroke), width + 20,
                         height + 20), new Point(
@@ -339,7 +336,7 @@ public class EditorPanel extends JPanel implements MouseMotionListener,
 
         try
         {
-            drawStack.add(new DrawLayer((BufferedImage) editingLayer
+            drawStack.add(new DrawLayer(editingLayer
                 .getSubimage((int) selection.getX(),
                     (int) selection.getY(), (int) selection.getWidth(),
                     (int) selection.getHeight()), new Point(
@@ -461,23 +458,23 @@ public class EditorPanel extends JPanel implements MouseMotionListener,
             }
         }
         g.fillRect((int) (rect.getX() + rect.getWidth())
-            + (int) (stroke_correction / 2), (int) rect.getY()
+            + stroke_correction / 2, (int) rect.getY()
             + stroke_correction, stroke_correction, (int) rect
-            .getHeight() - (int) (stroke_correction / 2));
+            .getHeight() - stroke_correction / 2);
         g.fillRect((int) (rect.getX() + stroke_correction),
             (int) (rect.getY() + rect.getHeight())
-                + (int) (stroke_correction / 2), (int) rect
-                .getWidth() + (int) (stroke_correction / 2),
+                + stroke_correction / 2, (int) rect
+                .getWidth() + stroke_correction / 2,
             stroke_correction);
         /*
          * End Shadow
          */
 
         g.setColor(fillColor);
-        g.fill(new Rectangle(rect.x + (int) (stroke_correction / 2),
-            rect.y + (int) (stroke_correction / 2),
-            rect.width - (int) (stroke_correction / 2),
-            rect.height - (int) (stroke_correction / 2)));
+        g.fill(new Rectangle(rect.x + stroke_correction / 2,
+            rect.y + stroke_correction / 2,
+            rect.width - stroke_correction / 2,
+            rect.height - stroke_correction / 2));
 
         g.setColor(borderColor);
         g.draw(rect);

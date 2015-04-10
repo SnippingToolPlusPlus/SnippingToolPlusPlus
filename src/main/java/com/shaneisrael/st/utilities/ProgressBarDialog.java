@@ -1,11 +1,10 @@
 package com.shaneisrael.st.utilities;
 
 import java.awt.BorderLayout;
-import java.awt.Window;
-
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JProgressBar;
+import javax.swing.WindowConstants;
 import javax.swing.border.EmptyBorder;
 
 import net.miginfocom.swing.MigLayout;
@@ -70,7 +69,7 @@ public class ProgressBarDialog extends JFrame
         this.setTitle(title);
         this.setResizable(false);
         this.setAlwaysOnTop(true);
-        this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        this.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
         this.setLocationRelativeTo(null);
         this.setVisible(true);
         

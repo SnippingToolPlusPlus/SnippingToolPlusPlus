@@ -1,7 +1,5 @@
 package com.shaneisrael.st.data;
 
-import static org.junit.Assert.assertEquals;
-
 import org.junit.Test;
 
 public class PreferencesTests
