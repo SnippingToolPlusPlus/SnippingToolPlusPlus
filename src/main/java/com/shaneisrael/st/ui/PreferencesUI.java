@@ -177,6 +177,7 @@ public class PreferencesUI
     private void initialize()
     {
         frmPreferences = new JFrame();
+        frmPreferences.getContentPane().setBackground(Color.WHITE);
         frmPreferences.getContentPane().setEnabled(false);
         frmPreferences.setIconImage(Toolkit.getDefaultToolkit().getImage(
             PreferencesUI.class.getResource("/images/icons/pref.png")));
@@ -187,9 +188,11 @@ public class PreferencesUI
             new MigLayout("", "[430.00px]", "[244.00px,grow,baseline][][20.00,grow]"));
 
         JTabbedPane tabbedPane = new JTabbedPane(SwingConstants.TOP);
+        tabbedPane.setBackground(Color.WHITE);
         frmPreferences.getContentPane().add(tabbedPane, "cell 0 0,growy");
 
         JPanel tab1 = new JPanel();
+        tab1.setBackground(Color.WHITE);
         tabbedPane.addTab("General", null, tab1, null);
         tab1.setLayout(new MigLayout("", "[206.00][44.00]", "[15.00][][][][]"));
 
@@ -197,6 +200,7 @@ public class PreferencesUI
         tab1.add(lblLocalSaveDirectory, "cell 0 0");
 
         directoryField = new JTextField();
+        directoryField.setBackground(Color.WHITE);
         directoryField.setEditable(false);
         tab1.add(directoryField, "flowy,cell 0 1,growx");
         directoryField.setColumns(10);
@@ -273,14 +277,17 @@ public class PreferencesUI
         tab1.add(separator, "cell 0 6 2 1,grow");
 
         JPanel tab2 = new JPanel();
+        tab2.setBackground(Color.WHITE);
         tabbedPane.addTab("Snippet", null, tab2, null);
-        tab2.setLayout(new MigLayout("", "[123.00,grow]", "[][][][24.00][][39.00][]"));
+        tab2.setLayout(new MigLayout("", "[123.00,grow]", "[][][][24.00][][][27.00][]"));
 
         chckbxEnableEditor = new JCheckBox("Enable Editor");
+        chckbxEnableEditor.setBackground(Color.WHITE);
         chckbxEnableEditor.setSelected(true);
         tab2.add(chckbxEnableEditor, "cell 0 0");
 
         chckbxAutosaveUploads = new JCheckBox("Auto-Save Uploads");
+        chckbxAutosaveUploads.setBackground(Color.WHITE);
         chckbxAutosaveUploads.setSelected(true);
         tab2.add(chckbxAutosaveUploads, "cell 0 1");
 
@@ -293,6 +300,7 @@ public class PreferencesUI
         tab2.add(lblDefaultTool, "flowx,cell 0 3");
 
         qualitySlider = new JSlider();
+        qualitySlider.setBackground(Color.WHITE);
         qualitySlider.setToolTipText("Higher quality = Larger file size");
         qualitySlider.setPaintLabels(true);
         qualitySlider.setValue(100);
@@ -300,16 +308,20 @@ public class PreferencesUI
         qualitySlider.setMajorTickSpacing(25);
         tab2.add(qualitySlider, "cell 0 4");
         
+        JSeparator separator_7 = new JSeparator();
+        tab2.add(separator_7, "cell 0 5,growx");
+        
         JLabel lblPrimaryImageHost = new JLabel("Primary Image Host");
         lblPrimaryImageHost.setToolTipText("Reduces file size decreasing the time it takes to upload.");
-        lblPrimaryImageHost.setFont(new Font("Tahoma", Font.BOLD, 16));
-        tab2.add(lblPrimaryImageHost, "cell 0 5");
+        lblPrimaryImageHost.setFont(new Font("Tahoma", Font.PLAIN, 16));
+        tab2.add(lblPrimaryImageHost, "flowx,cell 0 6");
         
         providerBox = new JComboBox();
         providerBox.setModel(new DefaultComboBoxModel(new String[] {"Stppl.us", "Imgur.com"}));
-        tab2.add(providerBox, "cell 0 6,alignx left");
+        tab2.add(providerBox, "cell 0 7,alignx left");
 
         JPanel tab4 = new JPanel();
+        tab4.setBackground(Color.WHITE);
         tabbedPane.addTab("FTP", null, tab4, null);
         tab4.setLayout(new MigLayout("", "[84.00][266.00]", "[][][27.00][][][-17.00][][]"));
 
@@ -392,14 +404,17 @@ public class PreferencesUI
         tab4.add(separator_5, "cell 0 4 2 1,growx");
 
         chckbxAlwaysSaveToFTP = new JCheckBox("Backup to FTP");
+        chckbxAlwaysSaveToFTP.setBackground(Color.WHITE);
         chckbxAlwaysSaveToFTP.setToolTipText("Will save a copy of the image to the desired server via FTP");
         tab4.add(chckbxAlwaysSaveToFTP, "cell 1 6");
 
         chckbxGenerateTimestamp = new JCheckBox("Timestamp as file name");
+        chckbxGenerateTimestamp.setBackground(Color.WHITE);
         chckbxGenerateTimestamp.setSelected(true);
         tab4.add(chckbxGenerateTimestamp, "cell 1 7");
 
         JPanel tab5 = new JPanel();
+        tab5.setBackground(Color.WHITE);
         tabbedPane.addTab("Stats/Keysets", null, tab5, null);
         tab5.setLayout(new MigLayout("", "[161.00,grow][165.00,grow]", "[32.00][26.00][][][][][]"));
 
@@ -591,6 +606,7 @@ public class PreferencesUI
         tab5.add(btnImport, "cell 1 2");
 
         chckbxDontTrackUseage = new JCheckBox("Don't send statistics data");
+        chckbxDontTrackUseage.setBackground(Color.WHITE);
         tab5.add(chckbxDontTrackUseage, "cell 1 6,alignx right");
 
         JButton btnUseDefault = new JButton("Use default keys");
@@ -610,9 +626,9 @@ public class PreferencesUI
         tab3.setLayout(new BorderLayout(0, 0));
 
         JPanel panel_1 = new JPanel();
+        panel_1.setBackground(Color.WHITE);
         // tab3.add(panel_1, BorderLayout.CENTER);
-        panel_1.setLayout(new MigLayout("", "[31.00,leading][83.00,grow,leading][81.00,grow]",
-            "[][][][][][][][][][][][][17.00][19.00][][][][][][][]"));
+        panel_1.setLayout(new MigLayout("", "[31.00,leading][83.00,grow,leading][81.00,grow]", "[][][][][][][][][][][][][][][][17.00][19.00][][][][][][][]"));
 
         JLabel lblEditor = new JLabel("Editor");
         lblEditor.setFont(new Font("Tahoma", Font.BOLD, 18));
@@ -644,17 +660,41 @@ public class PreferencesUI
         JLabel lblEscape = new JLabel("ESCAPE ");
         lblEscape.setFont(new Font("Tahoma", Font.BOLD, 11));
         panel_1.add(lblEscape, "cell 1 4");
+        
+        JLabel lblCopyImageTo = new JLabel("Copy Image");
+        lblCopyImageTo.setFont(new Font("Tahoma", Font.PLAIN, 13));
+        panel_1.add(lblCopyImageTo, "cell 0 5");
+        
+        JLabel lblCtrlc = new JLabel("CTRL+C");
+        lblCtrlc.setFont(new Font("Tahoma", Font.BOLD, 11));
+        panel_1.add(lblCtrlc, "cell 1 5");
+        
+        JLabel lblUndoEdit = new JLabel("Undo Edit");
+        lblUndoEdit.setFont(new Font("Tahoma", Font.PLAIN, 13));
+        panel_1.add(lblUndoEdit, "cell 0 6");
+        
+        JLabel lblCtrlz = new JLabel("CTRL+Z");
+        lblCtrlz.setFont(new Font("Tahoma", Font.BOLD, 11));
+        panel_1.add(lblCtrlz, "cell 1 6");
+        
+        JLabel lblRedoEdit = new JLabel("Redo Edit");
+        lblRedoEdit.setFont(new Font("Tahoma", Font.PLAIN, 13));
+        panel_1.add(lblRedoEdit, "cell 0 7");
+        
+        JLabel lblCtrly = new JLabel("CTRL+Y");
+        lblCtrly.setFont(new Font("Tahoma", Font.BOLD, 11));
+        panel_1.add(lblCtrly, "cell 1 7");
 
         JLabel lblGlobalHotkeys = new JLabel("Global Hotkeys");
         lblGlobalHotkeys.setFont(new Font("Tahoma", Font.BOLD, 18));
-        panel_1.add(lblGlobalHotkeys, "cell 0 5");
+        panel_1.add(lblGlobalHotkeys, "cell 0 8");
 
         JSeparator separator_4 = new JSeparator();
-        panel_1.add(separator_4, "cell 0 6 2 1,grow");
+        panel_1.add(separator_4, "cell 0 9 2 1,grow");
 
         JLabel lblUploadSnippet = new JLabel("Upload Snippet");
         lblUploadSnippet.setFont(new Font("Tahoma", Font.PLAIN, 13));
-        panel_1.add(lblUploadSnippet, "cell 0 7,alignx leading");
+        panel_1.add(lblUploadSnippet, "cell 0 10,alignx leading");
 
         upModBox1 = new JComboBox();
         upModBox1.addItemListener(new ItemListener()
@@ -666,7 +706,7 @@ public class PreferencesUI
             }
         });
         upModBox1.setModel(new DefaultComboBoxModel(Hotkeys.MODIFIER_KEYS));
-        panel_1.add(upModBox1, "flowx,cell 1 7");
+        panel_1.add(upModBox1, "flowx,cell 1 10");
 
         upKeyField = new JTextField();
         upKeyField.setText("NONE");
@@ -706,12 +746,12 @@ public class PreferencesUI
                 upKeyField.setBackground(Color.white);
             }
         });
-        panel_1.add(upKeyField, "cell 2 7");
+        panel_1.add(upKeyField, "cell 2 10");
         upKeyField.setColumns(10);
 
         JLabel lblUploadScreenshot = new JLabel("Upload Screenshot");
         lblUploadScreenshot.setFont(new Font("Tahoma", Font.PLAIN, 13));
-        panel_1.add(lblUploadScreenshot, "cell 0 8,alignx leading");
+        panel_1.add(lblUploadScreenshot, "cell 0 11,alignx leading");
 
         upScreenModBox1 = new JComboBox(Hotkeys.MODIFIER_KEYS);
         upScreenModBox1.addItemListener(new ItemListener()
@@ -722,7 +762,7 @@ public class PreferencesUI
                 hotkeyMods1[Config.UPLOAD_SCREEN_ID] = Hotkeys.getHotkeyMod(upScreenModBox1.getSelectedIndex());
             }
         });
-        panel_1.add(upScreenModBox1, "flowx,cell 1 8");
+        panel_1.add(upScreenModBox1, "flowx,cell 1 11");
 
         upScreenKeyField = new JTextField();
         upScreenKeyField.setText("NONE");
@@ -762,11 +802,11 @@ public class PreferencesUI
                 upScreenKeyField.setBackground(Color.white);
             }
         });
-        panel_1.add(upScreenKeyField, "cell 2 8,growx");
+        panel_1.add(upScreenKeyField, "cell 2 11,growx");
 
         JLabel lblUploadClipboard = new JLabel("Upload Clipboard Img");
         lblUploadClipboard.setFont(new Font("Tahoma", Font.PLAIN, 13));
-        panel_1.add(lblUploadClipboard, "cell 0 9,alignx leading");
+        panel_1.add(lblUploadClipboard, "cell 0 12,alignx leading");
 
         upClipModBox1 = new JComboBox(Hotkeys.MODIFIER_KEYS);
         upClipModBox1.addItemListener(new ItemListener()
@@ -777,7 +817,7 @@ public class PreferencesUI
                 hotkeyMods1[Config.UPLOAD_CLIPBOARD_ID] = Hotkeys.getHotkeyMod(upClipModBox1.getSelectedIndex());
             }
         });
-        panel_1.add(upClipModBox1, "flowx,cell 1 9");
+        panel_1.add(upClipModBox1, "flowx,cell 1 12");
 
         upClipKeyField = new JTextField();
         upClipKeyField.setText("NONE");
@@ -817,11 +857,11 @@ public class PreferencesUI
                 upClipKeyField.setBackground(Color.white);
             }
         });
-        panel_1.add(upClipKeyField, "cell 2 9,growx");
+        panel_1.add(upClipKeyField, "cell 2 12,growx");
 
         JLabel lblSaveSnippet = new JLabel("Save Snippet");
         lblSaveSnippet.setFont(new Font("Tahoma", Font.PLAIN, 13));
-        panel_1.add(lblSaveSnippet, "cell 0 10,alignx leading");
+        panel_1.add(lblSaveSnippet, "cell 0 13,alignx leading");
 
         saveModBox1 = new JComboBox(Hotkeys.MODIFIER_KEYS);
         saveModBox1.addItemListener(new ItemListener()
@@ -832,7 +872,7 @@ public class PreferencesUI
                 hotkeyMods1[Config.SAVE_SNIPPET_ID] = Hotkeys.getHotkeyMod(saveModBox1.getSelectedIndex());
             }
         });
-        panel_1.add(saveModBox1, "flowx,cell 1 10");
+        panel_1.add(saveModBox1, "flowx,cell 1 13");
 
         saveKeyField = new JTextField();
         saveKeyField.setText("NONE");
@@ -872,11 +912,11 @@ public class PreferencesUI
                 saveKeyField.setBackground(Color.white);
             }
         });
-        panel_1.add(saveKeyField, "cell 2 10,growx");
+        panel_1.add(saveKeyField, "cell 2 13,growx");
 
         JLabel lblSaveScreenshot = new JLabel("Save Screenshot");
         lblSaveScreenshot.setFont(new Font("Tahoma", Font.PLAIN, 13));
-        panel_1.add(lblSaveScreenshot, "cell 0 11,alignx leading");
+        panel_1.add(lblSaveScreenshot, "cell 0 14,alignx leading");
 
         JScrollPane scrollPane = new JScrollPane(panel_1);
 
@@ -889,7 +929,7 @@ public class PreferencesUI
                 hotkeyMods1[Config.SAVE_SCREEN_ID] = Hotkeys.getHotkeyMod(saveScreenModBox1.getSelectedIndex());
             }
         });
-        panel_1.add(saveScreenModBox1, "flowx,cell 1 11");
+        panel_1.add(saveScreenModBox1, "flowx,cell 1 14");
 
         saveScreenKeyField = new JTextField();
         saveScreenKeyField.setText("NONE");
@@ -929,10 +969,10 @@ public class PreferencesUI
                 saveScreenKeyField.setBackground(Color.white);
             }
         });
-        panel_1.add(saveScreenKeyField, "cell 2 11,growx");
+        panel_1.add(saveScreenKeyField, "cell 2 14,growx");
 
         JLabel lblFtpUploadSnippet = new JLabel("FTP Upload Snippet");
-        panel_1.add(lblFtpUploadSnippet, "cell 0 12,alignx leading");
+        panel_1.add(lblFtpUploadSnippet, "cell 0 15,alignx leading");
 
         ftpModBox1 = new JComboBox(Hotkeys.MODIFIER_KEYS);
         ftpModBox1.addItemListener(new ItemListener()
@@ -943,7 +983,7 @@ public class PreferencesUI
                 hotkeyMods1[Config.FTP_UPLOAD_SNIPPET_ID] = Hotkeys.getHotkeyMod(ftpModBox1.getSelectedIndex());
             }
         });
-        panel_1.add(ftpModBox1, "flowx,cell 1 12");
+        panel_1.add(ftpModBox1, "flowx,cell 1 15");
 
         ftpKeyField = new JTextField();
         ftpKeyField.setText("NONE");
@@ -983,10 +1023,10 @@ public class PreferencesUI
                 ftpKeyField.setBackground(Color.white);
             }
         });
-        panel_1.add(ftpKeyField, "cell 2 12,growx");
+        panel_1.add(ftpKeyField, "cell 2 15,growx");
 
         JLabel lblFtpUploadScreenshot = new JLabel("FTP Upload Screen");
-        panel_1.add(lblFtpUploadScreenshot, "cell 0 13,alignx leading");
+        panel_1.add(lblFtpUploadScreenshot, "cell 0 16,alignx leading");
 
         ftpScreenModBox1 = new JComboBox(Hotkeys.MODIFIER_KEYS);
         ftpScreenModBox1.addItemListener(new ItemListener()
@@ -997,7 +1037,7 @@ public class PreferencesUI
                 hotkeyMods1[Config.FTP_UPLOAD_SCREEN_ID] = Hotkeys.getHotkeyMod(ftpScreenModBox1.getSelectedIndex());
             }
         });
-        panel_1.add(ftpScreenModBox1, "flowx,cell 1 13");
+        panel_1.add(ftpScreenModBox1, "flowx,cell 1 16");
 
         ftpScreenKeyField = new JTextField();
         ftpScreenKeyField.setText("NONE");
@@ -1037,52 +1077,52 @@ public class PreferencesUI
                 ftpScreenKeyField.setBackground(Color.white);
             }
         });
-        panel_1.add(ftpScreenKeyField, "cell 2 13,growx");
+        panel_1.add(ftpScreenKeyField, "cell 2 16,growx");
 
         JLabel lblOverlayControls = new JLabel("Overlay");
         lblOverlayControls.setFont(new Font("Tahoma", Font.BOLD, 18));
-        panel_1.add(lblOverlayControls, "cell 0 14");
+        panel_1.add(lblOverlayControls, "cell 0 17");
 
         JSeparator separator_2 = new JSeparator();
-        panel_1.add(separator_2, "cell 0 15 2 1,growx");
+        panel_1.add(separator_2, "cell 0 18 2 1,growx");
 
         JLabel lblZoomMagnifierInout = new JLabel("Magnifier Zoom");
         lblZoomMagnifierInout.setFont(new Font("Tahoma", Font.PLAIN, 13));
-        panel_1.add(lblZoomMagnifierInout, "cell 0 16");
+        panel_1.add(lblZoomMagnifierInout, "cell 0 19");
 
         JLabel lblMouseWheel = new JLabel("MOUSE WHEEL");
         lblMouseWheel.setFont(new Font("Tahoma", Font.BOLD, 13));
-        panel_1.add(lblMouseWheel, "cell 1 16");
+        panel_1.add(lblMouseWheel, "cell 1 19");
 
         JLabel lblIncreaseTransparency = new JLabel("Overlay Opacity");
         lblIncreaseTransparency.setFont(new Font("Tahoma", Font.PLAIN, 13));
-        panel_1.add(lblIncreaseTransparency, "cell 0 17");
+        panel_1.add(lblIncreaseTransparency, "cell 0 20");
 
         JLabel lblMousewheelUp = new JLabel("MOUSE WHEEL");
         lblMousewheelUp.setFont(new Font("Tahoma", Font.BOLD, 13));
-        panel_1.add(lblMousewheelUp, "cell 1 17");
+        panel_1.add(lblMousewheelUp, "cell 1 20");
 
         JSeparator separator_6 = new JSeparator();
-        panel_1.add(separator_6, "cell 0 19 2 1,grow");
+        panel_1.add(separator_6, "cell 0 22 2 1,grow");
 
         JTextPane txtpnNote = new JTextPane();
         txtpnNote.setFont(new Font("Tahoma", Font.PLAIN, 13));
-        txtpnNote.setBackground(new Color(240, 240, 240));
+        txtpnNote.setBackground(Color.WHITE);
         txtpnNote.setEditable(false);
         txtpnNote
             .setText("* Note - To change overlay transparency, you must first hide the Magnifying Glass with [Right Click].");
-        panel_1.add(txtpnNote, "cell 0 20,growx");
+        panel_1.add(txtpnNote, "cell 0 23,growx");
 
         JLabel lblUpdateOverlay = new JLabel("Update Overlay");
         lblUpdateOverlay.setFont(new Font("Tahoma", Font.PLAIN, 13));
-        panel_1.add(lblUpdateOverlay, "cell 0 18");
+        panel_1.add(lblUpdateOverlay, "cell 0 21");
 
         JLabel lblMiddleClick = new JLabel("MIDDLE CLICK");
         lblMiddleClick.setFont(new Font("Tahoma", Font.BOLD, 13));
-        panel_1.add(lblMiddleClick, "cell 1 18");
+        panel_1.add(lblMiddleClick, "cell 1 21");
 
         JLabel label = new JLabel("+");
-        panel_1.add(label, "cell 1 7");
+        panel_1.add(label, "cell 1 10");
 
         upModBox2 = new JComboBox();
         upModBox2.setModel(new DefaultComboBoxModel(Hotkeys.MODIFIER_KEYS));
@@ -1094,13 +1134,13 @@ public class PreferencesUI
                 hotkeyMods2[Config.UPLOAD_SNIPPET_ID] = Hotkeys.getHotkeyMod(upModBox2.getSelectedIndex());
             }
         });
-        panel_1.add(upModBox2, "cell 1 7");
+        panel_1.add(upModBox2, "cell 1 10");
 
         JLabel label_1 = new JLabel("+");
-        panel_1.add(label_1, "cell 1 7");
+        panel_1.add(label_1, "cell 1 10");
 
         JLabel label_2 = new JLabel("+");
-        panel_1.add(label_2, "cell 1 8");
+        panel_1.add(label_2, "cell 1 11");
 
         upScreenModBox2 = new JComboBox(Hotkeys.MODIFIER_KEYS);
         upScreenModBox2.addItemListener(new ItemListener()
@@ -1111,13 +1151,13 @@ public class PreferencesUI
                 hotkeyMods2[Config.UPLOAD_SCREEN_ID] = Hotkeys.getHotkeyMod(upScreenModBox2.getSelectedIndex());
             }
         });
-        panel_1.add(upScreenModBox2, "cell 1 8");
+        panel_1.add(upScreenModBox2, "cell 1 11");
 
         JLabel label_3 = new JLabel("+");
-        panel_1.add(label_3, "cell 1 8");
+        panel_1.add(label_3, "cell 1 11");
 
         JLabel label_4 = new JLabel("+");
-        panel_1.add(label_4, "cell 1 9");
+        panel_1.add(label_4, "cell 1 12");
 
         upClipModBox2 = new JComboBox(Hotkeys.MODIFIER_KEYS);
         upClipModBox2.addItemListener(new ItemListener()
@@ -1128,13 +1168,13 @@ public class PreferencesUI
                 hotkeyMods2[Config.UPLOAD_CLIPBOARD_ID] = Hotkeys.getHotkeyMod(upClipModBox2.getSelectedIndex());
             }
         });
-        panel_1.add(upClipModBox2, "cell 1 9");
+        panel_1.add(upClipModBox2, "cell 1 12");
 
         JLabel label_5 = new JLabel("+");
-        panel_1.add(label_5, "cell 1 9");
+        panel_1.add(label_5, "cell 1 12");
 
         JLabel label_6 = new JLabel("+");
-        panel_1.add(label_6, "cell 1 10");
+        panel_1.add(label_6, "cell 1 13");
 
         saveModBox2 = new JComboBox(Hotkeys.MODIFIER_KEYS);
         saveModBox2.addItemListener(new ItemListener()
@@ -1145,13 +1185,13 @@ public class PreferencesUI
                 hotkeyMods2[Config.SAVE_SNIPPET_ID] = Hotkeys.getHotkeyMod(saveModBox2.getSelectedIndex());
             }
         });
-        panel_1.add(saveModBox2, "cell 1 10");
+        panel_1.add(saveModBox2, "cell 1 13");
 
         JLabel label_7 = new JLabel("+");
-        panel_1.add(label_7, "cell 1 10");
+        panel_1.add(label_7, "cell 1 13");
 
         JLabel label_8 = new JLabel("+");
-        panel_1.add(label_8, "cell 1 11");
+        panel_1.add(label_8, "cell 1 14");
 
         saveScreenModBox2 = new JComboBox(Hotkeys.MODIFIER_KEYS);
         saveScreenModBox2.addItemListener(new ItemListener()
@@ -1162,13 +1202,13 @@ public class PreferencesUI
                 hotkeyMods2[Config.SAVE_SCREEN_ID] = Hotkeys.getHotkeyMod(saveScreenModBox2.getSelectedIndex());
             }
         });
-        panel_1.add(saveScreenModBox2, "cell 1 11");
+        panel_1.add(saveScreenModBox2, "cell 1 14");
 
         JLabel label_9 = new JLabel("+");
-        panel_1.add(label_9, "cell 1 11");
+        panel_1.add(label_9, "cell 1 14");
 
         JLabel label_10 = new JLabel("+");
-        panel_1.add(label_10, "cell 1 12");
+        panel_1.add(label_10, "cell 1 15");
 
         ftpModBox2 = new JComboBox(Hotkeys.MODIFIER_KEYS);
         ftpModBox2.addItemListener(new ItemListener()
@@ -1179,13 +1219,13 @@ public class PreferencesUI
                 hotkeyMods2[Config.FTP_UPLOAD_SNIPPET_ID] = Hotkeys.getHotkeyMod(ftpModBox2.getSelectedIndex());
             }
         });
-        panel_1.add(ftpModBox2, "cell 1 12");
+        panel_1.add(ftpModBox2, "cell 1 15");
 
         JLabel label_11 = new JLabel("+");
-        panel_1.add(label_11, "cell 1 12");
+        panel_1.add(label_11, "cell 1 15");
 
         JLabel label_12 = new JLabel("+");
-        panel_1.add(label_12, "cell 1 13");
+        panel_1.add(label_12, "cell 1 16");
 
         ftpScreenModBox2 = new JComboBox(Hotkeys.MODIFIER_KEYS);
         ftpScreenModBox2.addItemListener(new ItemListener()
@@ -1196,10 +1236,10 @@ public class PreferencesUI
                 hotkeyMods2[Config.FTP_UPLOAD_SCREEN_ID] = Hotkeys.getHotkeyMod(ftpScreenModBox2.getSelectedIndex());
             }
         });
-        panel_1.add(ftpScreenModBox2, "cell 1 13");
+        panel_1.add(ftpScreenModBox2, "cell 1 16");
 
         JLabel label_13 = new JLabel("+");
-        panel_1.add(label_13, "cell 1 13");
+        panel_1.add(label_13, "cell 1 16");
         scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
         scrollPane.getVerticalScrollBar().setUnitIncrement(8);
         // scrollPane.setMaximumSize(new Dimension(200,100));

@@ -254,7 +254,7 @@ public class EditorPanel extends JPanel implements MouseMotionListener,
         {
             if (editor.fill())
             {
-                if(editor.shadow())
+                if (editor.shadow())
                     drawBorderedRoundRectangle(editG2D);
                 else
                     drawFilledRoundRectangle(editG2D);
@@ -265,7 +265,7 @@ public class EditorPanel extends JPanel implements MouseMotionListener,
         {
             if (editor.fill())
             {
-                if(editor.shadow())
+                if (editor.shadow())
                     drawBorderedEllipse(editG2D);
                 else
                     drawFilledEllipse(editG2D);
@@ -371,24 +371,38 @@ public class EditorPanel extends JPanel implements MouseMotionListener,
         return selection.getBounds();
     }
 
+    private void setStroke(Graphics2D g)
+    {
+
+        if (editor.dashed())
+        {
+            BasicStroke s = new BasicStroke(stroke,
+                BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER, miterLimit,
+                dashPattern, dashPhase);
+            g.setStroke(s);
+        }
+        else
+            g.setStroke(new BasicStroke(stroke));
+    }
+
     private void drawPenLine()
     {
         editG2D.setColor(fillColor);
-        editG2D.setStroke(new BasicStroke(stroke));
+        setStroke(editG2D);
         editG2D.drawLine(lastX, lastY, mx, my);
     }
 
     private void drawLine(Graphics2D g)
     {
         g.setColor(fillColor);
-        g.setStroke(new BasicStroke(stroke));
+        setStroke(g);
         g.drawLine(clickPoint.x, clickPoint.y, mx, my);
     }
 
     private void drawEllipse(Graphics2D g)
     {
         g.setColor(fillColor);
-        g.setStroke(new BasicStroke(stroke));
+        setStroke(g);
         Rectangle rect = draggedRect();
         g.drawOval(rect.x, rect.y, rect.width, rect.height);
     }
@@ -396,7 +410,7 @@ public class EditorPanel extends JPanel implements MouseMotionListener,
     private void drawFilledEllipse(Graphics2D g)
     {
         g.setColor(fillColor);
-        g.setStroke(new BasicStroke(stroke));
+        setStroke(g);
         Rectangle rect = draggedRect();
         g.fillOval(rect.x, rect.y, rect.width, rect.height);
     }
@@ -404,14 +418,14 @@ public class EditorPanel extends JPanel implements MouseMotionListener,
     private void drawRectangle(Graphics2D g)
     {
         g.setColor(fillColor);
-        g.setStroke(new BasicStroke(stroke));
+        setStroke(g);
         g.draw(draggedRect());
     }
 
     private void drawRoundRectangle(Graphics2D g)
     {
         g.setColor(fillColor);
-        g.setStroke(new BasicStroke(stroke));
+        setStroke(g);
         Rectangle rect = draggedRect();
         g.drawRoundRect(rect.x, rect.y, rect.width, rect.height,
             rect.height / 2, rect.height / 2);
@@ -420,7 +434,7 @@ public class EditorPanel extends JPanel implements MouseMotionListener,
     private void drawFilledRoundRectangle(Graphics2D g)
     {
         g.setColor(fillColor);
-        g.setStroke(new BasicStroke(stroke));
+        setStroke(g);
         Rectangle rect = draggedRect();
         g.fillRoundRect(rect.x, rect.y, rect.width, rect.height,
             rect.height / 2, rect.height / 2);
@@ -429,14 +443,14 @@ public class EditorPanel extends JPanel implements MouseMotionListener,
     private void drawFilledRectangle(Graphics2D g)
     {
         g.setColor(fillColor);
-        g.setStroke(new BasicStroke(stroke));
+        setStroke(g);
         g.fill(draggedRect());
     }
 
     private void drawBorderedRectangle(Graphics2D g)
     {
         Rectangle rect = draggedRect();
-        g.setStroke(new BasicStroke(stroke));
+        setStroke(g);
         Color shadow = new Color(borderColor.getRed(), borderColor.getGreen(),
             borderColor.getBlue(), 100);
         // Color last = g.getColor();
@@ -485,7 +499,7 @@ public class EditorPanel extends JPanel implements MouseMotionListener,
     private void drawBorderedRoundRectangle(Graphics2D g)
     {
         Rectangle rect = draggedRect();
-        g.setStroke(new BasicStroke(stroke));
+        setStroke(g);
 
         Color shadow = new Color(borderColor.getRed(), borderColor.getGreen(),
             borderColor.getBlue(), 100);
@@ -504,11 +518,11 @@ public class EditorPanel extends JPanel implements MouseMotionListener,
 
         g.setColor(fillColor);
     }
-    
+
     private void drawBorderedEllipse(Graphics2D g)
     {
         Rectangle rect = draggedRect();
-        g.setStroke(new BasicStroke(stroke));
+        setStroke(g);
         Color shadow = new Color(borderColor.getRed(), borderColor.getGreen(),
             borderColor.getBlue(), 100);
         // Color last = g.getColor();
@@ -559,8 +573,11 @@ public class EditorPanel extends JPanel implements MouseMotionListener,
                 if (lines.length * g.getFontMetrics().getHeight() > selection
                     .getHeight() - g.getFontMetrics().getHeight())
                 {
-                    if (text.length() > 0)
-                        text = text.substring(0, text.length() - 1);
+                    selection.setFrame(new Rectangle((int) selection.getX(), (int) selection.getY(), (int) selection
+                        .getWidth(), (int) selection.getHeight() + g.getFontMetrics().getHeight()));
+                    clearTransparentLayer();
+                    drawSelectionRegion();
+
                 } else
                     lineWrapText();
         }
@@ -704,6 +721,26 @@ public class EditorPanel extends JPanel implements MouseMotionListener,
     public void addWriteText(char character)
     {
         this.text += character;
+        //If new lines are larger than the selection region, we increase the height of the selection
+        if (character == '\n')
+        {
+            int lines = 0;
+            for (int i = 0; i < text.length(); i++)
+                if (i + 1 < text.length())
+                {
+                    String temp = text.substring(i, i + 1);
+                    if (temp.equals("\n"))
+                        lines++;
+                }
+            if (lines * editG2D.getFontMetrics().getHeight() > selection
+                .getHeight() - editG2D.getFontMetrics().getHeight())
+            {
+                selection.setFrame(new Rectangle((int) selection.getX(), (int) selection.getY(), (int) selection
+                    .getWidth(), (int) selection.getHeight() + editG2D.getFontMetrics().getHeight()));
+                clearTransparentLayer();
+                drawSelectionRegion();
+            }
+        }
     }
 
     public void backspaceWriteText()

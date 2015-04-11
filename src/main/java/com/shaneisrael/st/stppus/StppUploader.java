@@ -81,7 +81,7 @@ public class StppUploader implements Runnable
             SnippingToolPlusPlus.trayIcon
                 .setImage(new ImageIcon(this.getClass().getResource("/images/trayIconMac.png")).getImage());
         }
-
+        NotificationManager.getInstance().showNotification("upload-done", STNotificationType.SUCCESS);
         image = null;
     }
 

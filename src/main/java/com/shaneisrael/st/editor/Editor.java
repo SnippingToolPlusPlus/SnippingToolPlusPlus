@@ -13,6 +13,8 @@ import java.awt.Toolkit;
 import java.awt.Window.Type;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.FocusEvent;
+import java.awt.event.FocusListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -36,12 +38,12 @@ import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
 import javax.swing.JRadioButtonMenuItem;
 import javax.swing.JScrollPane;
-import javax.swing.JSlider;
+import javax.swing.JTextField;
 import javax.swing.JToggleButton;
 import javax.swing.KeyStroke;
+import javax.swing.SwingConstants;
 import javax.swing.UIManager;
 import javax.swing.WindowConstants;
-import javax.swing.border.EmptyBorder;
 import javax.swing.border.EtchedBorder;
 import javax.swing.border.LineBorder;
 import javax.swing.border.TitledBorder;
@@ -50,6 +52,7 @@ import net.miginfocom.swing.MigLayout;
 
 import com.shaneisrael.st.overlay.Overlay;
 import com.shaneisrael.st.upload.SimpleFTPUploader;
+import com.shaneisrael.st.utilities.ClipboardUtilities;
 import com.shaneisrael.st.utilities.ImageUtilities;
 import com.shaneisrael.st.utilities.Save;
 import com.shaneisrael.st.utilities.Upload;
@@ -58,16 +61,14 @@ public class Editor
 {
 
     private JPanel editorPanel;
-    private JButton btnReset, blurToolBtn, textToolBtn, toggleButton_8, toggleButton_9;
+    private JButton btnReset, blurToolBtn, textToolBtn;
     private JMenuItem mntmRedo, mntmUndo;
     private JToggleButton btnSelect;
     private JCheckBox chckbxShadow, chckbxFilled;
     JFrame frmEditor;
-    private Color fillColor;
-    private Color borderColor;
+    private Color fillColor = Color.red;
+    private Color borderColor = Color.black;
     private JColorChooser colorChooser;
-    private JSlider opacitySlider;
-    private JSlider strokeSlider;
     private JLayeredPane layeredPane;
 
     private ButtonGroup toolGroup;
@@ -84,6 +85,9 @@ public class Editor
     private JRadioButtonMenuItem rdbtnmntmBold;
     private JRadioButtonMenuItem rdbtnmntmItalic;
     private final ButtonGroup buttonGroup = new ButtonGroup();
+    private JTextField opacityField;
+    private JTextField strokeField;
+    private JCheckBox chckbxDashed;
 
     /**
      * Create the application.
@@ -114,6 +118,12 @@ public class Editor
                 ImageUtilities.saveTemporarily(getEditedImage()));
         }
 
+        exit();
+    }
+    
+    public void submitToReddit()
+    {
+        upload = new Upload(getEditedImage(), true);
         exit();
     }
 
@@ -160,8 +170,8 @@ public class Editor
         frmEditor = new JFrame();
         frmEditor.setType(Type.NORMAL);
         frmEditor.setTitle("Editor");
-        frmEditor.setSize(image.getWidth(), image.getHeight());
-        frmEditor.setMinimumSize(new Dimension(1260, 400));
+        frmEditor.setMinimumSize(new Dimension(900, 400));
+        frmEditor.setSize(img.getWidth(), img.getHeight() + 200);
         frmEditor.setIconImage(Toolkit.getDefaultToolkit().getImage(
             Editor.class.getResource("/images/icons/utilities.png")));
         frmEditor.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
@@ -182,6 +192,9 @@ public class Editor
                             break;
                         case KeyEvent.VK_Y:
                             ((EditorPanel) editorPanel).redo();
+                            break;
+                        case KeyEvent.VK_C:
+                            copyImageToClipboard();
                             break;
                         }
                     }
@@ -225,7 +238,7 @@ public class Editor
                             else if (e.getKeyChar() == KeyEvent.VK_SPACE)
                                 ((EditorPanel) editorPanel).addWriteText(' ');
                             else if (e.getKeyChar() == KeyEvent.VK_ENTER)
-                                ((EditorPanel) editorPanel).submitText();
+                                ((EditorPanel) editorPanel).addWriteText('\n');
                             else
                                 ((EditorPanel) editorPanel).addWriteText((e.getKeyChar()));
 
@@ -237,6 +250,9 @@ public class Editor
                         {
                         case KeyEvent.VK_ESCAPE:
                             exit();
+                            break;
+                        case KeyEvent.VK_F10:
+                            submitToReddit();
                             break;
                         }
                     }
@@ -260,20 +276,91 @@ public class Editor
         toolPanel.setBackground(Color.WHITE);
         toolPanel.setForeground(Color.BLACK);
         panel.add(toolPanel, "cell 0 0,grow");
-        toolPanel.setLayout(new MigLayout("", "[110.00,leading][][][][51.00][120.00][][][][][52.00][][][][][][]",
-            "[66.00,grow]"));
-
-        opacitySlider = new JSlider();
-        opacitySlider.setBackground(Color.WHITE);
-        opacitySlider.setMinorTickSpacing(5);
-
-        toolPanel.add(opacitySlider, "cell 1 0");
-
-        strokeSlider = new JSlider();
-        strokeSlider.setPaintTicks(true);
-        strokeSlider.setPaintLabels(true);
-        strokeSlider.setBackground(Color.WHITE);
-        toolPanel.add(strokeSlider, "cell 2 0");
+        toolPanel.setLayout(new MigLayout("", "[103.00,leading][85.00][51.00][120.00][43.00][][]", "[60.00,grow]"));
+        
+        JLabel lblStroke = new JLabel("Stroke");
+        toolPanel.add(lblStroke, "flowy,cell 1 0,aligny top");
+        
+        strokeField = new JTextField();
+        strokeField.setText("3");
+        toolPanel.add(strokeField, "cell 1 0");
+        strokeField.setColumns(10);
+        strokeField.addActionListener(new ActionListener()
+        {
+            
+            @Override
+            public void actionPerformed(ActionEvent e)
+            {
+                String value = strokeField.getText();
+                
+                if(value.matches("^-?\\d+$"))
+                {
+                    if (Integer.parseInt(value)<0){
+                        strokeField.setText("0");
+                    }
+                    else if(Integer.parseInt(value)>100)
+                    {
+                        strokeField.setText("100");
+                    }
+                    else
+                        strokeField.setText(value);
+                }
+                else
+                {
+                    strokeField.setText("100");
+                }
+                
+                ((EditorPanel) editorPanel).setStroke(getStrokeSliderValue());
+            }
+        });
+        strokeField.addFocusListener(new FocusListener()
+        {
+            
+            @Override
+            public void focusLost(FocusEvent e)
+            {
+                update();
+                
+            }
+            
+            @Override
+            public void focusGained(FocusEvent e)
+            {
+                // TODO Auto-generated method stub
+                
+            }
+            public void update() {
+                String value = strokeField.getText();
+                
+                if(value.matches("^-?\\d+$"))
+                {
+                    if (Integer.parseInt(value)<0){
+                        strokeField.setText("0");
+                    }
+                    else if(Integer.parseInt(value)>100)
+                    {
+                        strokeField.setText("100");
+                    }
+                    else
+                        strokeField.setText(value);
+                }
+                else
+                {
+                    strokeField.setText("100");
+                }
+                
+                ((EditorPanel) editorPanel).setStroke(getStrokeSliderValue());
+            }
+        });
+        
+        JLabel lblOpacity = new JLabel("Opacity");
+        toolPanel.add(lblOpacity, "cell 1 0");
+        
+        opacityField = new JTextField();
+        opacityField.setHorizontalAlignment(SwingConstants.LEFT);
+        opacityField.setText("100%");
+        toolPanel.add(opacityField, "cell 1 0");
+        opacityField.setColumns(10);
 
         final ColorSelectionPanel fillColorPanel = new ColorSelectionPanel();
         final ColorSelectionPanel borderColorPanel = new ColorSelectionPanel();
@@ -301,7 +388,7 @@ public class Editor
                     fillColor = new Color(c.getRed(), c.getGreen(),
                         c.getBlue(), c.getAlpha());
                     if (c.getTransparency() != 1.0)
-                        opacitySlider.setValue(c.getTransparency() * 10);
+                        opacityField.setText(""+c.getTransparency() * 10);
                     ((EditorPanel) editorPanel).setColor(fillColor);
                     fillColorPanel.setColor(new Color(c.getRed(), c.getGreen(),
                         c.getBlue(), getOpacitySliderValue()));
@@ -331,7 +418,7 @@ public class Editor
                     borderColor = new Color(c.getRed(), c.getGreen(), c
                         .getBlue(), c.getAlpha());
                     if (c.getTransparency() != 1.0)
-                        opacitySlider.setValue(c.getTransparency() * 10);
+                        opacityField.setText(""+c.getTransparency() * 10);
                     ((EditorPanel) editorPanel).setBorderColor(borderColor);
                     borderColorPanel.setColor(new Color(c.getRed(), c
                         .getGreen(), c.getBlue(), getOpacitySliderValue()));
@@ -341,12 +428,53 @@ public class Editor
             }
         });
         layeredPane.add(borderColorPanel);
+        // Create the label table
+        Hashtable<Integer, JLabel> labelTable = new Hashtable<>();
+        labelTable.put(new Integer(0), new JLabel("0%"));
+        labelTable.put(new Integer(50), new JLabel("50%"));
+        labelTable.put(new Integer(100), new JLabel("100%"));
 
-        opacitySlider.addMouseListener(new MouseAdapter()
+        // Create the label table
+        Hashtable<Integer, JLabel> labelTable2 = new Hashtable<>();
+        labelTable2.put(new Integer(0), new JLabel("0"));
+        labelTable2.put(new Integer(10), new JLabel("1"));
+        labelTable2.put(new Integer(20), new JLabel("2"));
+        labelTable2.put(new Integer(30), new JLabel("3"));
+        labelTable2.put(new Integer(40), new JLabel("4"));
+        labelTable2.put(new Integer(50), new JLabel("5"));
+        labelTable2.put(new Integer(60), new JLabel("6"));
+        labelTable2.put(new Integer(70), new JLabel("7"));
+        labelTable2.put(new Integer(80), new JLabel("8"));
+        labelTable2.put(new Integer(90), new JLabel("9"));
+        labelTable2.put(new Integer(100), new JLabel("10"));
+
+        opacityField.addActionListener(new ActionListener()
         {
+            
             @Override
-            public void mouseReleased(MouseEvent e)
+            public void actionPerformed(ActionEvent e)
             {
+                String value = opacityField.getText();
+                if(value.contains("%"))
+                    value = value.substring(0, opacityField.getText().length()-1);
+                
+                if(value.matches("^-?\\d+$"))
+                {
+                    if (Integer.parseInt(value)<0){
+                        opacityField.setText("0%");
+                    }
+                    else if(Integer.parseInt(value)>100)
+                    {
+                        opacityField.setText("100%");
+                    }
+                    else
+                        opacityField.setText(value+"%");
+                }
+                else
+                {
+                    opacityField.setText("100%");
+                }
+                
                 if (JLayeredPane.getLayer(fillColorPanel) == 1)
                 {
                     ((EditorPanel) editorPanel).setTransparency(getOpacitySliderValue());
@@ -364,71 +492,64 @@ public class Editor
                 }
             }
         });
-        opacitySlider.setFont(new Font("Tahoma", Font.PLAIN, 11));
-        opacitySlider.setPaintTicks(true);
-        opacitySlider.setPaintLabels(true);
-        opacitySlider.setBorder(new TitledBorder(new EmptyBorder(0, 0, 0, 0), "Opacity Level", TitledBorder.TRAILING,
-            TitledBorder.BOTTOM, null, null));
-        opacitySlider.setToolTipText("Opacity level");
-        opacitySlider.setMajorTickSpacing(25);
-        opacitySlider.setValue(255);
-        // Create the label table
-        Hashtable<Integer, JLabel> labelTable = new Hashtable<>();
-        labelTable.put(new Integer(0), new JLabel("0%"));
-        labelTable.put(new Integer(50), new JLabel("50%"));
-        labelTable.put(new Integer(100), new JLabel("100%"));
-        opacitySlider.setLabelTable(labelTable);
-
-        // Create the label table
-        Hashtable<Integer, JLabel> labelTable2 = new Hashtable<>();
-        labelTable2.put(new Integer(0), new JLabel("0"));
-        labelTable2.put(new Integer(10), new JLabel("1"));
-        labelTable2.put(new Integer(20), new JLabel("2"));
-        labelTable2.put(new Integer(30), new JLabel("3"));
-        labelTable2.put(new Integer(40), new JLabel("4"));
-        labelTable2.put(new Integer(50), new JLabel("5"));
-        labelTable2.put(new Integer(60), new JLabel("6"));
-        labelTable2.put(new Integer(70), new JLabel("7"));
-        labelTable2.put(new Integer(80), new JLabel("8"));
-        labelTable2.put(new Integer(90), new JLabel("9"));
-        labelTable2.put(new Integer(100), new JLabel("10"));
-
-        strokeSlider.setBorder(new TitledBorder(new EmptyBorder(0, 0, 0, 0), "Stroke Size", TitledBorder.TRAILING,
-            TitledBorder.BOTTOM, null, null));
-        strokeSlider.setMinorTickSpacing(5);
-        strokeSlider.setToolTipText("Stroke Width");
-        strokeSlider.setMajorTickSpacing(10);
-        strokeSlider.setValue(30);
-        strokeSlider.setLabelTable(labelTable2);
-        strokeSlider.addMouseListener(new MouseAdapter()
+        opacityField.addFocusListener(new FocusListener()
         {
+            
             @Override
-            public void mouseReleased(MouseEvent e)
+            public void focusLost(FocusEvent e)
             {
-                ((EditorPanel) editorPanel).setStroke(getStrokeSliderValue());
+                update();
+                
             }
-        });
-
-        btnSelect = new JToggleButton("");
-        btnSelect.setIcon(new ImageIcon(Editor.class.getResource("/images/icons/buttons/select.png")));
-        btnSelect.setBackground(Color.WHITE);
-        btnSelect.setBorderPainted(false);
-        btnSelect.setFocusPainted(false);
-        btnSelect.setOpaque(false);
-        btnSelect.addActionListener(new ActionListener()
-        {
-
+            
             @Override
-            public void actionPerformed(ActionEvent e)
+            public void focusGained(FocusEvent e)
             {
-                ((EditorPanel) editorPanel).setTool("select");
+                // TODO Auto-generated method stub
+                
             }
+            public void update() {
+                String value = opacityField.getText();
+                if(value.contains("%"))
+                    value = value.substring(0, opacityField.getText().length()-1);
+                
+                if(value.matches("^-?\\d+$"))
+                {
+                    if (Integer.parseInt(value)<0){
+                        opacityField.setText("0%");
+                    }
+                    else if(Integer.parseInt(value)>100)
+                    {
+                        opacityField.setText("100%");
+                    }
+                    else
+                        opacityField.setText(value+"%");
+                }
+                else
+                {
+                    opacityField.setText("100%");
+                }
+                if (JLayeredPane.getLayer(fillColorPanel) == 1)
+                {
+                    ((EditorPanel) editorPanel).setTransparency(getOpacitySliderValue());
+                    fillColorPanel.setColor(new Color(fillColorPanel.getColor()
+                        .getRed(), fillColorPanel.getColor().getGreen(),
+                        fillColorPanel.getColor().getBlue(),
+                        getOpacitySliderValue()));
+                } else if (JLayeredPane.getLayer(borderColorPanel) == 1)
+                {
+                    ((EditorPanel) editorPanel).setBorderTransparency(getOpacitySliderValue());
+                    borderColorPanel.setColor(new Color(borderColorPanel
+                        .getColor().getRed(), borderColorPanel.getColor()
+                        .getGreen(), borderColorPanel.getColor().getBlue(),
+                        getOpacitySliderValue()));
+                }
+
+             }
         });
-        //btnSelect.setContentAreaFilled(false);
-        toolGroup.add(btnSelect);
-        toolPanel.add(btnSelect, "cell 3 0");
 
         JToggleButton pencilButton = new JToggleButton("");
+        pencilButton.setVerticalAlignment(SwingConstants.TOP);
         pencilButton.setBackground(Color.white);
         pencilButton.setFocusPainted(false);
         pencilButton.setSelected(true);
@@ -443,12 +564,11 @@ public class Editor
             }
         });
         pencilButton.setIcon(new ImageIcon(Editor.class.getResource("/images/icons/buttons/pencil.png")));
-        toolPanel.add(pencilButton, "cell 4 0");
+        toolPanel.add(pencilButton, "cell 2 0,aligny top");
 
         JPanel shapePanel = new JPanel();
         shapePanel.setBackground(Color.WHITE);
-        shapePanel.setBorder(new TitledBorder(null, "Shapes", TitledBorder.TRAILING, TitledBorder.BOTTOM, null, null));
-        toolPanel.add(shapePanel, "cell 5 0");
+        toolPanel.add(shapePanel, "cell 3 0,aligny top");
         shapePanel.setLayout(new GridLayout(0, 2, 0, 0));
 
         JToggleButton lineButton = new JToggleButton();
@@ -514,21 +634,25 @@ public class Editor
         ellipseButton.setFocusPainted(false);
         toolGroup.add(ellipseButton);
         shapePanel.add(ellipseButton);
+        
+        chckbxDashed = new JCheckBox("Dashed");
+        chckbxDashed.setBackground(Color.WHITE);
+        toolPanel.add(chckbxDashed, "flowy,cell 4 0");
 
         chckbxFilled = new JCheckBox("Filled");
         chckbxFilled.setBackground(Color.WHITE);
         chckbxFilled.setFocusPainted(false);
-        toolPanel.add(chckbxFilled, "flowy,cell 6 0,growx");
+        toolPanel.add(chckbxFilled, "cell 4 0,growx,aligny top");
 
         JPanel editingToolsPanel = new JPanel();
         editingToolsPanel.setBorder(new TitledBorder(UIManager.getBorder("TitledBorder.border"), "Tools",
             TitledBorder.TRAILING, TitledBorder.BOTTOM, null, null));
         editingToolsPanel.setBackground(Color.WHITE);
-        toolPanel.add(editingToolsPanel, "cell 7 0,grow");
-        editingToolsPanel.setLayout(new GridLayout(0, 2, 0, 0));
+        toolPanel.add(editingToolsPanel, "cell 5 0,growx,aligny top");
+        editingToolsPanel.setLayout(new GridLayout(0, 3, 0, 0));
 
         textToolBtn = new JButton("T");
-        textToolBtn.setFont(new Font("Georgia", Font.BOLD, 16));
+        textToolBtn.setFont(new Font("Georgia", Font.BOLD, 36));
         textToolBtn.setToolTipText("Write text");
         textToolBtn.setFocusPainted(false);
         textToolBtn.setFocusable(false);
@@ -547,6 +671,25 @@ public class Editor
 
             }
         });
+        
+        btnSelect = new JToggleButton("");
+        editingToolsPanel.add(btnSelect);
+        btnSelect.setIcon(new ImageIcon(Editor.class.getResource("/images/icons/buttons/select.png")));
+        btnSelect.setBackground(Color.WHITE);
+        btnSelect.setBorderPainted(false);
+        btnSelect.setFocusPainted(false);
+        btnSelect.setOpaque(false);
+        btnSelect.addActionListener(new ActionListener()
+        {
+
+            @Override
+            public void actionPerformed(ActionEvent e)
+            {
+                ((EditorPanel) editorPanel).setTool("select");
+            }
+        });
+        //btnSelect.setContentAreaFilled(false);
+        toolGroup.add(btnSelect);
         editingToolsPanel.add(textToolBtn);
 
         blurToolBtn = new JButton("");
@@ -564,45 +707,35 @@ public class Editor
         toolGroup.add(blurToolBtn);
         editingToolsPanel.add(blurToolBtn);
 
-        toggleButton_8 = new JButton("2");
-        toggleButton_8.setFocusPainted(false);
-        toolGroup.add(toggleButton_8);
-        editingToolsPanel.add(toggleButton_8);
-
-        toggleButton_9 = new JButton("3");
-        toggleButton_9.setFocusPainted(false);
-        toolGroup.add(toggleButton_9);
-        editingToolsPanel.add(toggleButton_9);
-
-        btnReset = new JButton("Reset");
-        btnReset.addActionListener(new ActionListener()
-        {
-
-            @Override
-            public void actionPerformed(ActionEvent e)
-            {
-                ((EditorPanel) editorPanel).reset();
-            }
-        });
-        toolPanel.add(btnReset, "cell 9 0,growy");
-
-        JButton btnSubmit = new JButton("Submit");
-        btnSubmit.addActionListener(new ActionListener()
-        {
-
-            @Override
-            public void actionPerformed(ActionEvent e)
-            {
-                submit();
-            }
-        });
-        toolPanel.add(btnSubmit, "cell 10 0,growy");
-
         chckbxShadow = new JCheckBox("Shadow");
         chckbxShadow.setFocusPainted(false);
         chckbxShadow.setBackground(Color.WHITE);
         chckbxShadow.setEnabled(false);
-        toolPanel.add(chckbxShadow, "cell 6 0");
+        toolPanel.add(chckbxShadow, "cell 4 0");
+                
+                        btnReset = new JButton("Reset");
+                        btnReset.addActionListener(new ActionListener()
+                        {
+
+                            @Override
+                            public void actionPerformed(ActionEvent e)
+                            {
+                                ((EditorPanel) editorPanel).reset();
+                            }
+                        });
+                        toolPanel.add(btnReset, "flowy,cell 6 0,grow");
+                
+                        JButton btnSubmit = new JButton("Submit");
+                        btnSubmit.addActionListener(new ActionListener()
+                        {
+
+                            @Override
+                            public void actionPerformed(ActionEvent e)
+                            {
+                                submit();
+                            }
+                        });
+                        toolPanel.add(btnSubmit, "cell 6 0,growy");
         chckbxFilled.addActionListener(new ActionListener()
         {
 
@@ -635,6 +768,7 @@ public class Editor
         addPopup(editorPanel, popupMenu);
 
         rdbtnmntmPlain = new JRadioButtonMenuItem("Plain");
+        rdbtnmntmPlain.setSelected(true);
         rdbtnmntmPlain.addActionListener(new ActionListener()
         {
             @Override
@@ -756,13 +890,15 @@ public class Editor
 
     protected int getOpacitySliderValue()
     {
-        double value = ((opacitySlider.getValue() / 100.0) * 255.0);
-        return (int) value;
+        String text = opacityField.getText().replace("%", "");
+        int value = Integer.parseInt(text);
+        double v = ((value/ 100.0) * 255.0);
+        return (int)v;
     }
 
     protected float getStrokeSliderValue()
     {
-        float value = ((strokeSlider.getValue() / 10f));
+        float value = (Integer.parseInt(strokeField.getText()));
         return value;
     }
 
@@ -780,8 +916,6 @@ public class Editor
     {
         blurToolBtn.setEnabled(enable);
         textToolBtn.setEnabled(enable);
-        toggleButton_8.setEnabled(enable);
-        toggleButton_9.setEnabled(enable);
 
         if (enable == false)
         {
@@ -808,12 +942,24 @@ public class Editor
     {
         return chckbxShadow.isSelected();
     }
+    
+    public boolean dashed()
+    {
+        return chckbxDashed.isSelected();
+    }
 
     public boolean inSelectionMode()
     {
         return btnSelect.isSelected();
     }
-
+    private void copyImageToClipboard()
+    {
+        BufferedImage temp = ((EditorPanel) editorPanel).getImage();
+//        BufferedImage image = new BufferedImage(editorPanel.getI.getWidth(null), graph.getHeight(null),
+//            BufferedImage.TYPE_INT_ARGB);
+//        finalImage.getGraphics().drawImage(graph, 0, 0, null);
+        ClipboardUtilities.setClipboardImage(temp);
+    }
     private static void addPopup(Component component, final JPopupMenu popup)
     {
         component.addMouseListener(new MouseAdapter()
