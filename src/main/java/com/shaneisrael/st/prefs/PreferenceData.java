@@ -18,7 +18,7 @@ public final class PreferenceData
     float uploadQuality = 1f;
     
     @SerializedName("primary_provider")
-    int provider = Provider.STPP;
+    int provider = Provider.IMGUR;
     
     /** Begin FTP Data **/
     
