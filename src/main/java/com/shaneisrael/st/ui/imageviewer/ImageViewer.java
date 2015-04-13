@@ -35,6 +35,7 @@ import com.shaneisrael.st.prefs.Preferences;
 import com.shaneisrael.st.utilities.Browser;
 import com.shaneisrael.st.utilities.ClipboardUtilities;
 import com.shaneisrael.st.utilities.ProgressBarDialog;
+import com.shaneisrael.st.utilities.database.DBStats;
 import com.shaneisrael.st.utilities.database.DBUniqueKey;
 
 public class ImageViewer extends JFrame implements ListSelectionListener
@@ -276,7 +277,11 @@ public class ImageViewer extends JFrame implements ListSelectionListener
                 	if(currentModel.getDeleteLink().equals(""))
                 		JOptionPane.showMessageDialog(null,"The image provider of the selected image\ndoes not provide a deletion hash.", "Cannot Delete!", JOptionPane.INFORMATION_MESSAGE);
                 	else
+                	{
                 		Browser.open(currentModel.getDeleteLink());
+                		DBStats.delHistory(currentModel.getImageLink());
+                	}
+                	
                 } else
                 {
                     try

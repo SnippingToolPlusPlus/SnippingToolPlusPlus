@@ -71,6 +71,28 @@ public class DBStats
 
     }
     
+    /**
+     * 
+     * @param uplinkk
+     *          removes the desired users upload link from the database
+     */
+    public static void delHistory(String uplinkk)
+    {
+        connect = DBConnection.getConnection();
+        try
+        {
+            getKeySet();
+            
+            rkid = DBUniqueKey.getUniqueKeyID(key1, key2);
+            statement = connect.prepareStatement("DELETE FROM upload_history WHERE rkid = ? AND upload_link = ?");
+            statement.setString(1, rkid);
+            statement.setString(2, uplinkk);
+            statement.executeUpdate();
+            statement.close();
+            connect.close();
+        }       
+        catch(Exception e){e.printStackTrace();}
+    }
     public static void addHistory(ArrayList<String> uploadList, ArrayList<String> deleteList)
     {
         /** If tracking not disabled **/

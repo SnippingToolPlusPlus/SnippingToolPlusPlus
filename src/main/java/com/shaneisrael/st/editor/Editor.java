@@ -56,6 +56,11 @@ import com.shaneisrael.st.utilities.ClipboardUtilities;
 import com.shaneisrael.st.utilities.ImageUtilities;
 import com.shaneisrael.st.utilities.Save;
 import com.shaneisrael.st.utilities.Upload;
+import javax.swing.border.SoftBevelBorder;
+import javax.swing.border.BevelBorder;
+import javax.swing.border.MatteBorder;
+import java.awt.FlowLayout;
+import javax.swing.BoxLayout;
 
 public class Editor
 {
@@ -171,7 +176,7 @@ public class Editor
         frmEditor.setType(Type.NORMAL);
         frmEditor.setTitle("Editor");
         frmEditor.setMinimumSize(new Dimension(900, 400));
-        frmEditor.setSize(img.getWidth(), img.getHeight() + 200);
+        frmEditor.setSize(900, img.getHeight()+200);
         frmEditor.setIconImage(Toolkit.getDefaultToolkit().getImage(
             Editor.class.getResource("/images/icons/utilities.png")));
         frmEditor.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
@@ -276,7 +281,7 @@ public class Editor
         toolPanel.setBackground(Color.WHITE);
         toolPanel.setForeground(Color.BLACK);
         panel.add(toolPanel, "cell 0 0,grow");
-        toolPanel.setLayout(new MigLayout("", "[103.00,leading][85.00][51.00][120.00][43.00][][]", "[60.00,grow]"));
+        toolPanel.setLayout(new MigLayout("", "[65.00,leading][45.00][246.00,center][43.00][][]", "[60.00,grow,top]"));
         
         JLabel lblStroke = new JLabel("Stroke");
         toolPanel.add(lblStroke, "flowy,cell 1 0,aligny top");
@@ -547,108 +552,107 @@ public class Editor
 
              }
         });
+        
+                JToggleButton pencilButton = new JToggleButton("");
+                toolPanel.add(pencilButton, "flowx,cell 2 0");
+                pencilButton.setVerticalAlignment(SwingConstants.TOP);
+                pencilButton.setBackground(Color.white);
+                pencilButton.setFocusPainted(false);
+                pencilButton.setSelected(true);
+                toolGroup.add(pencilButton);
+                pencilButton.addActionListener(new ActionListener()
+                {
 
-        JToggleButton pencilButton = new JToggleButton("");
-        pencilButton.setVerticalAlignment(SwingConstants.TOP);
-        pencilButton.setBackground(Color.white);
-        pencilButton.setFocusPainted(false);
-        pencilButton.setSelected(true);
-        toolGroup.add(pencilButton);
-        pencilButton.addActionListener(new ActionListener()
-        {
-
-            @Override
-            public void actionPerformed(ActionEvent e)
-            {
-                ((EditorPanel) editorPanel).setTool("pencil");
-            }
-        });
-        pencilButton.setIcon(new ImageIcon(Editor.class.getResource("/images/icons/buttons/pencil.png")));
-        toolPanel.add(pencilButton, "cell 2 0,aligny top");
+                    @Override
+                    public void actionPerformed(ActionEvent e)
+                    {
+                        ((EditorPanel) editorPanel).setTool("pencil");
+                    }
+                });
+                pencilButton.setIcon(new ImageIcon(Editor.class.getResource("/images/icons/buttons/pencil.png")));
 
         JPanel shapePanel = new JPanel();
         shapePanel.setBackground(Color.WHITE);
-        toolPanel.add(shapePanel, "cell 3 0,aligny top");
-        shapePanel.setLayout(new GridLayout(0, 2, 0, 0));
+        toolPanel.add(shapePanel, "cell 2 0,aligny top");
+                        
+                                JToggleButton rectangleButton = new JToggleButton("");
+                                rectangleButton.addActionListener(new ActionListener()
+                                {
 
-        JToggleButton lineButton = new JToggleButton();
-        lineButton.addActionListener(new ActionListener()
-        {
+                                    @Override
+                                    public void actionPerformed(ActionEvent e)
+                                    {
+                                        ((EditorPanel) editorPanel).setTool("rectangle");
+                                    }
+                                });
+                                
+                                        JToggleButton lineButton = new JToggleButton();
+                                        lineButton.addActionListener(new ActionListener()
+                                        {
 
-            @Override
-            public void actionPerformed(ActionEvent e)
-            {
-                ((EditorPanel) editorPanel).setTool("line");
-            }
-        });
-        lineButton.setIcon(new ImageIcon(Editor.class.getResource("/images/icons/buttons/line.png")));
-        lineButton.setBackground(Color.white);
-        lineButton.setFocusPainted(false);
-        toolGroup.add(lineButton);
-        shapePanel.add(lineButton);
+                                            @Override
+                                            public void actionPerformed(ActionEvent e)
+                                            {
+                                                ((EditorPanel) editorPanel).setTool("line");
+                                            }
+                                        });
+                                        shapePanel.setLayout(new GridLayout(0, 2, 0, 0));
+                                        lineButton.setIcon(new ImageIcon(Editor.class.getResource("/images/icons/buttons/line.png")));
+                                        lineButton.setBackground(Color.white);
+                                        lineButton.setFocusPainted(false);
+                                        toolGroup.add(lineButton);
+                                        shapePanel.add(lineButton);
+                                rectangleButton.setIcon(new ImageIcon(Editor.class.getResource("/images/icons/buttons/rectangle.png")));
+                                rectangleButton.setBackground(Color.white);
+                                rectangleButton.setFocusPainted(false);
+                                toolGroup.add(rectangleButton);
+                                shapePanel.add(rectangleButton);
+                                
+                                        JToggleButton roundRectButton = new JToggleButton("");
+                                        roundRectButton.addActionListener(new ActionListener()
+                                        {
 
-        JToggleButton rectangleButton = new JToggleButton("");
-        rectangleButton.addActionListener(new ActionListener()
-        {
+                                            @Override
+                                            public void actionPerformed(ActionEvent e)
+                                            {
+                                                ((EditorPanel) editorPanel).setTool("roundRectangle");
+                                            }
+                                        });
+                                        roundRectButton.setIcon(new ImageIcon(Editor.class.getResource("/images/icons/buttons/round_rectangle.png")));
+                                        roundRectButton.setBackground(Color.white);
+                                        roundRectButton.setFocusPainted(false);
+                                        toolGroup.add(roundRectButton);
+                                        shapePanel.add(roundRectButton);
+                                        
+                                                JToggleButton ellipseButton = new JToggleButton("");
+                                                ellipseButton.addActionListener(new ActionListener()
+                                                {
 
-            @Override
-            public void actionPerformed(ActionEvent e)
-            {
-                ((EditorPanel) editorPanel).setTool("rectangle");
-            }
-        });
-        rectangleButton.setIcon(new ImageIcon(Editor.class.getResource("/images/icons/buttons/rectangle.png")));
-        rectangleButton.setBackground(Color.white);
-        rectangleButton.setFocusPainted(false);
-        toolGroup.add(rectangleButton);
-        shapePanel.add(rectangleButton);
-
-        JToggleButton roundRectButton = new JToggleButton("");
-        roundRectButton.addActionListener(new ActionListener()
-        {
-
-            @Override
-            public void actionPerformed(ActionEvent e)
-            {
-                ((EditorPanel) editorPanel).setTool("roundRectangle");
-            }
-        });
-        roundRectButton.setIcon(new ImageIcon(Editor.class.getResource("/images/icons/buttons/round_rectangle.png")));
-        roundRectButton.setBackground(Color.white);
-        roundRectButton.setFocusPainted(false);
-        toolGroup.add(roundRectButton);
-        shapePanel.add(roundRectButton);
-
-        JToggleButton ellipseButton = new JToggleButton("");
-        ellipseButton.addActionListener(new ActionListener()
-        {
-
-            @Override
-            public void actionPerformed(ActionEvent e)
-            {
-                ((EditorPanel) editorPanel).setTool("ellipse");
-            }
-        });
-        ellipseButton.setIcon(new ImageIcon(Editor.class.getResource("/images/icons/buttons/ellipse.png")));
-        ellipseButton.setBackground(Color.white);
-        ellipseButton.setFocusPainted(false);
-        toolGroup.add(ellipseButton);
-        shapePanel.add(ellipseButton);
+                                                    @Override
+                                                    public void actionPerformed(ActionEvent e)
+                                                    {
+                                                        ((EditorPanel) editorPanel).setTool("ellipse");
+                                                    }
+                                                });
+                                                ellipseButton.setIcon(new ImageIcon(Editor.class.getResource("/images/icons/buttons/ellipse.png")));
+                                                ellipseButton.setBackground(Color.white);
+                                                ellipseButton.setFocusPainted(false);
+                                                toolGroup.add(ellipseButton);
+                                                shapePanel.add(ellipseButton);
         
         chckbxDashed = new JCheckBox("Dashed");
         chckbxDashed.setBackground(Color.WHITE);
-        toolPanel.add(chckbxDashed, "flowy,cell 4 0");
+        toolPanel.add(chckbxDashed, "flowy,cell 3 0");
 
         chckbxFilled = new JCheckBox("Filled");
         chckbxFilled.setBackground(Color.WHITE);
         chckbxFilled.setFocusPainted(false);
-        toolPanel.add(chckbxFilled, "cell 4 0,growx,aligny top");
+        toolPanel.add(chckbxFilled, "cell 3 0,growx,aligny top");
 
         JPanel editingToolsPanel = new JPanel();
-        editingToolsPanel.setBorder(new TitledBorder(UIManager.getBorder("TitledBorder.border"), "Tools",
-            TitledBorder.TRAILING, TitledBorder.BOTTOM, null, null));
+        editingToolsPanel.setBorder(new TitledBorder(UIManager.getBorder("TitledBorder.border"), "Tools", TitledBorder.LEADING, TitledBorder.BOTTOM, null, new Color(0, 0, 0)));
         editingToolsPanel.setBackground(Color.WHITE);
-        toolPanel.add(editingToolsPanel, "cell 5 0,growx,aligny top");
+        toolPanel.add(editingToolsPanel, "cell 4 0,growx,aligny top");
         editingToolsPanel.setLayout(new GridLayout(0, 3, 0, 0));
 
         textToolBtn = new JButton("T");
@@ -711,7 +715,7 @@ public class Editor
         chckbxShadow.setFocusPainted(false);
         chckbxShadow.setBackground(Color.WHITE);
         chckbxShadow.setEnabled(false);
-        toolPanel.add(chckbxShadow, "cell 4 0");
+        toolPanel.add(chckbxShadow, "cell 3 0");
                 
                         btnReset = new JButton("Reset");
                         btnReset.addActionListener(new ActionListener()
@@ -723,7 +727,7 @@ public class Editor
                                 ((EditorPanel) editorPanel).reset();
                             }
                         });
-                        toolPanel.add(btnReset, "flowy,cell 6 0,grow");
+                        toolPanel.add(btnReset, "flowy,cell 5 0,grow");
                 
                         JButton btnSubmit = new JButton("Submit");
                         btnSubmit.addActionListener(new ActionListener()
@@ -735,7 +739,7 @@ public class Editor
                                 submit();
                             }
                         });
-                        toolPanel.add(btnSubmit, "cell 6 0,growy");
+                        toolPanel.add(btnSubmit, "cell 5 0,growy");
         chckbxFilled.addActionListener(new ActionListener()
         {
 
