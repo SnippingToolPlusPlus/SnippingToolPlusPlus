@@ -5,6 +5,9 @@ import java.awt.Toolkit;
 import javax.swing.JFrame;
 import javax.swing.WindowConstants;
 
+import com.shaneisrael.st.prefs.Preferences;
+import com.shaneisrael.st.utilities.version.Version;
+
 public class AboutFrame extends JFrame
 {
     private static final long serialVersionUID = 3137296899967294809L;
@@ -22,7 +25,7 @@ public class AboutFrame extends JFrame
                 getClass().getResource("/images/st-icon.png")
                 )
             );
-        this.setTitle("Snipping Tool++");
+        this.setTitle("About");
         this.setResizable(false);
         this.setAlwaysOnTop(true);
 
