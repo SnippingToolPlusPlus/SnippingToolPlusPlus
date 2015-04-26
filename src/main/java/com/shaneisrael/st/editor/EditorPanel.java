@@ -797,7 +797,10 @@ public class EditorPanel extends JPanel implements MouseMotionListener,
         redoStack.clear();
         editG2D.dispose();
         clearG2D.dispose();
+        editingLayer = null;
+        clearLayer = null;
         image = null;
+        imageBackup = null;
     }
 
     public void setFontType(int plain)

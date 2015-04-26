@@ -174,7 +174,7 @@ public class Editor
 
         frmEditor = new JFrame();
         frmEditor.setType(Type.NORMAL);
-        frmEditor.setTitle("Editor");
+        frmEditor.setTitle("Editor [Beta]");
         frmEditor.setMinimumSize(new Dimension(900, 400));
         frmEditor.setSize(900, img.getHeight()+200);
         frmEditor.setIconImage(Toolkit.getDefaultToolkit().getImage(

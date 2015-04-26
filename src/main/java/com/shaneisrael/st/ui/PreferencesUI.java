@@ -71,6 +71,7 @@ public class PreferencesUI
     private JCheckBox chckbxAlwaysSaveToFTP;
     private JCheckBox chckbxGenerateTimestamp;
     private JCheckBox chckbxDontTrackUseage;
+    private JCheckBox chckbxShowBalloonNotifications;
     private JSlider qualitySlider;
     private JTextField hostField;
     private JTextField userField;
@@ -140,7 +141,7 @@ public class PreferencesUI
         keyField2.setText(Preferences.getInstance().getUniqueKey2());
         chckbxDontTrackUseage.setSelected(Preferences.getInstance().isTrackingDisabled());
         providerBox.setSelectedIndex(Preferences.getInstance().getPrimaryProvider());
-        
+        chckbxShowBalloonNotifications.setSelected(Preferences.getInstance().showBalloonMessages());
         
         hotkeyCodes = Preferences.getInstance().getHotkeyCodes();
         hotkeyMods1 = Preferences.getInstance().getFirstHotkeyMods();
@@ -194,7 +195,7 @@ public class PreferencesUI
         JPanel tab1 = new JPanel();
         tab1.setBackground(Color.WHITE);
         tabbedPane.addTab("General", null, tab1, null);
-        tab1.setLayout(new MigLayout("", "[206.00][44.00]", "[15.00][][][][]"));
+        tab1.setLayout(new MigLayout("", "[206.00][44.00]", "[15.00][][][][][][][]"));
 
         JLabel lblLocalSaveDirectory = new JLabel("Local Save Directory");
         tab1.add(lblLocalSaveDirectory, "cell 0 0");
@@ -275,6 +276,11 @@ public class PreferencesUI
 
         JSeparator separator = new JSeparator();
         tab1.add(separator, "cell 0 6 2 1,grow");
+        
+        chckbxShowBalloonNotifications = new JCheckBox("Show Balloon Notifications");
+        chckbxShowBalloonNotifications.setSelected(true);
+        chckbxShowBalloonNotifications.setBackground(Color.WHITE);
+        tab1.add(chckbxShowBalloonNotifications, "cell 0 7");
 
         JPanel tab2 = new JPanel();
         tab2.setBackground(Color.WHITE);
@@ -1271,6 +1277,7 @@ public class PreferencesUI
                 Preferences.getInstance().setFirstHotkeyMods(hotkeyMods1);
                 Preferences.getInstance().setSecondHotkeyMods(hotkeyMods2);
                 Preferences.getInstance().setPrimaryProvider(providerBox.getSelectedIndex());
+                Preferences.getInstance().showBalloonMessages(chckbxShowBalloonNotifications.isSelected());
                 
                 hotkeys = new Hotkeys();
                 hotkeys.registerHotkeys();

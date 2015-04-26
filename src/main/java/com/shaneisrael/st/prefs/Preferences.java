@@ -85,7 +85,7 @@ public class Preferences
         locations.getDataDirectory().mkdirs();
         locations.getUploadsDirectory().mkdirs();
         locations.getSavesDirectory().mkdirs();
-        
+
         try
         {
             locations.getPreferencesFile().createNewFile();
@@ -113,13 +113,15 @@ public class Preferences
         refresh();
         return preferences.getCaptureDirectoryRoot();
     }
+
     public File getUploadsDirectoryRoot()
     {
-    	return new File(preferences.getCaptureDirectoryRoot() + locations.getUploadsDirectory());
+        return new File(preferences.getCaptureDirectoryRoot() + locations.getUploadsDirectory());
     }
+
     public File getSavesDirectoryRoot()
     {
-    	return new File(preferences.getCaptureDirectoryRoot() + locations.getSavesDirectory());
+        return new File(preferences.getCaptureDirectoryRoot() + locations.getSavesDirectory());
     }
 
     /**
@@ -131,20 +133,20 @@ public class Preferences
         preferences.captureDirectoryRoot = captureDirectoryRoot;
         save();
     }
-    
+
     /**
      * @return Checks if the capture directories exist. Creates them if they don't.
      */
-	public void checkDirectories() 
-	{
-		if(!locations.getDataDirectory().exists())
-			setDefaultPreferences();
-		if(!getUploadsDirectoryRoot().exists())
-			getUploadsDirectoryRoot().mkdirs();
-		if(!getSavesDirectoryRoot().exists())
-			getSavesDirectoryRoot().mkdirs();
+    public void checkDirectories()
+    {
+        if (!locations.getDataDirectory().exists())
+            setDefaultPreferences();
+        if (!getUploadsDirectoryRoot().exists())
+            getUploadsDirectoryRoot().mkdirs();
+        if (!getSavesDirectoryRoot().exists())
+            getSavesDirectoryRoot().mkdirs();
 
-	}
+    }
 
     public boolean isAutoSaveEnabled()
     {
@@ -161,7 +163,7 @@ public class Preferences
         preferences.autoSaveEnabled = autoSaveEnabled;
         save();
     }
-    
+
     /**
      * @param uploadQuality
      *            the uploadQuality to set
@@ -180,6 +182,7 @@ public class Preferences
     {
         return preferences.getUploadQuality();
     }
+
     public boolean isEditorEnabled()
     {
         refresh();
@@ -211,108 +214,108 @@ public class Preferences
         preferences.getEditor().defaultTool = defaultTool;
         save();
     }
-    
+
     /**
      * @param host
-     *          the ftp server url
+     *            the ftp server url
      */
     public void setFTPHost(String host)
     {
         preferences.ftpHost = host;
         save();
     }
-    
+
     /**
      * @param user
-     *          the desired user to login as
+     *            the desired user to login as
      */
     public void setFTPUser(String user)
     {
         preferences.ftpUser = user;
         save();
     }
-    
+
     /**
      * @param password
-     *          the password for the specified user
+     *            the password for the specified user
      */
     public void setFTPPassword(String password)
     {
         preferences.ftpPassword = password;
         save();
     }
-    
+
     /**
      * @param port
-     *          the port the ftp server listens on   
+     *            the port the ftp server listens on
      */
     public void setFTPPort(String port)
     {
         preferences.ftpPort = port;
         save();
     }
-    
+
     /**
      * @param path
-     *          the desired path uploaded images will be saved to
+     *            the desired path uploaded images will be saved to
      */
     public void setFTPPath(String path)
     {
         preferences.ftpPath = path;
         save();
     }
-    
+
     /**
      * @param always
-     *          should every upload be also uploaded to the ftp server
+     *            should every upload be also uploaded to the ftp server
      */
     public void setFTPUploadAlways(boolean always)
     {
         preferences.ftpUploadAlways = always;
         save();
     }
-    
+
     /**
      * 
      * @param generateStamp
-     *          should a time stamp be generated as the file name
+     *            should a time stamp be generated as the file name
      */
     public void setFTPGenerateTimestamp(boolean generateStamp)
     {
         preferences.ftpGenerateTimestamp = generateStamp;
         save();
     }
-    
+
     /**
      * @param key
-     *          The desired key to be set as key 1
+     *            The desired key to be set as key 1
      */
     public void setUniqueKey1(String key)
     {
         preferences.setUniqueKey1(key);
         save();
     }
-    
+
     /**
      * @param key
-     *          The desired key to be set as key 2
+     *            The desired key to be set as key 2
      */
     public void setUniqueKey2(String key)
     {
         preferences.setUniqueKey2(key);
         save();
     }
-    
+
     /**
      * @param track
-     *          disable statistics data tracking
+     *            disable statistics data tracking
      */
     public void setTrackingDisabled(boolean track)
     {
         preferences.setTrackingDisabled(track);
         save();
     }
-    
+
     /**
      * 
      * @param codes
@@ -322,7 +325,7 @@ public class Preferences
         preferences.setHotkeyCodes(codes);
         save();
     }
-    
+
     /**
      * 
      * @param mods
@@ -332,7 +335,7 @@ public class Preferences
         preferences.setFirstHotkeyMods(mods);
         save();
     }
-    
+
     /**
      * 
      * @param mods
@@ -342,18 +345,31 @@ public class Preferences
         preferences.setSecondHotkeyMods(mods);
         save();
     }
-    
+
     /**
      * 
      * @param provider
-     * 		The desired image hosting provider. Refer to Provider
+     *            The desired image hosting provider. Refer to Provider
      * 
      */
-	public void setPrimaryProvider(int provider) {
-		preferences.setPrimaryProvider(provider);
-		save();
-	}
-    
+    public void setPrimaryProvider(int provider)
+    {
+        preferences.setPrimaryProvider(provider);
+        save();
+    }
+
+    /**
+     * 
+     * @param show
+     *          enable/disable balloon notification system.
+     */
+    public void showBalloonMessages(boolean show)
+    {
+        preferences.showBalloonMessages(show);
+        save();
+
+    }
+
     /**
      * @return the ftp host url
      */
@@ -361,7 +377,7 @@ public class Preferences
     {
         return preferences.getFTPHost();
     }
-    
+
     /**
      * @return the ftp user
      */
@@ -369,15 +385,15 @@ public class Preferences
     {
         return preferences.getFTPUser();
     }
-    
+
     /**
-     * @return  the ftp user password
+     * @return the ftp user password
      */
     public String getFTPPassword()
     {
         return preferences.getFTPPassword();
     }
-    
+
     /**
      * @return the ftp server port
      */
@@ -385,7 +401,7 @@ public class Preferences
     {
         return preferences.getFTPPort();
     }
-    
+
     /**
      * @return the image save location
      */
@@ -393,7 +409,7 @@ public class Preferences
     {
         return preferences.getFTPPath();
     }
-    
+
     /**
      * @return is every upload sent to the ftp server
      */
@@ -409,7 +425,7 @@ public class Preferences
     {
         return preferences.getFTPGenerateTimestamp();
     }
-    
+
     /**
      * 
      * @return is the first unique key set by the user
@@ -418,7 +434,7 @@ public class Preferences
     {
         return preferences.getUniqueKey1();
     }
-    
+
     /**
      * 
      * @return is the second unique key set by the user
@@ -427,7 +443,7 @@ public class Preferences
     {
         return preferences.getUniqueKey2();
     }
-    
+
     /**
      * 
      * @return the hotkey codes array
@@ -436,7 +452,7 @@ public class Preferences
     {
         return preferences.getHotkeyCodes();
     }
-    
+
     /**
      * 
      * @return the first hotkeys Modsifiers array
@@ -445,7 +461,7 @@ public class Preferences
     {
         return preferences.getFirstHotkeyMods();
     }
-    
+
     /**
      * 
      * @return the second hotkeys Modsifiers array
@@ -454,24 +470,33 @@ public class Preferences
     {
         return preferences.getSecondHotkeyMods();
     }
-    
+
     /**
      * 
      * @return the primary image hosting provider
      */
-	public int getPrimaryProvider() {
-		return preferences.getPrimaryProvider();
-	}
-    
+    public int getPrimaryProvider()
+    {
+        return preferences.getPrimaryProvider();
+    }
+
     /**
-     * @return
-     *          is tracking statistics data disabled
+     * @return is tracking statistics data disabled
      */
     public boolean isTrackingDisabled()
     {
         return preferences.isTrackingDisabled();
     }
     
+    /**
+     * 
+     * @return are notifications enabled
+     */
+    public boolean showBalloonMessages()
+    {
+        return preferences.showBalloonMessages();
+    }
+
     public static Preferences getInstance()
     {
         if (instance == null)
@@ -489,15 +514,15 @@ public class Preferences
 
     public boolean isFTPReady()
     {
-        if(getFTPUser().equals(""))
+        if (getFTPUser().equals(""))
             return false;
-        else if(getFTPPassword().equals(""))
+        else if (getFTPPassword().equals(""))
             return false;
-        else if(getFTPHost().equals(""))
+        else if (getFTPHost().equals(""))
             return false;
-        else if(getFTPPort().equals(""))
+        else if (getFTPPort().equals(""))
             return false;
-        
+
         return true;
     }
 

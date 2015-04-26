@@ -6,7 +6,7 @@ apply plugin: 'launch4j'
 
 project.sourceCompatibility = 1.7
 project.targetCompatibility = 1.7
-project.version = '6.3.3'
+project.version = '6.4.0'
 
 project.ext {
     mainClass = 'com.shaneisrael.st.SnippingToolPlusPlus'

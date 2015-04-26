@@ -16,53 +16,55 @@ public final class PreferenceData
 
     @SerializedName("upload_quality")
     float uploadQuality = 1f;
-    
+
     @SerializedName("primary_provider")
     int provider = Provider.IMGUR;
     
+    @SerializedName("show_notifications")
+    boolean notifications = true;
+
     /** Begin FTP Data **/
-    
+
     @SerializedName("ftp_host")
     public String ftpHost;
-    
+
     @SerializedName("ftp_user")
     public String ftpUser;
-    
+
     @SerializedName("ftp_password")
     public String ftpPassword;
-    
+
     @SerializedName("ftp_port")
     public String ftpPort = "21";
-    
+
     @SerializedName("ftp_path")
     public String ftpPath;
-    
+
     @SerializedName("ftp_upload_always")
     boolean ftpUploadAlways;
-    
+
     @SerializedName("ftp_gen_timestamp")
     boolean ftpGenerateTimestamp;
-    
+
     /** Begin Stats **/
     @SerializedName("key_1")
     public String key1 = "";
-    
+
     @SerializedName("key_2")
     public String key2 = "";
-    
+
     @SerializedName("disable_tracking")
     public boolean disableTracking = false;
-    
+
     @SerializedName("hotkey_codes")
-    public int hotkeyCodes[] = {49, 50, 51, 52, 88, 49, 50}; //1, 2, 3, 4, X, 1, 2
-    
+    public int hotkeyCodes[] = { 49, 50, 51, 52, 88, 49, 50 }; //1, 2, 3, 4, X, 1, 2
+
     @SerializedName("hotkey_modifier_1")
-    public int hotkeyMods1[] = {2, 2, 2, 2, 2, 1, 1}; //CTRL, CTRL, CTRL, CTRL, CTRL, ALT, ALT
-    
+    public int hotkeyMods1[] = { 2, 2, 2, 2, 2, 1, 1 }; //CTRL, CTRL, CTRL, CTRL, CTRL, ALT, ALT
+
     @SerializedName("hotkey_modifier_2")
-    public int hotkeyMods2[] = {4, 4, 4, 4, 4, 4, 4}; //SHIFT
-    
-    
+    public int hotkeyMods2[] = { 4, 4, 4, 4, 4, 4, 4 }; //SHIFT
+
     PreferenceData()
     {
         editor = new EditorPreferences();
@@ -109,11 +111,11 @@ public final class PreferenceData
     {
         this.autoSaveEnabled = autoSaveEnabled;
     }
-    
+
     /**
      * 
      * @param setUploadQuality
-     *          the quality level of the uploads
+     *            the quality level of the uploads
      */
     void setUploadQuality(float quality)
     {
@@ -137,46 +139,46 @@ public final class PreferenceData
     {
         getEditor().defaultTool = defaultTool;
     }
-    
+
     /**
      * @param host
-     *          the ftp server url
+     *            the ftp server url
      */
     void setFTPHost(String host)
     {
         this.ftpHost = host;
     }
-    
+
     /**
      * @param user
-     *          the desired user to login as
+     *            the desired user to login as
      */
     void setFTPUser(String user)
     {
         this.ftpUser = user;
     }
-    
+
     /**
      * @param pass
-     *          the password for the specified user
+     *            the password for the specified user
      */
     void setFTPPassword(String pass)
     {
         this.ftpPassword = pass;
     }
-    
+
     /**
      * @param port
-     *          the port the ftp server listens on   
+     *            the port the ftp server listens on
      */
     void setFTPPort(String port)
     {
         this.ftpPort = port;
     }
-    
+
     /**
      * @param path
-     *          the desired path uploaded images will be saved to
+     *            the desired path uploaded images will be saved to
      */
     void setFTPPath(String path)
     {
@@ -185,16 +187,16 @@ public final class PreferenceData
 
     /**
      * @param always
-     *          should every upload be also uploaded to the ftp server
+     *            should every upload be also uploaded to the ftp server
      */
     void setFTPUploadAlways(boolean always)
     {
         this.ftpUploadAlways = always;
     }
-    
+
     /**
      * @param timestamp
-     *          generates a time stamp as the file name
+     *            generates a time stamp as the file name
      */
     void setFTPGenerateTimestamp(boolean timestamp)
     {
@@ -203,32 +205,32 @@ public final class PreferenceData
 
     /**
      * @param key
-     *          the key to be set
+     *            the key to be set
      */
     void setUniqueKey1(String key)
     {
         this.key1 = key;
     }
-    
+
     /**
      * @param key
-     *          the key to be set
+     *            the key to be set
      */
     void setUniqueKey2(String key)
     {
         this.key2 = key;
     }
-    
+
     /**
      * 
      * @param track
-     *          Is useage statistics tracking enabled
+     *            Is useage statistics tracking enabled
      */
     void setTrackingDisabled(boolean track)
     {
         this.disableTracking = track;
     }
-    
+
     /**
      * 
      * @param codes
@@ -237,7 +239,7 @@ public final class PreferenceData
     {
         this.hotkeyCodes = codes;
     }
-    
+
     /**
      * 
      * @param Modss
@@ -246,7 +248,7 @@ public final class PreferenceData
     {
         this.hotkeyMods1 = mods;
     }
-    
+
     /**
      * 
      * @param Modss
@@ -255,15 +257,25 @@ public final class PreferenceData
     {
         this.hotkeyMods2 = mods;
     }
-    
+
     /**
      * 
      * @param provider
      */
-	void setPrimaryProvider(int provider) {
-		this.provider = provider;
-	}
+    void setPrimaryProvider(int provider)
+    {
+        this.provider = provider;
+    }
     
+    /**
+     * 
+     * @param show
+     */
+    public void showBalloonMessages(boolean show)
+    {
+        this.notifications = show;
+    }
+
     /**
      * @return the enabled
      */
@@ -271,8 +283,7 @@ public final class PreferenceData
     {
         return getEditor().enabled;
     }
-    
-    
+
     /**
      * @return the quality setting of uploads
      */
@@ -280,6 +291,7 @@ public final class PreferenceData
     {
         return uploadQuality;
     }
+
     /**
      * @return the defaultTool
      */
@@ -295,7 +307,7 @@ public final class PreferenceData
     {
         return ftpHost;
     }
-    
+
     /**
      * @return the ftp user
      */
@@ -303,15 +315,15 @@ public final class PreferenceData
     {
         return ftpUser;
     }
-    
+
     /**
-     * @return  the ftp user password
+     * @return the ftp user password
      */
     String getFTPPassword()
     {
         return ftpPassword;
     }
-    
+
     /**
      * @return the ftp server port
      */
@@ -319,7 +331,7 @@ public final class PreferenceData
     {
         return ftpPort;
     }
-    
+
     /**
      * @return the image save location
      */
@@ -327,7 +339,7 @@ public final class PreferenceData
     {
         return ftpPath;
     }
-    
+
     /**
      * @return is every upload sent to the ftp server
      */
@@ -335,7 +347,7 @@ public final class PreferenceData
     {
         return ftpUploadAlways;
     }
-    
+
     /**
      * @return is a time stamp generated as the file name
      */
@@ -343,7 +355,7 @@ public final class PreferenceData
     {
         return ftpGenerateTimestamp;
     }
-    
+
     /**
      * 
      * @return is the users unique key 1
@@ -352,7 +364,7 @@ public final class PreferenceData
     {
         return key1;
     }
-    
+
     /**
      * 
      * @return is the users unique key 2
@@ -361,7 +373,7 @@ public final class PreferenceData
     {
         return key2;
     }
-    
+
     /**
      * 
      * @return the hotkey codes array
@@ -370,7 +382,7 @@ public final class PreferenceData
     {
         return hotkeyCodes;
     }
-    
+
     /**
      * 
      * @return the first Modsifier keys
@@ -379,7 +391,7 @@ public final class PreferenceData
     {
         return hotkeyMods1;
     }
-    
+
     /**
      * 
      * @return the second Modsifier keys
@@ -388,25 +400,33 @@ public final class PreferenceData
     {
         return hotkeyMods2;
     }
-    
+
     /**
      * 
      * @return the primary image hosting provider
      */
-	public int getPrimaryProvider() 
-	{
-		return provider;
-	}
-    
+    public int getPrimaryProvider()
+    {
+        return provider;
+    }
+
     /**
      * 
-     * @return
-     *          is usage statistics disabled
+     * @return is usage statistics disabled
      */
     boolean isTrackingDisabled()
     {
         return disableTracking;
     }
+    /**
+     * 
+     * @return are notifications enabled
+     */
+    public boolean showBalloonMessages()
+    {
+        return notifications;
+    }
+
     class EditorPreferences
     {
         @SerializedName("enabled")
@@ -423,6 +443,5 @@ public final class PreferenceData
         Gson gson = new Gson();
         return gson.toJson(this);
     }
-
 
 }
