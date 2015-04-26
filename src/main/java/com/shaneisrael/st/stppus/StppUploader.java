@@ -8,6 +8,7 @@ import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
+import java.util.Base64;
 
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
@@ -23,7 +24,6 @@ import com.shaneisrael.st.utilities.ClipboardUtilities;
 import com.shaneisrael.st.utilities.ImageUtilities;
 import com.shaneisrael.st.utilities.SoundNotifications;
 import com.shaneisrael.st.utilities.database.DBStats;
-import com.sun.org.apache.xml.internal.security.utils.Base64;
 
 public class StppUploader implements Runnable
 {
@@ -94,7 +94,7 @@ public class StppUploader implements Runnable
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
             ImageIO.write(image, "png", baos);
             byte[] bytes = baos.toByteArray();
-            String base64bytes = Base64.encode(bytes);
+            String base64bytes = Base64.getEncoder().encodeToString(bytes);
             String data = "key=" + KEY;
             data += "&source=" + URLEncoder.encode(base64bytes, "UTF-8");//Base64.encodeBase64String(baos.toByteArray()).toString();
             data += "&format=txt";

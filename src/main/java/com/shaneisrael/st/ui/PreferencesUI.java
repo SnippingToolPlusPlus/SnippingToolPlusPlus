@@ -323,7 +323,7 @@ public class PreferencesUI
         tab2.add(lblPrimaryImageHost, "flowx,cell 0 6");
         
         providerBox = new JComboBox();
-        providerBox.setModel(new DefaultComboBoxModel(new String[] {"Stppl.us", "Imgur.com"}));
+        providerBox.setModel(new DefaultComboBoxModel(new String[] {"Imgur.com", "Stppl.us"}));
         tab2.add(providerBox, "cell 0 7,alignx left");
 
         JPanel tab4 = new JPanel();
