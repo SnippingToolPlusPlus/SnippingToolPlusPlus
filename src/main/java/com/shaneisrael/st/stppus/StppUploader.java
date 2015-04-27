@@ -8,7 +8,6 @@ import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
-import java.util.Base64;
 
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
