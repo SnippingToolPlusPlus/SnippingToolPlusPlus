@@ -12,6 +12,7 @@ import java.util.Base64;
 
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
+import javax.xml.bind.DatatypeConverter;
 
 import com.google.gson.Gson;
 import com.shaneisrael.st.SnippingToolPlusPlus;
@@ -94,7 +95,7 @@ public class StppUploader implements Runnable
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
             ImageIO.write(image, "png", baos);
             byte[] bytes = baos.toByteArray();
-            String base64bytes = Base64.getEncoder().encodeToString(bytes);
+            String base64bytes = DatatypeConverter.printBase64Binary(bytes);
             String data = "key=" + KEY;
             data += "&source=" + URLEncoder.encode(base64bytes, "UTF-8");//Base64.encodeBase64String(baos.toByteArray()).toString();
             data += "&format=txt";

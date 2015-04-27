@@ -4,10 +4,10 @@ public class Provider {
 	/**
 	 * http://stppl.us
 	 */
-	public static final int STPP = 0;
+	public static final int STPP = 1;
 	
 	/**
 	 * http://imgur.com
 	 */
-	public static final int IMGUR = 1;
+	public static final int IMGUR = 0;
 }
