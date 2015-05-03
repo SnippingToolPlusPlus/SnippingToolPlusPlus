@@ -176,7 +176,7 @@ public class Editor
         frmEditor.setType(Type.NORMAL);
         frmEditor.setTitle("Editor [Beta]");
         frmEditor.setMinimumSize(new Dimension(900, 400));
-        frmEditor.setSize(900, img.getHeight()+200);
+        frmEditor.setSize(img.getWidth()+40, img.getHeight()+200);
         frmEditor.setIconImage(Toolkit.getDefaultToolkit().getImage(
             Editor.class.getResource("/images/icons/utilities.png")));
         frmEditor.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
