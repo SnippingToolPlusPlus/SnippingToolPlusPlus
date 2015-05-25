@@ -7,6 +7,7 @@ import java.io.IOException;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.shaneisrael.st.data.Locations;
+import com.shaneisrael.st.data.Logger;
 import com.shaneisrael.st.utilities.FileReader;
 
 public class Preferences
@@ -28,6 +29,7 @@ public class Preferences
                 jsonData = FileReader.readFile(locations.getPreferencesFile().getAbsolutePath());
             } catch (IOException e)
             {
+                Logger.Log(e);
                 throw new PreferencesException("Error reading preferences with Locations: " + locations.toString()
                     + ": " + e.getMessage());
             }
@@ -55,6 +57,7 @@ public class Preferences
             FileReader.writeFile(locations.getPreferencesFile().getAbsolutePath(), json);
         } catch (FileNotFoundException e)
         {
+            Logger.Log(e);
             e.printStackTrace();
         }
     }
@@ -69,6 +72,7 @@ public class Preferences
             jsonData = FileReader.readFile(locations.getPreferencesFile().getAbsolutePath());
         } catch (IOException e)
         {
+            Logger.Log(e);
             e.printStackTrace(); //shouldn't happen
         }
         Gson gson = new Gson();
@@ -85,12 +89,14 @@ public class Preferences
         locations.getDataDirectory().mkdirs();
         locations.getUploadsDirectory().mkdirs();
         locations.getSavesDirectory().mkdirs();
+        createLogDirectory();
 
         try
         {
             locations.getPreferencesFile().createNewFile();
         } catch (IOException e)
         {
+            Logger.Log(e);
             System.out.println("Could not create default settings at "
                 + locations.getPreferencesFile().getAbsolutePath());
             e.printStackTrace();
@@ -106,6 +112,11 @@ public class Preferences
         preferences.setTrackingDisabled(false);
         preferences.setCaptureDirectoryRoot(locations.getPictureDirectory().getAbsolutePath());
         save();
+    }
+    
+    public void createLogDirectory()
+    {
+        locations.getLogDirectory().mkdirs();
     }
 
     public String getCaptureDirectoryRoot()
@@ -141,6 +152,8 @@ public class Preferences
     {
         if (!locations.getDataDirectory().exists())
             setDefaultPreferences();
+        if(!locations.getLogDirectory().exists())
+            createLogDirectory();
         if (!getUploadsDirectoryRoot().exists())
             getUploadsDirectoryRoot().mkdirs();
         if (!getSavesDirectoryRoot().exists())
@@ -506,6 +519,7 @@ public class Preferences
                 instance = new Preferences(new Locations());
             } catch (PreferencesException e)
             {
+                Logger.Log(e);
                 e.printStackTrace();
             }
         }

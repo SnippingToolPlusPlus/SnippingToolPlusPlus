@@ -6,6 +6,8 @@ import java.awt.Graphics;
 
 import javax.swing.JPanel;
 
+import com.shaneisrael.st.data.Logger;
+
 public class ColorSelectionPanel extends JPanel
 {
     private static final long serialVersionUID = 3147366598069033090L;
@@ -25,6 +27,7 @@ public class ColorSelectionPanel extends JPanel
             Thread.sleep(10);
         } catch (InterruptedException e)
         {
+            Logger.Log(e);
             e.printStackTrace();
         }
 

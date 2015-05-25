@@ -10,6 +10,8 @@ import java.io.IOException;
 import javax.imageio.ImageIO;
 import javax.swing.JComponent;
 
+import com.shaneisrael.st.data.Logger;
+
 /**
  * 
  * @author Shane This is the notifications windows, what you see.
@@ -58,7 +60,7 @@ public class STNotificationWindow extends JComponent
             texture = ImageIO.read(this.getClass().getResourceAsStream(texturePath));
         } catch (IOException e)
         {
-            // TODO Auto-generated catch block
+            Logger.Log(e);
             e.printStackTrace();
         }
 

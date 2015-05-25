@@ -5,6 +5,7 @@ import java.util.Properties;
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 import com.google.gson.annotations.SerializedName;
+import com.shaneisrael.st.data.Logger;
 import com.shaneisrael.st.prefs.Preferences;
 
 /**
@@ -222,6 +223,7 @@ public final class Version implements Comparable<Version>
             version = gson.fromJson(json, Version.class);
         } catch (JsonSyntaxException e)
         {
+            Logger.Log(e);
             e.printStackTrace();
             version = null;
         }
@@ -279,6 +281,7 @@ public final class Version implements Comparable<Version>
             versionString = pomProperties.getProperty("Application-Version");
         } catch (Exception e)
         {
+            Logger.Log(e);
         }
 
         return versionString == null ? Version.getDebugVersion() : Version.fromString(versionString);

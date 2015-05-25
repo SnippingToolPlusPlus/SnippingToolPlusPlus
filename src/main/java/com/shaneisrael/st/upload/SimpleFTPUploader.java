@@ -11,6 +11,7 @@ import java.util.Date;
 
 import javax.swing.JOptionPane;
 
+import com.shaneisrael.st.data.Logger;
 import com.shaneisrael.st.notification.NotificationManager;
 import com.shaneisrael.st.notification.STNotificationType;
 import com.shaneisrael.st.prefs.Preferences;
@@ -47,6 +48,7 @@ public class SimpleFTPUploader implements Runnable
         }
         catch(Exception e)
         {
+            Logger.Log(e);
             e.printStackTrace();
         }
     }
@@ -83,6 +85,7 @@ public class SimpleFTPUploader implements Runnable
             NotificationManager.getInstance().showNotification("upload-ftp-done", STNotificationType.SUCCESS);
         } catch (IOException ex)
         {
+            Logger.Log(ex);
             NotificationManager.getInstance().showNotification("uploading-ftp-failed", STNotificationType.ERROR);
             JOptionPane.showMessageDialog(null, ex.getMessage(), "FTP Error!", JOptionPane.ERROR_MESSAGE);
             ex.printStackTrace();

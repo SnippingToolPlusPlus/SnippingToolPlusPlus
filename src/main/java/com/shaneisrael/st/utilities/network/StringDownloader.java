@@ -2,6 +2,8 @@ package com.shaneisrael.st.utilities.network;
 
 import java.io.IOException;
 
+import com.shaneisrael.st.data.Logger;
+
 /**
  * Downloads a String from a URL in the background and alerts a listener when it finishes or an error occurs.
  * 
@@ -57,6 +59,7 @@ public class StringDownloader implements Runnable, ServerResponseListener
             serverResponse = urlReader.downloadString(url);
         } catch (IOException e)
         {
+            Logger.Log(e);
             listener.onServerResponseFail(e.getMessage());
         }
         listener.onServerResponseSuccess(serverResponse);

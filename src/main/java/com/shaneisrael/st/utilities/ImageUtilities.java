@@ -26,6 +26,8 @@ import javax.imageio.ImageWriteParam;
 import javax.imageio.ImageWriter;
 import javax.imageio.stream.ImageOutputStream;
 
+import com.shaneisrael.st.data.Logger;
+
 public class ImageUtilities
 {
     public static Image image;
@@ -110,6 +112,7 @@ public class ImageUtilities
         }
         catch(IOException e)
         {
+            Logger.Log(e);
             e.printStackTrace();
         }
         
@@ -133,6 +136,7 @@ public class ImageUtilities
             return file;
         } catch (IOException e)
         {
+            Logger.Log(e);
             e.printStackTrace();
         }
         return null;

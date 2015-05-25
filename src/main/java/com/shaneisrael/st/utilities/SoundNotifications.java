@@ -6,6 +6,8 @@ import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.Clip;
 
+import com.shaneisrael.st.data.Logger;
+
 public class SoundNotifications
 {
     public static void playDing()
@@ -24,6 +26,7 @@ public class SoundNotifications
                     clip.start();
                 } catch (Exception e)
                 {
+                    Logger.Log(e);
                     System.err.println(e.getMessage());
                 }
             }
@@ -45,6 +48,7 @@ public class SoundNotifications
                     clip.start();
                 } catch (Exception e)
                 {
+                    Logger.Log(e);
                     System.err.println(e.getMessage());
                 }
             }

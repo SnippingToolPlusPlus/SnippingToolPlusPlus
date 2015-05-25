@@ -7,6 +7,8 @@ import java.awt.image.BufferedImage;
 
 import javax.swing.JPanel;
 
+import com.shaneisrael.st.data.Logger;
+
 public class ViewerPanel extends JPanel
 {
     private static final long serialVersionUID = -12723826586678160L;
@@ -27,6 +29,7 @@ public class ViewerPanel extends JPanel
             Thread.sleep(1);
         } catch (InterruptedException e)
         {
+            Logger.Log(e);
             e.printStackTrace();
         }
         repaint();

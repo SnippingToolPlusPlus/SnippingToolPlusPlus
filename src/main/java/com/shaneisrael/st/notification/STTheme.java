@@ -11,6 +11,8 @@ import java.io.InputStreamReader;
 
 import javax.swing.JFrame;
 
+import com.shaneisrael.st.data.Logger;
+
 /**
  * 
  * @author Shane
@@ -50,11 +52,11 @@ public class STTheme
             }
         } catch (FileNotFoundException e)
         {
-            // TODO Auto-generated catch block
+            Logger.Log(e);
             e.printStackTrace();
         } catch (IOException e)
         {
-            // TODO Auto-generated catch block
+            Logger.Log(e);
             e.printStackTrace();
         }
 

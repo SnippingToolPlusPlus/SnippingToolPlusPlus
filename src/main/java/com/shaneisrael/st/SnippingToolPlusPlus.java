@@ -18,7 +18,7 @@
  *  
  *  Contact the author at contact@snippingtoolpluspl.us
  *  
-**/
+ **/
 package com.shaneisrael.st;
 
 import java.awt.AWTException;
@@ -47,6 +47,7 @@ import com.melloware.jintellitype.JIntellitype;
 import com.melloware.jintellitype.JIntellitypeConstants;
 import com.melloware.jintellitype.JIntellitypeException;
 import com.shaneisrael.st.data.Locations;
+import com.shaneisrael.st.data.Logger;
 import com.shaneisrael.st.data.OperatingSystem;
 import com.shaneisrael.st.notification.NotificationManager;
 import com.shaneisrael.st.notification.STNotificationType;
@@ -103,7 +104,7 @@ public class SnippingToolPlusPlus extends JFrame implements ActionListener, JInt
             System.out.println("Feel free to implement the feature and submit a patch though!");
             System.out.println("Source: https://github.com/SnippingToolPlusPlus/SnippingToolPlusPlus");
         }
-        
+
     }
 
     private static void processArguments(String[] args)
@@ -162,7 +163,7 @@ public class SnippingToolPlusPlus extends JFrame implements ActionListener, JInt
 
         updater = new UpdateChecker();
         updater.checkForUpdates();
-        
+
     }
 
     private void initializeHotkeys()
@@ -177,6 +178,7 @@ public class SnippingToolPlusPlus extends JFrame implements ActionListener, JInt
             keyhook = JIntellitype.getInstance();
         } catch (JIntellitypeException ex)
         {
+            Logger.Log(ex);
             JOptionPane.showMessageDialog(null, "Please only run one copy of Snipping Tool++ at once");
             System.exit(1);
         }
@@ -195,13 +197,13 @@ public class SnippingToolPlusPlus extends JFrame implements ActionListener, JInt
             @Override
             public void onHotKey(int identifier)
             {
-                if (identifier == Config.UPLOAD_SNIPPET_ID) 
+                if (identifier == Config.UPLOAD_SNIPPET_ID)
                 {
                     uSnippet.doClick();
-                } else if (identifier == Config.UPLOAD_SCREEN_ID) 
+                } else if (identifier == Config.UPLOAD_SCREEN_ID)
                 {
                     uScreenshot.doClick();
-                } else if (identifier == Config.SAVE_SNIPPET_ID) 
+                } else if (identifier == Config.SAVE_SNIPPET_ID)
                 {
                     sSnippet.doClick();
                 } else if (identifier == Config.SAVE_SCREEN_ID)
@@ -279,25 +281,26 @@ public class SnippingToolPlusPlus extends JFrame implements ActionListener, JInt
         prefMenu.setIcon(new ImageIcon(this.getClass().getResource("/images/icons/pref.png")));
         prefMenu.addActionListener(this);
         prefMenu.setActionCommand("preferences");
-        uScreenshot = new JMenuItem("Screenshot ["+Hotkeys.getHotkeyComboText(Config.UPLOAD_SCREEN_ID)+"]");
+        uScreenshot = new JMenuItem("Screenshot [" + Hotkeys.getHotkeyComboText(Config.UPLOAD_SCREEN_ID) + "]");
         uScreenshot.setIcon(new ImageIcon(this.getClass().getResource("/images/icons/screenshot.png")));
         uScreenshot.addActionListener(this);
         uScreenshot.setActionCommand("uScreen");
-        uSnippet = new JMenuItem("Snippet ["+Hotkeys.getHotkeyComboText(Config.UPLOAD_SNIPPET_ID)+"]");
+        uSnippet = new JMenuItem("Snippet [" + Hotkeys.getHotkeyComboText(Config.UPLOAD_SNIPPET_ID) + "]");
         uSnippet.setIcon(new ImageIcon(this.getClass().getResource("/images/icons/snippet.png")));
         uSnippet.addActionListener(this);
         uSnippet.setActionCommand("uSnippet");
 
-        uClipboardImg = new JMenuItem("Clipboard Image ["+Hotkeys.getHotkeyComboText(Config.UPLOAD_CLIPBOARD_ID)+"]");
+        uClipboardImg = new JMenuItem("Clipboard Image [" + Hotkeys.getHotkeyComboText(Config.UPLOAD_CLIPBOARD_ID)
+            + "]");
         uClipboardImg.setIcon(new ImageIcon(this.getClass().getResource("/images/icons/image_upload.png")));
         uClipboardImg.addActionListener(this);
         uClipboardImg.setActionCommand("uClipboardImg");
 
-        sScreenshot = new JMenuItem("Screenshot ["+Hotkeys.getHotkeyComboText(Config.SAVE_SCREEN_ID)+"]");
+        sScreenshot = new JMenuItem("Screenshot [" + Hotkeys.getHotkeyComboText(Config.SAVE_SCREEN_ID) + "]");
         sScreenshot.setIcon(new ImageIcon(this.getClass().getResource("/images/icons/screenshot.png")));
         sScreenshot.addActionListener(this);
         sScreenshot.setActionCommand("sScreen");
-        sSnippet = new JMenuItem("Snippet ["+Hotkeys.getHotkeyComboText(Config.SAVE_SNIPPET_ID)+"]");
+        sSnippet = new JMenuItem("Snippet [" + Hotkeys.getHotkeyComboText(Config.SAVE_SNIPPET_ID) + "]");
         sSnippet.setIcon(new ImageIcon(this.getClass().getResource("/images/icons/snippet.png")));
         sSnippet.addActionListener(this);
         sSnippet.setActionCommand("sSnippet");
@@ -350,6 +353,7 @@ public class SnippingToolPlusPlus extends JFrame implements ActionListener, JInt
             NotificationManager.getInstance().showNotification("welcome", STNotificationType.SUCCESS, 3000);
         } catch (AWTException e)
         {
+            Logger.Log(e);
             System.out.println("TrayIcon could not be added.");
         }
 
@@ -454,11 +458,12 @@ public class SnippingToolPlusPlus extends JFrame implements ActionListener, JInt
                     Desktop.getDesktop().open(new File(Preferences.getInstance().getCaptureDirectoryRoot()));
                 } catch (IOException e1)
                 {
+                    Logger.Log(e1);
                     e1.printStackTrace();
                 }
             }
         }
-        else if(command.equals("donate"))
+        else if (command.equals("donate"))
         {
             Browser.open(Config.DONATE_URL);
         }

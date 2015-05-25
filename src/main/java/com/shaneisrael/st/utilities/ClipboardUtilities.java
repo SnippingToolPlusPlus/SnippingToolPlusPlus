@@ -9,6 +9,7 @@ import java.awt.datatransfer.UnsupportedFlavorException;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 
+import com.shaneisrael.st.data.Logger;
 import com.shaneisrael.st.notification.NotificationManager;
 import com.shaneisrael.st.notification.STNotificationType;
 
@@ -42,9 +43,11 @@ public abstract class ClipboardUtilities implements ClipboardOwner
             }
         } catch (UnsupportedFlavorException e)
         {
+            Logger.Log(e);
             e.printStackTrace();
         } catch (IOException e)
         {
+            Logger.Log(e);
             e.printStackTrace();
         }
         return null;
@@ -91,6 +94,7 @@ public abstract class ClipboardUtilities implements ClipboardOwner
             img = getImageFromClipboard();
         } catch (Exception e1)
         {
+            Logger.Log(e1);
             e1.printStackTrace();
         }
 
@@ -119,6 +123,7 @@ public abstract class ClipboardUtilities implements ClipboardOwner
                 return (BufferedImage) transferable.getTransferData(DataFlavor.imageFlavor);
             } catch (Exception e)
             {
+                Logger.Log(e);
                 e.printStackTrace();
             }
         }

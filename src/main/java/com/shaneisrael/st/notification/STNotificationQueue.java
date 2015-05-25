@@ -3,6 +3,8 @@ package com.shaneisrael.st.notification;
 import java.util.LinkedList;
 import java.util.Queue;
 
+import com.shaneisrael.st.data.Logger;
+
 /**
  * 
  * @author Shane
@@ -75,6 +77,7 @@ public class STNotificationQueue implements Runnable
                 next.dispose();
             } catch (Exception e)
             {
+                Logger.Log(e);
                 e.printStackTrace();
             }
         }

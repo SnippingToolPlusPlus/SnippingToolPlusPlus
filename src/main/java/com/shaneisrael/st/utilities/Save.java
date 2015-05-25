@@ -5,6 +5,7 @@ import java.io.File;
 
 import javax.imageio.ImageIO;
 
+import com.shaneisrael.st.data.Logger;
 import com.shaneisrael.st.notification.NotificationManager;
 import com.shaneisrael.st.notification.STNotificationType;
 import com.shaneisrael.st.prefs.Preferences;
@@ -35,6 +36,7 @@ public class Save
             ImageIO.write(img, "png", savLoc);
         } catch (Exception e)
         {
+            Logger.Log(e);
             e.printStackTrace();
         }
         NotificationManager.getInstance().showNotification("saved", STNotificationType.SUCCESS);
@@ -58,6 +60,7 @@ public class Save
             ImageIO.write(img, "png", savLoc);
         } catch (Exception e)
         {
+            Logger.Log(e);
             e.printStackTrace();
         }
     }

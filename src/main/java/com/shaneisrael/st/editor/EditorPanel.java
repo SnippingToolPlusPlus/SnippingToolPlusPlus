@@ -8,6 +8,8 @@ import java.awt.Font;
 import java.awt.FontMetrics;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.GraphicsConfiguration;
+import java.awt.GraphicsEnvironment;
 import java.awt.Image;
 import java.awt.Point;
 import java.awt.Rectangle;
@@ -23,13 +25,14 @@ import java.util.Stack;
 import javax.swing.ImageIcon;
 import javax.swing.JPanel;
 
+import com.shaneisrael.st.data.Logger;
 import com.shaneisrael.st.utilities.ImageUtilities;
 
 public class EditorPanel extends JPanel implements MouseMotionListener,
     MouseListener
 {
     private static final long serialVersionUID = -8925388346037613270L;
-    private Image image, imageBackup;
+    private Image image;
     private BufferedImage editingLayer, clearLayer;
     private Graphics2D editG2D, clearG2D;
     private Color fillColor = Color.red;
@@ -98,6 +101,7 @@ public class EditorPanel extends JPanel implements MouseMotionListener,
         this.setPreferredSize(new Dimension(img.getWidth(), img.getHeight()));
 
     }
+
 
     public void setMouseCursor()
     {
@@ -319,7 +323,7 @@ public class EditorPanel extends JPanel implements MouseMotionListener,
                     (int) (dlMinX - stroke), (int) (dlMinY - stroke))));
             } catch (java.awt.image.RasterFormatException ex)
             {
-
+                Logger.Log(ex);
                 System.out.println(dlMinY + height);
             }
 
@@ -343,7 +347,7 @@ public class EditorPanel extends JPanel implements MouseMotionListener,
                 (int) selection.getX(), (int) selection.getY())));
         } catch (java.awt.image.RasterFormatException ex)
         {
-
+            Logger.Log(ex);
         }
 
         if (!drawStack.isEmpty())
@@ -800,7 +804,6 @@ public class EditorPanel extends JPanel implements MouseMotionListener,
         editingLayer = null;
         clearLayer = null;
         image = null;
-        imageBackup = null;
     }
 
     public void setFontType(int plain)

@@ -22,6 +22,7 @@ import java.util.concurrent.TimeUnit;
 
 import javax.imageio.ImageIO;
 
+import com.shaneisrael.st.data.Logger;
 import com.shaneisrael.st.prefs.Preferences;
 import com.shaneisrael.st.utilities.ProgressBarDialog;
 import com.shaneisrael.st.utilities.database.DBConnection;
@@ -178,10 +179,11 @@ public class ImageViewerLinkBuilder
 
         } catch (SQLException e)
         {
+            Logger.Log(e);
             e.printStackTrace();
         } catch (InterruptedException e)
         {
-            // TODO Auto-generated catch block
+            Logger.Log(e);
             e.printStackTrace();
         }
     }
@@ -213,9 +215,11 @@ public class ImageViewerLinkBuilder
             }
         } catch (FileNotFoundException e)
         {
+            Logger.Log(e);
             e.printStackTrace();
         } catch (IOException e)
         {
+            Logger.Log(e);
             e.printStackTrace();
         } finally
         {
@@ -226,6 +230,7 @@ public class ImageViewerLinkBuilder
                     reader.close();
                 } catch (IOException e)
                 {
+                    Logger.Log(e);
                     e.printStackTrace();
                 }
             }
@@ -286,7 +291,7 @@ public class ImageViewerLinkBuilder
                 img = ImageIO.read(url);
             } catch (IOException e)
             {
-                // TODO Auto-generated catch block
+                Logger.Log(e);
                 e.printStackTrace();
             }
             File imageFile = new File(Preferences.getInstance().getCaptureDirectoryRoot() + "/TempHistory/" + linkTitle);
@@ -297,7 +302,7 @@ public class ImageViewerLinkBuilder
                 ImageIO.write(img, "png", imageFile);
             } catch (IOException e)
             {
-                // TODO Auto-generated catch block
+                Logger.Log(e);
                 e.printStackTrace();
             }
             cloudFiles.add(imageFile);

@@ -76,6 +76,16 @@ public class Locations
     {
         return new File(dataRoot, operatingSystem.getDataDirectoryPath());
     }
+    
+    /**
+     * This location is not guaranteed to exist yet.
+     * 
+     * @return the data directory for storing log files, no trailing slash.
+     */
+    public File getLogDirectory()
+    {
+        return new File(dataRoot, operatingSystem.getDataDirectoryPath() + "/log");
+    }
 
     /**
      * This location is not guaranteed to exist yet.
@@ -126,4 +136,5 @@ public class Locations
             getPictureDirectory().getAbsolutePath(),
             getPreferencesFile().getAbsolutePath());
     }
+
 }

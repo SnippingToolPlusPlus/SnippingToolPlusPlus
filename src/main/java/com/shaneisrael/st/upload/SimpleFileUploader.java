@@ -5,6 +5,8 @@ import java.io.IOException;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+import com.shaneisrael.st.data.Logger;
+
 public class SimpleFileUploader implements Runnable
 {
     private final String uri;
@@ -58,9 +60,11 @@ public class SimpleFileUploader implements Runnable
             listener.onUploadSuccess(serverResponse);
         } catch (UploadException ue)
         {
+            Logger.Log(ue);
             listener.onUploadFail(ue.getHttpStatusCode(), ue.getMessage());
         } catch (IOException io)
         {
+            Logger.Log(io);
             listener.onUploadFail(-1, io.getMessage());
         } finally
         {
@@ -69,6 +73,7 @@ public class SimpleFileUploader implements Runnable
                 self.join();
             } catch (InterruptedException e)
             {
+                Logger.Log(e);
                 e.printStackTrace();
             }
         }

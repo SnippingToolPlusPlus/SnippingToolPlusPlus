@@ -9,6 +9,7 @@ import javax.imageio.ImageIO;
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 import com.shaneisrael.st.Config;
+import com.shaneisrael.st.data.Logger;
 import com.shaneisrael.st.prefs.Preferences;
 import com.shaneisrael.st.upload.SimpleFTPUploader;
 import com.shaneisrael.st.upload.SimpleFileUploader;
@@ -60,6 +61,7 @@ public class ImgurUploader implements UploadListener
             response = gson.fromJson(content, ImgurResponse.class);
         } catch (JsonSyntaxException ex)
         {
+            Logger.Log(ex);
             listener.onImgurResponseFail(response);
         }
 
@@ -96,6 +98,7 @@ public class ImgurUploader implements UploadListener
             return file;
         } catch (IOException e)
         {
+            Logger.Log(e);
             e.printStackTrace();
         }
         return null;

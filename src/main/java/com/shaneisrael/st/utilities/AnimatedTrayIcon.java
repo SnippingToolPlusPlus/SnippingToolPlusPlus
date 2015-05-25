@@ -8,6 +8,7 @@ import javax.swing.ImageIcon;
 
 import com.shaneisrael.st.Config;
 import com.shaneisrael.st.SnippingToolPlusPlus;
+import com.shaneisrael.st.data.Logger;
 
 public class AnimatedTrayIcon implements Runnable
 {
@@ -40,6 +41,7 @@ public class AnimatedTrayIcon implements Runnable
                     Thread.sleep(delayMs);
                 } catch (InterruptedException e)
                 {
+                    Logger.Log(e);
                     e.printStackTrace();
                 }
             }

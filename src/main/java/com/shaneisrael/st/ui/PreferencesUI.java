@@ -46,6 +46,7 @@ import net.miginfocom.swing.MigLayout;
 
 import com.shaneisrael.st.Config;
 import com.shaneisrael.st.data.Locations;
+import com.shaneisrael.st.data.Logger;
 import com.shaneisrael.st.prefs.Preferences;
 import com.shaneisrael.st.prefs.Hotkeys.Hotkeys;
 import com.shaneisrael.st.utilities.database.DBUniqueKey;
@@ -240,6 +241,7 @@ public class PreferencesUI
                     Desktop.getDesktop().open(new File(Preferences.getInstance().getCaptureDirectoryRoot()));
                 } catch (IOException e)
                 {
+                    Logger.Log(e);
                     JOptionPane.showMessageDialog(null, "Unable to open "
                         + Preferences.getInstance().getCaptureDirectoryRoot(), "Error",
                         JOptionPane.ERROR_MESSAGE);
@@ -265,6 +267,7 @@ public class PreferencesUI
                     Desktop.getDesktop().open(new Locations().getDataDirectory());
                 } catch (IOException e)
                 {
+                    Logger.Log(e);
                     JOptionPane.showMessageDialog(null, "Unable to open "
                         + new Locations().getDataDirectory(), "Error",
                         JOptionPane.ERROR_MESSAGE);
@@ -535,11 +538,11 @@ public class PreferencesUI
                         writer.close();
                     } catch (FileNotFoundException e)
                     {
-                        // TODO Auto-generated catch block
+                        Logger.Log(e);
                         e.printStackTrace();
                     } catch (IOException e)
                     {
-                        // TODO Auto-generated catch block
+                        Logger.Log(e);
                         e.printStackTrace();
                     }
 
@@ -598,11 +601,11 @@ public class PreferencesUI
                         reader.close();
                     } catch (FileNotFoundException e)
                     {
-                        // TODO Auto-generated catch block
+                        Logger.Log(e);
                         e.printStackTrace();
                     } catch (IOException e)
                     {
-                        // TODO Auto-generated catch block
+                        Logger.Log(e);
                         e.printStackTrace();
                     }
                 }

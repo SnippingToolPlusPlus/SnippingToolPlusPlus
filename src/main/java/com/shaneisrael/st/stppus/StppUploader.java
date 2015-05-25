@@ -15,6 +15,7 @@ import javax.xml.bind.DatatypeConverter;
 
 import com.google.gson.Gson;
 import com.shaneisrael.st.SnippingToolPlusPlus;
+import com.shaneisrael.st.data.Logger;
 import com.shaneisrael.st.data.OperatingSystem;
 import com.shaneisrael.st.notification.NotificationManager;
 import com.shaneisrael.st.notification.STNotificationType;
@@ -116,6 +117,7 @@ public class StppUploader implements Runnable
             
         } catch (Exception e)
         {
+            Logger.Log(e);
             e.printStackTrace();
         }
 

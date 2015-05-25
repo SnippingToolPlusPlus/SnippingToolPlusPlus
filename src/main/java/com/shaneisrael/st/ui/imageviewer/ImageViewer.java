@@ -27,6 +27,7 @@ import javax.swing.event.ListSelectionListener;
 
 import net.miginfocom.swing.MigLayout;
 
+import com.shaneisrael.st.data.Logger;
 import com.shaneisrael.st.editor.Editor;
 import com.shaneisrael.st.notification.NotificationManager;
 import com.shaneisrael.st.notification.STNotificationType;
@@ -256,6 +257,7 @@ public class ImageViewer extends JFrame implements ListSelectionListener
                             + currentModel.getImageFile().getAbsolutePath()).start();
                     } catch (IOException e1)
                     {
+                        Logger.Log(e1);
                         e1.printStackTrace();
                     }
                 }
@@ -290,6 +292,7 @@ public class ImageViewer extends JFrame implements ListSelectionListener
                             + currentModel.getImageFile().getAbsolutePath()).start();
                     } catch (IOException e1)
                     {
+                        Logger.Log(e1);
                         e1.printStackTrace();
                     }
                 }
@@ -335,6 +338,7 @@ public class ImageViewer extends JFrame implements ListSelectionListener
                 imagePanel.setImage(getCurrentImage());
             } catch (IOException ex)
             {
+                Logger.Log(ex);
                 JOptionPane.showMessageDialog(null,
                     "Could not find the image file at " + imageInformation.getImageFile().getAbsolutePath(),
                     "Error",

@@ -29,6 +29,7 @@ import javax.swing.ImageIcon;
 import javax.swing.JPanel;
 import javax.swing.KeyStroke;
 
+import com.shaneisrael.st.data.Logger;
 import com.shaneisrael.st.editor.Editor;
 import com.shaneisrael.st.prefs.Preferences;
 import com.shaneisrael.st.upload.SimpleFTPUploader;
@@ -239,13 +240,14 @@ public class Overlay extends JPanel implements MouseListener, MouseMotionListene
             Thread.sleep(5);
         } catch (InterruptedException e)
         {
+            Logger.Log(e);
             e.printStackTrace();
         }
 
         if (zoomEnabled)
             drawMagnifyingGlass(g2d);
 
-        super.repaint();
+        //super.repaint();
 
     }
 

@@ -25,6 +25,7 @@ import javax.swing.border.EmptyBorder;
 
 import net.miginfocom.swing.MigLayout;
 
+import com.shaneisrael.st.data.Logger;
 import com.shaneisrael.st.imgur.ImgurImage;
 import com.shaneisrael.st.imgur.ImgurResponse;
 import com.shaneisrael.st.imgur.ImgurResponseListener;
@@ -95,6 +96,7 @@ public class MultiUploader extends JFrame implements ImgurResponseListener
                     }
                 } catch (Exception ex)
                 {
+                    Logger.Log(ex);
                     ex.printStackTrace();
                 }
             }

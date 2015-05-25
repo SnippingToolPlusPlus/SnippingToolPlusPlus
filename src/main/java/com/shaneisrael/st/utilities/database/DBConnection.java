@@ -21,7 +21,6 @@ public class DBConnection
                 Decryption.getUserDetails();
             } catch (Exception e)
             {
-                // TODO Auto-generated catch block
                 e.printStackTrace();
             }
         }

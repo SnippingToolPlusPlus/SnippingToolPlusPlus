@@ -4,6 +4,8 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.net.URI;
 import java.net.URISyntaxException;
+
+import com.shaneisrael.st.data.Logger;
 import com.shaneisrael.st.notification.NotificationManager;
 import com.shaneisrael.st.notification.STNotification;
 import com.shaneisrael.st.notification.STNotificationType;
@@ -75,12 +77,14 @@ public class UpdateChecker implements VersionResponseListener
                     Browser.open(new URI(latestVersion.getDownloadLocation()));
                 } catch (URISyntaxException e1)
                 {
+                    Logger.Log(e1);
                     try
                     {
                         
                         Browser.open(new URI("http://snippingtoolpluspl.us/"));
                     } catch (URISyntaxException e2)
                     {
+                        Logger.Log(e2);
                         System.out.println("Could not get latest version information.");
                     }
                 }

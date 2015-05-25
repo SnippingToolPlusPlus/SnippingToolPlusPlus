@@ -5,6 +5,7 @@ import java.awt.Rectangle;
 import java.awt.Robot;
 import java.awt.image.BufferedImage;
 
+import com.shaneisrael.st.data.Logger;
 import com.shaneisrael.st.overlay.ScreenBounds;
 
 public class CaptureScreen
@@ -21,7 +22,7 @@ public class CaptureScreen
             robot = new Robot();
         } catch (AWTException e)
         {
-            // TODO Auto-generated catch block
+            Logger.Log(e);
             e.printStackTrace();
         }
         return robot.createScreenCapture(screenRectangle);

@@ -5,6 +5,7 @@ import java.awt.event.KeyEvent;
 import com.melloware.jintellitype.JIntellitype;
 import com.melloware.jintellitype.JIntellitypeConstants;
 import com.melloware.jintellitype.JIntellitypeException;
+import com.shaneisrael.st.data.Logger;
 import com.shaneisrael.st.prefs.Preferences;
 
 public class Hotkeys
@@ -25,6 +26,7 @@ public class Hotkeys
             keyhook = JIntellitype.getInstance();
         } catch (JIntellitypeException ex)
         {
+            Logger.Log(ex);
             ex.printStackTrace();
         }
         if (keyhook != null)

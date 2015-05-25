@@ -24,6 +24,7 @@ public class LinkDataSaver
                 out = new PrintWriter(new FileOutputStream(imgurLinksFile));
             } catch (FileNotFoundException e)
             {
+                Logger.Log(e);
                 e.printStackTrace();
             }
             out.println("TITLE - UPLOAD LINK - DELETION LINK\n------------------------------------");
@@ -48,9 +49,11 @@ public class LinkDataSaver
 
         } catch (FileNotFoundException e)
         {
+            Logger.Log(e);
             e.printStackTrace();
         } catch (IOException e)
         {
+            Logger.Log(e);
             e.printStackTrace();
         }
     }

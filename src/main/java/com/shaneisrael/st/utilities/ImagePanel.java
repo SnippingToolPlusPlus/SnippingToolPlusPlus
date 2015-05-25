@@ -8,6 +8,8 @@ import java.io.IOException;
 import javax.imageio.ImageIO;
 import javax.swing.JPanel;
 
+import com.shaneisrael.st.data.Logger;
+
 public class ImagePanel extends JPanel
 {
     private static final long serialVersionUID = -4052593806526672895L;
@@ -21,6 +23,7 @@ public class ImagePanel extends JPanel
             setPreferredSize(new Dimension(image.getWidth(), image.getHeight()));
         } catch (IOException ex)
         {
+            Logger.Log(ex);
             ex.printStackTrace();
         }
     }

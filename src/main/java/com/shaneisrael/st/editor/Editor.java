@@ -50,16 +50,20 @@ import javax.swing.border.TitledBorder;
 
 import net.miginfocom.swing.MigLayout;
 
+import com.shaneisrael.st.data.Logger;
 import com.shaneisrael.st.overlay.Overlay;
 import com.shaneisrael.st.upload.SimpleFTPUploader;
 import com.shaneisrael.st.utilities.ClipboardUtilities;
 import com.shaneisrael.st.utilities.ImageUtilities;
 import com.shaneisrael.st.utilities.Save;
 import com.shaneisrael.st.utilities.Upload;
+
 import javax.swing.border.SoftBevelBorder;
 import javax.swing.border.BevelBorder;
 import javax.swing.border.MatteBorder;
+
 import java.awt.FlowLayout;
+
 import javax.swing.BoxLayout;
 
 public class Editor
@@ -180,6 +184,7 @@ public class Editor
         frmEditor.setIconImage(Toolkit.getDefaultToolkit().getImage(
             Editor.class.getResource("/images/icons/utilities.png")));
         frmEditor.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+        
 
         keyDispatcher = new KeyEventDispatcher()
         {
@@ -399,6 +404,7 @@ public class Editor
                         c.getBlue(), getOpacitySliderValue()));
                 } catch (Exception ex)
                 {
+                    Logger.Log(ex);
                 }
             }
         });
@@ -429,6 +435,7 @@ public class Editor
                         .getGreen(), c.getBlue(), getOpacitySliderValue()));
                 } catch (Exception ex)
                 {
+                    Logger.Log(ex);
                 }
             }
         });
@@ -828,6 +835,7 @@ public class Editor
                 }
                 catch (NumberFormatException ex)
                 {
+                    Logger.Log(ex);
                     size = 16;
                 }
                 ((EditorPanel) editorPanel).setFontSize(size);
@@ -885,6 +893,7 @@ public class Editor
                     frmEditor.setVisible(true);
                 } catch (Exception e)
                 {
+                    Logger.Log(e);
                     e.printStackTrace();
                 }
             }

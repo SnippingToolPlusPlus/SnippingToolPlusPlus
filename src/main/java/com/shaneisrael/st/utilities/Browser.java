@@ -4,6 +4,8 @@ import java.awt.Desktop;
 import java.net.URI;
 import java.net.URISyntaxException;
 
+import com.shaneisrael.st.data.Logger;
+
 public class Browser
 {
     private static final String REDDIT_SUBMIT_LINK = "www.reddit.com/submit?url=";
@@ -19,6 +21,7 @@ public class Browser
                 desktop.browse(link);
             } catch (Exception e)
             {
+                Logger.Log(e);
                 e.printStackTrace();
             }
         }
@@ -32,6 +35,7 @@ public class Browser
             url = new URI(REDDIT_SUBMIT_LINK + link);
         } catch (URISyntaxException e1)
         {
+            Logger.Log(e1);
             e1.printStackTrace();
         }
         Desktop desktop = Desktop.isDesktopSupported() ? Desktop.getDesktop() : null;
@@ -46,6 +50,7 @@ public class Browser
                 }
             } catch (Exception e)
             {
+                Logger.Log(e);
                 e.printStackTrace();
             }
         }
@@ -58,6 +63,7 @@ public class Browser
             Browser.open(new URI(websiteUrl));
         } catch (URISyntaxException e)
         {
+            Logger.Log(e);
             e.printStackTrace();
         }
     }
