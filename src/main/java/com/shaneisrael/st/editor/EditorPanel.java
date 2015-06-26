@@ -41,6 +41,8 @@ public class EditorPanel extends JPanel implements MouseMotionListener,
     private String text = "";
     private int fontType = Font.PLAIN;
     private int fontSize = 16;
+    private String fontStyle = "Georgia";
+    private Font font = new Font(fontStyle, fontType, fontSize);
 
     private Rectangle2D selection;
     private int mx, my, lastX, lastY; // mouse position holders
@@ -560,10 +562,8 @@ public class EditorPanel extends JPanel implements MouseMotionListener,
 
     public void drawText(Graphics2D g)
     {
-        Font f = new Font("Georgia", fontType, fontSize);
-        g.setFont(f);
+        g.setFont(font);
         FontMetrics fm1 = g.getFontMetrics();
-        g.setFont(f);
         g.setColor(fillColor);
         g.setClip(selection);
         String lines[] = text.split("\n");
@@ -809,11 +809,18 @@ public class EditorPanel extends JPanel implements MouseMotionListener,
     public void setFontType(int plain)
     {
         this.fontType = plain;
+        font = new Font(fontStyle, fontType, fontSize);
     }
 
     public void setFontSize(int size)
     {
         this.fontSize = size;
-
+        font = new Font(fontStyle, fontType, fontSize);
+    }
+    
+    public void setFontStyle(String styleName)
+    {
+        this.fontStyle = styleName;
+        font = new Font(fontStyle, fontType, fontSize);
     }
 }

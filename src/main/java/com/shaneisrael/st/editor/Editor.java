@@ -6,6 +6,7 @@ import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.EventQueue;
 import java.awt.Font;
+import java.awt.GraphicsEnvironment;
 import java.awt.GridLayout;
 import java.awt.KeyEventDispatcher;
 import java.awt.KeyboardFocusManager;
@@ -19,7 +20,9 @@ import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
+import java.util.ArrayList;
 import java.util.Hashtable;
+import java.util.List;
 
 import javax.swing.ButtonGroup;
 import javax.swing.ImageIcon;
@@ -27,6 +30,7 @@ import javax.swing.InputMap;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JColorChooser;
+import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JLayeredPane;
@@ -97,6 +101,8 @@ public class Editor
     private JTextField opacityField;
     private JTextField strokeField;
     private JCheckBox chckbxDashed;
+    private JMenuItem mntmFontStyle;
+    private JMenuItem mntmFontSize_1;
 
     /**
      * Create the application.
@@ -814,6 +820,22 @@ public class Editor
         });
         buttonGroup.add(rdbtnmntmItalic);
         popupMenu.add(rdbtnmntmItalic);
+        
+        mntmFontStyle = new JMenuItem("Font Style");
+        mntmFontStyle.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent arg0) {
+                setFontStyle();
+            }
+        });
+        
+        mntmFontSize_1 = new JMenuItem("Font Size");
+        mntmFontSize_1.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent arg0) {
+                setFontSize();
+            }
+        });
+        popupMenu.add(mntmFontSize_1);
+        popupMenu.add(mntmFontStyle);
         editorPanel.setLayout(new GridLayout(2, 3, 0, 0));
 
         menuBar = new JMenuBar();
@@ -828,20 +850,18 @@ public class Editor
             @Override
             public void actionPerformed(ActionEvent e)
             {
-                int size;
-                try
-                {
-                    size = Integer.parseInt(JOptionPane.showInputDialog("Desired font size?"));
-                }
-                catch (NumberFormatException ex)
-                {
-                    Logger.Log(ex);
-                    size = 16;
-                }
-                ((EditorPanel) editorPanel).setFontSize(size);
+                setFontSize();
             }
         });
         mnFont.add(mntmFontSize);
+        
+        JMenuItem mntmFontStyle_1 = new JMenuItem("Font Style");
+        mntmFontStyle_1.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent arg0) {
+                setFontStyle();
+            }
+        });
+        mnFont.add(mntmFontStyle_1);
 
         JMenu mnEdit = new JMenu("Edit");
         menuBar.add(mnEdit);
@@ -1000,5 +1020,29 @@ public class Editor
                 popup.show(e.getComponent(), e.getX(), e.getY());
             }
         });
+    }
+    
+    private void setFontStyle()
+    {
+        GraphicsEnvironment e = GraphicsEnvironment.getLocalGraphicsEnvironment();
+        String[] fonts = e.getAvailableFontFamilyNames(); // Get the fonts
+        JComboBox<String> cbox = new JComboBox(fonts);
+        JOptionPane.showMessageDialog( null, cbox, "Choose a font", JOptionPane.QUESTION_MESSAGE);
+        ((EditorPanel) editorPanel).setFontStyle(cbox.getSelectedItem().toString());
+    }
+    
+    private void setFontSize()
+    {
+        int size;
+        try
+        {
+            size = Integer.parseInt(JOptionPane.showInputDialog("Desired font size?"));
+        }
+        catch (NumberFormatException ex)
+        {
+            Logger.Log(ex);
+            size = 16;
+        }
+        ((EditorPanel) editorPanel).setFontSize(size);
     }
 }
