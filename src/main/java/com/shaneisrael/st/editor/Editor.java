@@ -19,6 +19,8 @@ import java.awt.event.FocusListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.Hashtable;
@@ -158,7 +160,7 @@ public class Editor
             instance = new Editor();
         } else
         {
-            instance.dispose();
+            instance.exit();
             instance = new Editor();
         }
         return instance;
@@ -916,6 +918,16 @@ public class Editor
                     Logger.Log(e);
                     e.printStackTrace();
                 }
+            }
+        });
+        
+        frmEditor.addWindowListener(new WindowAdapter()
+        {
+            @Override
+            public void windowClosing(WindowEvent arg0)
+            {
+                super.windowClosing(arg0);
+                exit();
             }
         });
 
