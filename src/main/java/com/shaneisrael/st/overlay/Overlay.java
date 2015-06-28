@@ -263,9 +263,9 @@ public class Overlay extends JPanel implements MouseListener, MouseMotionListene
     {
         for (Rectangle rect : selectionRects)
         {
-            g2d.setColor(new Color(255, 255, 255, 100));
+            g2d.setColor(new Color(255, 0, 0, 150));
             g2d.draw(rect);
-            g2d.setColor(new Color(0, 0, 255, 25));
+            g2d.setColor(new Color(255, 255, 255, 50));
             g2d.fill(rect);
         }
     }
