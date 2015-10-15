@@ -255,7 +255,7 @@ public class Overlay extends JPanel implements MouseListener, MouseMotionListene
         if (zoomEnabled)
             drawMagnifyingGlass(g2d);
 
-        //super.repaint();
+        super.repaint();
 
     }
 
