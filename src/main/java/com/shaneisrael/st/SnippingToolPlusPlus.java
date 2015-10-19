@@ -28,6 +28,7 @@ import java.awt.HeadlessException;
 import java.awt.SystemTray;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.io.File;
@@ -49,6 +50,8 @@ import com.melloware.jintellitype.JIntellitypeException;
 import com.shaneisrael.st.data.Locations;
 import com.shaneisrael.st.data.Logger;
 import com.shaneisrael.st.data.OperatingSystem;
+import com.shaneisrael.st.editor.Editor;
+import com.shaneisrael.st.modules.ActiveWindowModule;
 import com.shaneisrael.st.notification.NotificationManager;
 import com.shaneisrael.st.notification.STNotificationType;
 import com.shaneisrael.st.overlay.Overlay;
@@ -218,8 +221,22 @@ public class SnippingToolPlusPlus extends JFrame implements ActionListener, JInt
                     overlay.setMode(Overlay.UPLOAD_FTP);
                 } else if (identifier == Config.FTP_UPLOAD_SCREEN_ID)
                 {
-                    System.out.println("test!");
                     new SimpleFTPUploader(ImageUtilities.saveTemporarily(capture.getScreenCapture()));
+                } else if (identifier == Config.SAVE_ACTIVE_WINDOW) {
+                    if (Preferences.getInstance().isEditorEnabled())
+                    {
+                        Editor.getInstance().initialize(ActiveWindowModule.capture(), Overlay.SAVE);
+                    } else {
+                        save = new Save();
+                        save.save(ActiveWindowModule.capture());
+                    }
+                } else if (identifier == Config.UPLOAD_ACTIVE_WINDOW) {
+                    if (Preferences.getInstance().isEditorEnabled())
+                    {
+                        Editor.getInstance().initialize(ActiveWindowModule.capture(), Overlay.UPLOAD);
+                    } else {
+                        new Upload(ActiveWindowModule.capture(), false);
+                    }
                 }
 
             }

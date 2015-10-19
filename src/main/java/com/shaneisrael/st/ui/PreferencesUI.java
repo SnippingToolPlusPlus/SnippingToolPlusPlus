@@ -96,6 +96,8 @@ public class PreferencesUI
     private JTextField saveScreenKeyField;
     private JTextField ftpKeyField;
     private JTextField ftpScreenKeyField;
+    private JTextField upActiveWinField;
+    private JTextField saveActiveWinField;
 
     private JComboBox<String> upModBox1;
     private JComboBox<String> upModBox2;
@@ -111,6 +113,10 @@ public class PreferencesUI
     private JComboBox<String> ftpModBox2;
     private JComboBox<String> ftpScreenModBox1;
     private JComboBox<String> ftpScreenModBox2;
+    private JComboBox<String> upActiveWinModBox1;
+    private JComboBox<String> upActiveWinModBox2;
+    private JComboBox<String> saveActiveWinModBox1;
+    private JComboBox<String> saveActiveWinModBox2;
     private JComboBox<String> providerBox;
 
     /** END HOTKEY FIELDS **/
@@ -144,10 +150,21 @@ public class PreferencesUI
         providerBox.setSelectedIndex(Preferences.getInstance().getPrimaryProvider());
         chckbxShowBalloonNotifications.setSelected(Preferences.getInstance().showBalloonMessages());
         
+        try {
+            loadHotkeysFromPrefs();
+        } catch (ArrayIndexOutOfBoundsException e) {
+            Logger.Log(e);
+            Preferences.getInstance().setDefaultPreferences();
+            loadHotkeysFromPrefs();
+        }
+    }
+
+    private void loadHotkeysFromPrefs()
+    {
         hotkeyCodes = Preferences.getInstance().getHotkeyCodes();
         hotkeyMods1 = Preferences.getInstance().getFirstHotkeyMods();
         hotkeyMods2 = Preferences.getInstance().getSecondHotkeyMods();
-
+        
         upKeyField.setText(Hotkeys.getKeyCharacter(hotkeyCodes[0]));
         upScreenKeyField.setText(Hotkeys.getKeyCharacter(hotkeyCodes[1]));
         upClipKeyField.setText(Hotkeys.getKeyCharacter(hotkeyCodes[4]));
@@ -155,6 +172,8 @@ public class PreferencesUI
         saveScreenKeyField.setText(Hotkeys.getKeyCharacter(hotkeyCodes[3]));
         ftpKeyField.setText(Hotkeys.getKeyCharacter(hotkeyCodes[5]));
         ftpScreenKeyField.setText(Hotkeys.getKeyCharacter(hotkeyCodes[6]));
+        upActiveWinField.setText(Hotkeys.getKeyCharacter(hotkeyCodes[7]));
+        saveActiveWinField.setText(Hotkeys.getKeyCharacter(hotkeyCodes[8]));
 
         upModBox1.setSelectedIndex(Hotkeys.getModBoxIndex(hotkeyMods1[0]));
         upModBox2.setSelectedIndex(Hotkeys.getModBoxIndex(hotkeyMods2[0]));
@@ -170,7 +189,10 @@ public class PreferencesUI
         ftpModBox2.setSelectedIndex(Hotkeys.getModBoxIndex(hotkeyMods2[5]));
         ftpScreenModBox1.setSelectedIndex(Hotkeys.getModBoxIndex(hotkeyMods1[6]));
         ftpScreenModBox2.setSelectedIndex(Hotkeys.getModBoxIndex(hotkeyMods2[6]));
-
+        upActiveWinModBox1.setSelectedIndex(Hotkeys.getModBoxIndex(hotkeyMods1[7]));
+        upActiveWinModBox2.setSelectedIndex(Hotkeys.getModBoxIndex(hotkeyMods2[7]));
+        saveActiveWinModBox1.setSelectedIndex(Hotkeys.getModBoxIndex(hotkeyMods1[8]));
+        saveActiveWinModBox2.setSelectedIndex(Hotkeys.getModBoxIndex(hotkeyMods2[8]));
     }
 
     /**
@@ -184,7 +206,7 @@ public class PreferencesUI
         frmPreferences.setIconImage(Toolkit.getDefaultToolkit().getImage(
             PreferencesUI.class.getResource("/images/icons/pref.png")));
         frmPreferences.setTitle("Preferences");
-        frmPreferences.setBounds(100, 100, 444, 380);
+        frmPreferences.setBounds(100, 100, 444, 687);
         frmPreferences.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
         frmPreferences.getContentPane().setLayout(
             new MigLayout("", "[430.00px]", "[244.00px,grow,baseline][][20.00,grow]"));
@@ -637,7 +659,7 @@ public class PreferencesUI
         JPanel panel_1 = new JPanel();
         panel_1.setBackground(Color.WHITE);
         // tab3.add(panel_1, BorderLayout.CENTER);
-        panel_1.setLayout(new MigLayout("", "[31.00,leading][83.00,grow,leading][81.00,grow]", "[][][][][][][][][][][][][][][][17.00][19.00][][][][][][][]"));
+        panel_1.setLayout(new MigLayout("", "[31.00,leading][83.00,grow,leading][81.00,grow][]", "[][][][][][][][][][][][][][][][17.00][19.00][][][][][][][][][]"));
 
         JLabel lblEditor = new JLabel("Editor");
         lblEditor.setFont(new Font("Tahoma", Font.BOLD, 18));
@@ -1087,32 +1109,140 @@ public class PreferencesUI
             }
         });
         panel_1.add(ftpScreenKeyField, "cell 2 16,growx");
+        
+        JLabel lblUploadActiveWindow = new JLabel("Upload Active Window");
+        panel_1.add(lblUploadActiveWindow, "cell 0 17,alignx trailing");
+        
+        upActiveWinModBox1 = new JComboBox(Hotkeys.MODIFIER_KEYS);
+        upActiveWinModBox1.addItemListener(new ItemListener()
+        {
+            @Override
+            public void itemStateChanged(ItemEvent e)
+            {
+                hotkeyMods1[Config.UPLOAD_ACTIVE_WINDOW] = Hotkeys.getHotkeyMod(upActiveWinModBox1.getSelectedIndex());
+            }
+        });
+        panel_1.add(upActiveWinModBox1, "flowx,cell 1 17");
+        
+        upActiveWinField = new JTextField();
+        upActiveWinField.setText("NONE");
+        upActiveWinField.setEditable(false);
+        upActiveWinField.setBackground(Color.WHITE);
+        upActiveWinField.addKeyListener(new KeyAdapter()
+        {
+            @Override
+            public void keyPressed(KeyEvent e)
+            {
+                String text = Hotkeys.getKeyCharacter(e.getKeyCode()).toUpperCase();
+                int code = e.getKeyCode();
+                if (text.equals("NONE"))
+                    code = Hotkeys.NO_HOTKEY;
+
+                upActiveWinField.setText(text);
+                hotkeyCodes[Config.UPLOAD_ACTIVE_WINDOW] = code;
+            }
+        });
+        upActiveWinField.addMouseListener(new MouseAdapter()
+        {
+            @Override
+            public void mouseClicked(MouseEvent e)
+            {
+                upActiveWinField.selectAll();
+            }
+
+            @Override
+            public void mouseEntered(MouseEvent e)
+            {
+                upActiveWinField.setBackground(Color.green);
+            }
+
+            @Override
+            public void mouseExited(MouseEvent e)
+            {
+                upActiveWinField.setBackground(Color.white);
+            }
+        });
+        panel_1.add(upActiveWinField, "cell 2 17,growx");
+        
+        JLabel lblSaveActiveWindow = new JLabel("Save Active Window");
+        panel_1.add(lblSaveActiveWindow, "cell 0 18");
+        
+        saveActiveWinModBox1 = new JComboBox(Hotkeys.MODIFIER_KEYS);
+        saveActiveWinModBox1.addItemListener(new ItemListener()
+        {
+            @Override
+            public void itemStateChanged(ItemEvent e)
+            {
+                hotkeyMods1[Config.UPLOAD_ACTIVE_WINDOW] = Hotkeys.getHotkeyMod(saveActiveWinModBox1.getSelectedIndex());
+            }
+        });
+        panel_1.add(saveActiveWinModBox1, "flowx,cell 1 18");
+        
+        saveActiveWinField = new JTextField();
+        saveActiveWinField.setText("NONE");
+        saveActiveWinField.setEditable(false);
+        saveActiveWinField.setBackground(Color.WHITE);
+        saveActiveWinField.addKeyListener(new KeyAdapter()
+        {
+            @Override
+            public void keyPressed(KeyEvent e)
+            {
+                String text = Hotkeys.getKeyCharacter(e.getKeyCode()).toUpperCase();
+                int code = e.getKeyCode();
+                if (text.equals("NONE"))
+                    code = Hotkeys.NO_HOTKEY;
+
+                saveActiveWinField.setText(text);
+                hotkeyCodes[Config.SAVE_ACTIVE_WINDOW] = code;
+            }
+        });
+        saveActiveWinField.addMouseListener(new MouseAdapter()
+        {
+            @Override
+            public void mouseClicked(MouseEvent e)
+            {
+                saveActiveWinField.selectAll();
+            }
+
+            @Override
+            public void mouseEntered(MouseEvent e)
+            {
+                saveActiveWinField.setBackground(Color.green);
+            }
+
+            @Override
+            public void mouseExited(MouseEvent e)
+            {
+                saveActiveWinField.setBackground(Color.white);
+            }
+        });
+        panel_1.add(saveActiveWinField, "cell 2 18,growx");
 
         JLabel lblOverlayControls = new JLabel("Overlay");
         lblOverlayControls.setFont(new Font("Tahoma", Font.BOLD, 18));
-        panel_1.add(lblOverlayControls, "cell 0 17");
+        panel_1.add(lblOverlayControls, "cell 0 19");
 
         JSeparator separator_2 = new JSeparator();
-        panel_1.add(separator_2, "cell 0 18 2 1,growx");
+        panel_1.add(separator_2, "cell 0 20 2 1,growx");
 
         JLabel lblZoomMagnifierInout = new JLabel("Magnifier Zoom");
         lblZoomMagnifierInout.setFont(new Font("Tahoma", Font.PLAIN, 13));
-        panel_1.add(lblZoomMagnifierInout, "cell 0 19");
+        panel_1.add(lblZoomMagnifierInout, "cell 0 21");
 
         JLabel lblMouseWheel = new JLabel("MOUSE WHEEL");
         lblMouseWheel.setFont(new Font("Tahoma", Font.BOLD, 13));
-        panel_1.add(lblMouseWheel, "cell 1 19");
+        panel_1.add(lblMouseWheel, "cell 1 21");
 
         JLabel lblIncreaseTransparency = new JLabel("Overlay Opacity");
         lblIncreaseTransparency.setFont(new Font("Tahoma", Font.PLAIN, 13));
-        panel_1.add(lblIncreaseTransparency, "cell 0 20");
+        panel_1.add(lblIncreaseTransparency, "cell 0 22");
 
         JLabel lblMousewheelUp = new JLabel("MOUSE WHEEL");
         lblMousewheelUp.setFont(new Font("Tahoma", Font.BOLD, 13));
-        panel_1.add(lblMousewheelUp, "cell 1 20");
+        panel_1.add(lblMousewheelUp, "cell 1 22");
 
         JSeparator separator_6 = new JSeparator();
-        panel_1.add(separator_6, "cell 0 22 2 1,grow");
+        panel_1.add(separator_6, "cell 0 24 2 1,grow");
 
         JTextPane txtpnNote = new JTextPane();
         txtpnNote.setFont(new Font("Tahoma", Font.PLAIN, 13));
@@ -1120,15 +1250,15 @@ public class PreferencesUI
         txtpnNote.setEditable(false);
         txtpnNote
             .setText("* Note - To change overlay transparency, you must first hide the Magnifying Glass with [Right Click].");
-        panel_1.add(txtpnNote, "cell 0 23,growx");
+        panel_1.add(txtpnNote, "cell 0 25,growx");
 
         JLabel lblUpdateOverlay = new JLabel("Update Overlay");
         lblUpdateOverlay.setFont(new Font("Tahoma", Font.PLAIN, 13));
-        panel_1.add(lblUpdateOverlay, "cell 0 21");
+        panel_1.add(lblUpdateOverlay, "cell 0 23");
 
         JLabel lblMiddleClick = new JLabel("MIDDLE CLICK");
         lblMiddleClick.setFont(new Font("Tahoma", Font.BOLD, 13));
-        panel_1.add(lblMiddleClick, "cell 1 21");
+        panel_1.add(lblMiddleClick, "cell 1 23");
 
         JLabel label = new JLabel("+");
         panel_1.add(label, "cell 1 10");
@@ -1246,9 +1376,45 @@ public class PreferencesUI
             }
         });
         panel_1.add(ftpScreenModBox2, "cell 1 16");
+        
+        
 
         JLabel label_13 = new JLabel("+");
         panel_1.add(label_13, "cell 1 16");
+        
+        JLabel label_14 = new JLabel("+");
+        panel_1.add(label_14, "cell 1 18");
+        
+        saveActiveWinModBox2 = new JComboBox(Hotkeys.MODIFIER_KEYS);
+        saveActiveWinModBox2.addItemListener(new ItemListener()
+        {
+            @Override
+            public void itemStateChanged(ItemEvent arg0)
+            {
+                hotkeyMods2[Config.SAVE_ACTIVE_WINDOW] = Hotkeys.getHotkeyMod(saveActiveWinModBox2.getSelectedIndex());                
+            }
+        });
+        panel_1.add(saveActiveWinModBox2, "cell 1 18");
+        
+        JLabel label_15 = new JLabel("+");
+        panel_1.add(label_15, "cell 1 18");
+        
+        JLabel label_16 = new JLabel("+");
+        panel_1.add(label_16, "cell 1 17");
+        
+        upActiveWinModBox2 = new JComboBox(Hotkeys.MODIFIER_KEYS);
+        upActiveWinModBox2.addItemListener(new ItemListener()
+        {
+            @Override
+            public void itemStateChanged(ItemEvent arg0)
+            {
+                hotkeyMods2[Config.UPLOAD_ACTIVE_WINDOW] = Hotkeys.getHotkeyMod(upActiveWinModBox2.getSelectedIndex());                
+            }
+        });
+        panel_1.add(upActiveWinModBox2, "cell 1 17");
+        
+        JLabel label_17 = new JLabel("+");
+        panel_1.add(label_17, "cell 1 17");
         scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
         scrollPane.getVerticalScrollBar().setUnitIncrement(8);
         // scrollPane.setMaximumSize(new Dimension(200,100));

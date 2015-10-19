@@ -30,5 +30,7 @@ public class Config
     public static final int UPLOAD_CLIPBOARD_ID = 4;
     public static final int FTP_UPLOAD_SNIPPET_ID = 5;
     public static final int FTP_UPLOAD_SCREEN_ID = 6;
+    public static final int SAVE_ACTIVE_WINDOW = 7;
+    public static final int UPLOAD_ACTIVE_WINDOW = 8;
 
 }

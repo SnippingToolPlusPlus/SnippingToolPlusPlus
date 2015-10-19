@@ -108,7 +108,7 @@ public class Overlay extends JPanel implements MouseListener, MouseMotionListene
             @Override
             public void actionPerformed(ActionEvent e)
             {
-                if (null != selectionImage && selectionImage.getWidth() > 0 && selectionImage.getHeight() > 0)
+                if (activeSelection() || selectionRects.size() > 0)
                 {
                     //create the multi-snippet image 
                     if (selections.isEmpty() == false)
@@ -147,13 +147,17 @@ public class Overlay extends JPanel implements MouseListener, MouseMotionListene
             @Override
             public void actionPerformed(ActionEvent e)
             {
-                SoundNotifications.playShutter();
-                selections.add(selectionImage);
-                selectionRect = new Rectangle(startPoint);
-                selectionRect.add(endPoint);
-                selectionRects.add(selectionRect);
-                startPoint = new Point(0, 0);
-                endPoint = new Point(0, 0);
+                if(activeSelection())
+                {
+                    SoundNotifications.playShutter();
+                    selections.add(selectionImage);
+                    selectionRect = new Rectangle(startPoint);
+                    selectionRect.add(endPoint);
+                    selectionRects.add(selectionRect);
+                    selectionImage = null;
+                    startPoint = new Point(0, 0);
+                    endPoint = new Point(0, 0);
+                }
             }
         };
         Action escape = new AbstractAction()
@@ -182,6 +186,10 @@ public class Overlay extends JPanel implements MouseListener, MouseMotionListene
         setMouseCursor();
     }
 
+    private boolean activeSelection()
+    {
+        return selectionImage != null && selectionImage.getWidth() > 0 && selectionImage.getHeight() > 0;
+    }
     public void setupOverlay()
     {
         startPoint = new Point(0, 0);
@@ -247,7 +255,7 @@ public class Overlay extends JPanel implements MouseListener, MouseMotionListene
         if (zoomEnabled)
             drawMagnifyingGlass(g2d);
 
-        //super.repaint();
+        super.repaint();
 
     }
 
@@ -255,9 +263,9 @@ public class Overlay extends JPanel implements MouseListener, MouseMotionListene
     {
         for (Rectangle rect : selectionRects)
         {
-            g2d.setColor(new Color(255, 255, 255, 100));
+            g2d.setColor(new Color(255, 0, 0, 150));
             g2d.draw(rect);
-            g2d.setColor(new Color(0, 0, 255, 25));
+            g2d.setColor(new Color(255, 255, 255, 50));
             g2d.fill(rect);
         }
     }

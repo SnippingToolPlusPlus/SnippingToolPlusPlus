@@ -105,6 +105,5 @@ public class OverlayFrame extends JFrame
         overlayPanel.dispose();
         this.removeAll();
         this.dispose();
-        System.gc();
     }
 }
