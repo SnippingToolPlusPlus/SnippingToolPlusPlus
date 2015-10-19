@@ -24,7 +24,6 @@ public final class PreferenceData
     boolean notifications = true;
 
     /** Begin FTP Data **/
-
     @SerializedName("ftp_host")
     public String ftpHost;
 
@@ -57,13 +56,13 @@ public final class PreferenceData
     public boolean disableTracking = false;
 
     @SerializedName("hotkey_codes")
-    public int hotkeyCodes[] = { 49, 50, 51, 52, 88, 49, 50 }; //1, 2, 3, 4, X, 1, 2
+    public int hotkeyCodes[] = { 49, 50, 51, 52, 88, 49, 50, 112, 113 }; //1, 2, 3, 4, X, 1, 2, F1, F2
 
     @SerializedName("hotkey_modifier_1")
-    public int hotkeyMods1[] = { 2, 2, 2, 2, 2, 1, 1 }; //CTRL, CTRL, CTRL, CTRL, CTRL, ALT, ALT
+    public int hotkeyMods1[] = { 2, 2, 2, 2, 2, 1, 1, 2, 2 }; //CTRL, CTRL, CTRL, CTRL, CTRL, ALT, ALT, CTRL, CTRL
 
     @SerializedName("hotkey_modifier_2")
-    public int hotkeyMods2[] = { 4, 4, 4, 4, 4, 4, 4 }; //SHIFT
+    public int hotkeyMods2[] = { 4, 4, 4, 4, 4, 4, 4, 0, 0 }; //SHIFT
 
     PreferenceData()
     {

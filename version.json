@@ -1,9 +1,9 @@
 {
-    "version_name": "New and Improved basic editor!",
+    "version_name": "Get Direct Window Screenshots!",
     "major": "6",
     "minor": "4",
-    "patch": "0",
-    "download": "http://snippingtoolpluspl.us/downloads/SnippingToolPlusPlus-6.4.0.zip",
+    "patch": "5",
+    "download": "http://snippingtoolpluspl.us/downloads/SnippingToolPlusPlus-6.4.5.zip",
     "reset_prefs": "false",
     "changes": {
         "added": [
